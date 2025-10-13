@@ -1,16 +1,45 @@
+/* General body styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;                     /* remove default margin */
+    padding: 0;                    /* remove default padding */
+}
+
+/*Style header*/
 .header {
-  background-color:rgb(0, 143, 95);
-  padding:5px;
+    padding: 20px;
+    text-align: center;
+    background-color: rgb(132, 190, 209);
 }
 
 .footer {
-  background-color:rgb(167, 0, 0);
-  padding:5px;
+  background-color: rgb(132, 190, 209);
+  padding: 5px;
+  text-align: center;
 }
 
+/* Style the navigation container */
 .topnav {
-  background-color:orangered;
-  padding:2px;
+    display: flex;                 /* flexbox instead of float */
+    justify-content: space-around; /* spread links evenly */
+    background-color: lightblue;
+    width: 100%;                   /* fill the window width */
+}
+
+/* Style individual links */
+.topnav a {
+    flex-grow: 1;                  /* each link stretches equally */
+    color: rgb(45, 45, 65);
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;         /* remove underline */
+    font-size: 20px;
+}
+
+/*Change color for top navigation*/
+.topnav a:hover{
+    background-color: rgb(132, 190, 209);
+    color: black;
 }
 
 .row:after {
@@ -21,22 +50,22 @@
 
 .column {
   float: left;
+  min-height: 650px;              /* ensure columns have some height */
 }
 
-.side{
-  width: 15%;
+/*Left column*/
+.column.side {
+    width: 15%;
+    float: left;
+    background-color: lightblue;
+    padding: 10px;
 }
 
-.middle {
-  width: 85%;
-}
-
-.left {
-  width: 25%;
-}
-
-.right {
-  width: 25%;
+/*Middle column*/
+.column.middle {
+    width: 80%;
+    float: left;
+    padding: 10px;
 }
 
 .prefselector {
@@ -44,6 +73,16 @@
   margin-right: 10px;
 }
 
-#validationresult {
-  padding:2px;
+/* Input field styles */
+input[type=text] {
+    width: 20%;
+    padding: 6px 5px;
+    margin: 4px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#comment {
+    width: 30%;
 }
