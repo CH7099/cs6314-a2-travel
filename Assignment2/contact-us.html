@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Contact-Us</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="mystyle.css">
         <script type="text/JavaScript" src="travel.js"></script>
     </head>
     <body id="contact-us">
@@ -42,7 +42,26 @@
             <br>
         </div>
         <div class="column middle">
-            <h2>Main content</h2>
+            <h3>Contact Form</h3>
+            <form>
+                First name:<br>
+                <input id="firstname" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="firstname"><br>
+                Last name:<br>
+                <input id="lastname" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="lastname"><br>
+                Phone:<br>
+                <input id="phone" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="phone"><br>
+                Gender:<br>
+                <input type="radio" name="gender" value="male">
+                <label >Male</label>
+                <input type="radio" name="gender" value="female">
+                <label >Female</label><br>
+                Email:<br>
+                <input id="email" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="email"><br>
+                Comment:<br>
+                <input id="comment" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="comment"><br><br>
+                <button type="button" onclick="validateInfoContact()">Submit</button>
+            </form>
+            <p id="contactInfo"></p>
         </div>
     </div>
 
