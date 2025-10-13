@@ -36,17 +36,10 @@ function fontChange(){
     }
 }
 
-<<<<<<< HEAD
-// Validate selected radio button value
-function validateSelectedRadioValue(radioGroupName) {
-    // Use querySelector to find the checked radio button within the specified group
-    const selectedRadio = document.querySelector(`input[name="${radioGroupName}"]:checked`);
-=======
 //STAYS PAGE FUNCTIONS
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 function staySubmitHandler(event){
     event.preventDefault(); //Necessary to prevent immediate refresh
->>>>>>> 7b472acf96dc54c53a5244a9d39426b6349755db
 
     //Default response
     const p = "City Name: <br>Check-In Date: <br>Check-Out Date: <br>Number of Adults: "+
@@ -154,7 +147,21 @@ function staySubmitHandler(event){
     "<br>Number of Infants: " + infants + "<br>Number of Rooms: " + rooms;
 }
 
-<<<<<<< HEAD
+// Validate if a radio button is selected and return its value
+function validateSelectedRadioValue(radioGroupName) {
+    // Use querySelector to find the checked radio button within the specified group
+    const selectedRadio = document.querySelector(`input[name="${radioGroupName}"]:checked`);
+
+    // Check if a radio button was actually selected
+    if (selectedRadio) {
+        console.log("Selected radio: " + selectedRadio.value);
+        return true; // Return the value of the selected radio button
+    } else {
+        console.log("Displayed Contact: ERROR, RADIO IS NOT SELECTED");
+        return null; // No radio button was selected
+    }
+}
+
 // Validate alphabetic characters only
 function validateAlpha(name) {
     for (let i = 0; i < name.length; ++i) {
@@ -329,8 +336,6 @@ function myBlur(x) {
     x.style.background = "#ffffff";
 }
 
-=======
->>>>>>> 7b472acf96dc54c53a5244a9d39426b6349755db
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 //DOM listener (at the end for ease-of-access)
 document.addEventListener("DOMContentLoaded", ()=>{
