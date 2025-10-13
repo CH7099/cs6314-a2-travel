@@ -50,7 +50,7 @@ body {
 
 .column {
   float: left;
-  min-height: 550px;              /* ensure columns have some height */
+  min-height: 650px;              /* ensure columns have some height */
 }
 
 /*Left column*/
