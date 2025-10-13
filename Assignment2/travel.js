@@ -33,7 +33,7 @@ function fontChange(){
     }
 }
 
-/***** Validate Contact Us Form *****/
+// Validate selected radio button value
 function validateSelectedRadioValue(radioGroupName) {
     // Use querySelector to find the checked radio button within the specified group
     const selectedRadio = document.querySelector(`input[name="${radioGroupName}"]:checked`);
@@ -48,6 +48,7 @@ function validateSelectedRadioValue(radioGroupName) {
     }
 }
 
+// Validate alphabetic characters only
 function validateAlpha(name) {
     for (let i = 0; i < name.length; ++i) {
         let ch = name.charCodeAt(i);
@@ -58,6 +59,7 @@ function validateAlpha(name) {
     return true;
 }
 
+// Validate first letter is capitalized
 function validateFirstCap(name) {
     let ch = name.charCodeAt(0);
     if (ch >= 65 && ch <= 90) { // A-Z
@@ -67,6 +69,18 @@ function validateFirstCap(name) {
     }
 }
 
+// Validate date in between Sep 1, 2024 to Dec 1, 2024
+function validateDate(dateString) {
+    const date = new Date(dateString);
+    const minDate = new Date('2024-09-01');
+    const maxDate = new Date('2024-12-01');
+    if (date < minDate || date > maxDate) {
+        return false;
+    }
+    return true;
+}
+
+/***** Validate Contact Us Form *****/
 function validateInfoContact() {
     var f, l, p, e, c;
     // Get the value of the input field
@@ -79,7 +93,7 @@ function validateInfoContact() {
     var valid = true;
 
     // Check first name and last name should be alphabetic characters only
-    if (validateAlpha(f) && validateAlpha(l)) {
+    if (validateAlpha(f) && validateAlpha(l) && f.length != 0 && l.length != 0) {
         // Check first letter of first name and last name should be capitalized
         if (validateFirstCap(f) && validateFirstCap(l)) {
             // Check first name and last name can not be the same
@@ -137,14 +151,65 @@ function validateInfoContact() {
             "Phone: " + p + "<br>" +
             "Email: " + e + "<br>" +
             "Comment: " + c + "<br>";
-        console.log("Displayed Contact: \n" +
-            "First Name: " + f + "\n" +
-            "Last Name: " + l + "\n" +
-            "Phone: " + p + "\n" +
-            "Email: " + e + "\n" +
-            "Comment: " + c);
     }
     
+}
+
+/***** Validate Cars Form *****/
+function validateInfoCars() {
+    var city, carType, checkIn, checkOut;       
+    // Get the value of the input field
+    city = document.getElementById("city").value;
+    carType = document.getElementById("carType").value;
+    checkIn = document.getElementById("checkIn").value;         
+    checkOut = document.getElementById("checkOut").value;
+
+    var valid = true;
+
+    // Check city should be alphabetic characters only
+    if (!validateAlpha(city) || city.length == 0) {
+        alert("ERROR, CITY IS NOT ALPHABETIC");
+        console.log("ERROR, CITY IS NOT ALPHABETIC");
+        valid = false;
+    }
+
+    // Check if car type is correctly selected
+    carsType = ["Economy", "SUV", "Compact", "Midsize"];
+    if (!carsType.includes(carType)) {
+        alert("ERROR, CAR TYPE IS INVALID. Valid types are: Economy, SUV, Compact, Midsize");
+        console.log("ERROR, CAR TYPE IS INVALID");
+        valid = false;
+    }
+
+    // Check if check-in date is selected and valid 
+    if (checkIn === "" || !validateDate(checkIn)) {
+        alert("ERROR, CHECK-IN DATE IS NOT SELECTED OR NOT VALID (MUST BE BETWEEN SEP 1, 2024 AND DEC 1, 2024)");
+        console.log("ERROR, CHECK-IN DATE IS NOT SELECTED OR NOT VALID");
+        valid = false;
+    }
+
+    // Check if check-out date is selected and valid
+    if (checkOut === "" || !validateDate(checkOut)) {
+        alert("ERROR, CHECK-OUT DATE IS NOT SELECTED OR NOT VALID (MUST BE BETWEEN SEP 1, 2024 AND DEC 1, 2024)");
+        console.log("ERROR, CHECK-OUT DATE IS NOT SELECTED OR NOT VALID");
+        valid = false;
+    }
+
+    // Check if check-out date is after check-in date
+    if (checkIn !== "" && checkOut !== "" && new Date(checkOut) <= new Date(checkIn)) {
+        alert("ERROR, CHECK-OUT DATE MUST BE AFTER CHECK-IN DATE");
+        console.log("ERROR, CHECK-OUT DATE MUST BE AFTER CHECK-IN DATE");
+        valid = false;
+    }
+
+    if (valid == true) {
+        document.getElementById("carInfo").innerHTML = 
+            "Submitted Successfully! Here is the information you provided:<br><br>" +
+            "City: " + city + "<br>" +
+            "Car Type: " + carType + "<br>" +
+            "Check In: " + checkIn + "<br>" +
+            "Check Out: " + checkOut + "<br>";
+    }
 }
 
 /***** Style Page *****/
