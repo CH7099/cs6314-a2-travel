@@ -195,6 +195,7 @@ function validateDate(dateString) {
 }
 
 /***** Validate Contact Us Form *****/
+//----------------------------------------------------------------------------------------------------------------------------------------------------------
 function validateInfoContact() {
     var f, l, p, e, c;
     // Get the value of the input field
@@ -270,6 +271,7 @@ function validateInfoContact() {
 }
 
 /***** Validate Cars Form *****/
+//----------------------------------------------------------------------------------------------------------------------------------------------------------
 function validateInfoCars() {
     var city, carType, checkIn, checkOut;       
     // Get the value of the input field
