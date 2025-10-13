@@ -1,5 +1,8 @@
 var dateInterval; //Interval variable (for date refresh)
 
+//HOME PAGE FUNCTIONS
+//----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 //Set current datetime
 function dateTimeNow(){
     var date = new Date();
@@ -222,6 +225,7 @@ function myBlur(x) {
     x.style.background = "#ffffff";
 }
 
+//----------------------------------------------------------------------------------------------------------------------------------------------------------
 //DOM listener (at the end for ease-of-access)
 document.addEventListener("DOMContentLoaded", ()=>{
     //Check if home page is active; if yes, load live datetime, else clear interval
@@ -229,5 +233,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
         startInterval();
     } else {
         stopInterval();
+    }
+    
+    //Check if stays page is active; if yes, create listener
+    if (document.body.id === "stays"){
+        document.getElementById("staysform").addEventListener("submit", staySubmitHandler); //REQUIRED to prevent immediate page refresh
     }
 });
