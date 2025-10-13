@@ -231,7 +231,7 @@ function validateInfoContact() {
     // Check valid phone number
     const phoneRegex = /^\( \d{3}\) \d{3}- \d{4}$/;
     if (!phoneRegex.test(p)) {
-        alert("ERROR, PHONE NUMBER IS NOT VALID");
+        alert("ERROR, PHONE NUMBER IS NOT VALID. Format: ( xxx) xxx- xxxx");
         console.log("ERROR, PHONE NUMBER IS NOT VALID");
         valid = false;
     }
