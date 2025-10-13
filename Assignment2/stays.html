@@ -2,10 +2,10 @@
 <html>
     <head>
         <title>Stays</title>
-        <link rel="stylesheet" type="text/css" href="mystyle.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
         <script type="text/JavaScript" src="travel.js"></script>
     </head>
-    <body>
+    <body id="stays">
         <div class="header">
         <h1>Stays</h1>
     </div>
@@ -27,22 +27,57 @@
             <p class="prefselector">Choose background color: </p>
             <select id="colorpicker" onchange="colorChange()">
                 <option value="white" selected="true">White</option>
-                <option value="lightgray">Light Gray</option>
-                <option value="darkgray">Dark Gray</option>
+                <option value="darkblue">Blue</option>
+                <option value="yellow">Yellow</option>
             </select>
             <br>
             <p class="prefselector">Choose font size: </p>
             <select id="sizepicker" onchange="fontChange()">
+                <option value="10px">18</option>
                 <option value="12px" >12</option>
                 <option value="16px" selected="true">16</option>
-                <option value="10px">18</option>
                 <option value="20px">20</option>
                 <option value="24px">24</option>
             </select>
             <br>
         </div>
         <div class="column middle">
-            <h2>Main content</h2>
+            <div class="column left">
+                <h2>Main content 1</h2>
+                <form id="staysform">
+                    <label for="city">City Name:</label>
+                    <input type="text" id="city" name="city" required>
+                    <br>
+                    <label for="check-in">Check-In Date:</label>
+                    <input type="date" id="check-in" name="check-in" min="2024-09-01" max="2024-12-01" required>
+                    <br>
+                    <label for="check-out">Check-Out Date:</label>
+                    <input type="date" id="check-out" name="check-out" min="2024-09-01" max="2024-12-01" required>
+                    <br>
+                    <label for="adults">Number of Adults:</label>
+                    <input type="text" id="adults" name="adults" required>
+                    <br>
+                    <label for="children">Number of Children:</label>
+                    <input type="text" id="children" name="children" value="0" required>
+                    <br>
+                    <label for="infants">Number of Infants:</label>
+                    <input type="text" id="infants" name="infants" value="0" required>
+                    <br><br>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+            <div class="column right">
+                <h2>Main Content 2</h2>
+                <p id="validationresult">
+                    City Name: <br>
+                    Check-In Date: <br>
+                    Check-Out Date: <br>
+                    Number of Adults: <br>
+                    Number of Children: <br>
+                    Number of Infants: <br>
+                    Number of Rooms: <br>
+                </p>
+            </div>
         </div>
     </div>
 
