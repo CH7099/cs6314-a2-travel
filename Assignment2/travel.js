@@ -290,8 +290,8 @@ function validateInfoCars() {
     }
 
     // Check if car type is correctly selected
-    carsType = ["Economy", "SUV", "Compact", "Midsize"];
-    if (!carsType.includes(carType)) {
+    var carsTypes = ["Economy", "SUV", "Compact", "Midsize"];
+    if (!carsTypes.includes(carType)) {
         alert("ERROR, CAR TYPE IS INVALID. Valid types are: Economy, SUV, Compact, Midsize");
         console.log("ERROR, CAR TYPE IS INVALID");
         valid = false;

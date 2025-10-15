@@ -83,6 +83,16 @@ input[type=text] {
     border-radius: 4px;
 }
 
+/* Button styles */
+button, input[type=button] {
+    padding: 10px 25px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: rgb(132, 190, 209);
+    cursor: pointer;
+}
+
 #comment {
     width: 30%;
 }
@@ -111,8 +121,6 @@ input[type=text] {
     margin-top: 20px;
 }
 
-
-
 .location {
     width: 1500px;
     align-items: center;   
@@ -129,7 +137,6 @@ input[type=text] {
     gap: 10px;
     margin-left: 40px;
 }
-
 
 .from, .to {
     display: flex;
