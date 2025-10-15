@@ -30,9 +30,9 @@ function colorChange(){
 //Change font size of paragraphs (limited selection)
 function fontChange(){
     var size = document.getElementById("sizepicker").value;
-    var paragraphs = document.getElementsByTagName("p");
-    for (var i = 0; i < paragraphs.length; i++){
-        paragraphs[i].style.fontSize = size;
+    var all = document.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++){
+        all[i].style.fontSize = size;
     }
 }
 
