@@ -86,3 +86,179 @@ input[type=text] {
 #comment {
     width: 30%;
 }
+
+.flight-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 40px;
+    margin-right: 200px;
+}
+
+.passengersForm[hidden] {
+    display: none;
+}
+
+.passengersForm {
+    display: flex;
+    align-items: center;   
+    gap: 10px; 
+    margin-left: 40px;
+    margin-right: 200px;
+    margin-top: 20px;
+}
+
+
+
+.location {
+    width: 1500px;
+    align-items: center;   
+    gap: 10px; 
+    margin-left: 40px;
+    margin-right: 200px;
+}
+
+#passengersBtn {
+    width: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-left: 40px;
+}
+
+
+.from, .to {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 100px;
+}
+
+.location input[type="text"] {
+    padding: 6px 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-left: 20px;
+    margin-right: 200px;
+}
+
+.search input[type="button"] {
+    padding: 10px 25px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: rgb(132, 190, 209);
+    cursor: pointer;
+}
+
+.output {
+    text-align: center;
+    margin-top: 20px;
+    
+}
+
+/* Duration section styles - specific to cruises page */
+#cruises .duration {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 40px;
+    margin-right: 200px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#cruises .duration input[type="number"] {
+    width: 80px;
+    padding: 6px 5px;
+    margin: 4px 5px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#cruises .destination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 40px;
+    margin-right: 200px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#cruises .date {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 40px;
+    margin-right: 200px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#cruises .guests {
+    margin-left: 40px;
+    margin-right: 200px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#cruises .guests > label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#cruises .guests .group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+}
+
+#cruises .guests .group-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+#cruises .guests input[type="number"] {
+    width: 60px;
+    padding: 6px 5px;
+    margin: 4px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Submit button styles - specific to cruises page */
+#cruises .submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-left: 20px;
+    margin-right: 200px;
+    margin-top: 20px;
+}
+
+#cruises .submit input[type="button"] {
+    padding: 10px 25px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: rgb(132, 190, 209);
+    cursor: pointer;
+}
