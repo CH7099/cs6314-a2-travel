@@ -13,7 +13,7 @@ $(function () {
         var adults = parseInt($("#adults").val(), 10) || 0;
         var children = parseInt($("#children").val(), 10) || 0;
         var infants = parseInt($("#infants").val(), 10) || 0;
-
+        var rooms = parseInt($("#rooms").val(), 10) || 0;
         
         // validate destination
         if (!destin.has(dest)) {
@@ -67,20 +67,25 @@ $(function () {
 
         // validate guests
         var total = adults + children;
-        if (total > 2) {
+        
+
+        if (total === 0) {
+            $("#out").text("At least one adult or child is required.");
+            return;
+        }
+
+        if (rooms <= 0) {
+            $("#out").text("At least one room is required.");
+            return;
+        }
+
+        var perRoom = total / rooms;
+
+        if (perRoom > 2) {
              $("#out").text("No more than 2 guests in a room except infants.");
              return;
         }
 
-        if (total < 1) {
-            $("#out").text("No more than 2 guests in a room except infants.");
-            return;
-        }
-
-        if (total === 0) {
-            $("#out").text("At least have one guest for a room.");
-            return;
-        }
 
 
         // Format dates for display
@@ -92,7 +97,8 @@ $(function () {
                         "Departing between " + departDateStr + " and " + returnDateStr + "<br>" +
                         "Duration Days: Min " + minDays + " days, Max " + maxDays + " days<br>" +
                         "Number of guests: Adults (" + adults + "), Children (" + children + 
-                        "), Infants (" + infants + ")"
+                        "), Infants (" + infants + ")" + "<br>" +
+                        "Number of rooms: " + rooms
                     );
     })
 })

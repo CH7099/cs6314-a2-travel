@@ -39,6 +39,52 @@ function validateInput() {
     var out = document.getElementById("out");
     var text = " ";
 
+    const TX = [
+        "Houston", "Dallas", "Austin", "San Antonio", "El Paso", "Fort Worth", "Arlington", "Corpus Christi",
+        "Plano", "Laredo", "Lubbock", "Garland", "Irving", "Amarillo", "Grand Prairie", "Brownsville",
+        "Pasadena", "Frisco", "McKinney", "Killeen", "McAllen", "Waco", "Carrollton", "Denton", "Midland"
+    ]
+
+    const CA = [
+        "Adelanto", "Agoura Hills", "Alameda", "Albany", "Alhambra",
+        "Anaheim", "Antioch", "Apple Valley", "Arcadia", "Artesia",
+        "Bakersfield", "Baldwin Park", "Banning", "Beaumont", "Bell",
+        "Berkeley", "Beverly Hills", "Brentwood", "Burbank", "Calabasas",
+        "Carlsbad", "Carson", "Cathedral City", "Cerritos", "Chico",
+        "Chino", "Chula Vista", "Clovis", "Colton", "Compton",
+        "Concord", "Corona", "Costa Mesa", "Culver City", "Cupertino",
+        "Daly City", "Davis", "Delano", "Diamond Bar", "Downey",
+        "Dublin", "Eastvale", "El Cajon", "El Monte", "El Segundo",
+        "Fairfield", "Folsom", "Fontana", "Fountain Valley", "Fremont",
+        "Fresno", "Fullerton", "Garden Grove", "Gardena", "Glendale",
+        "Glendora", "Goleta", "Hacienda Heights", "Hawaiian Gardens", "Hawthorne",
+        "Hayward", "Hemet", "Hesperia", "Huntington Beach", "Indio",
+        "Irvine", "La Habra", "Laguna Niguel", "Lake Elsinore", "Lakewood",
+        "Lancaster", "Lodi", "Lomita", "Long Beach", "Los Angeles",
+        "Lynwood", "Madera", "Manhattan Beach", "Manteca", "Menlo Park",
+        "Merced", "Milpitas", "Mission Viejo", "Modesto", "Montebello",
+        "Monterey Park", "Moreno Valley", "Mountain View", "Napa", "National City",
+        "Newark", "Norwalk", "Novato", "Oakland", "Oceanside",
+        "Ontario", "Orange", "Oxnard", "Palm Desert", "Palm Springs",
+        "Palmdale", "Palo Alto", "Paramount", "Pasadena", "Petaluma",
+        "Pico Rivera", "Piedmont", "Pinole", "Placentia", "Pomona",
+        "Port Hueneme", "Rancho Cordova", "Rancho Cucamonga", "Redding", "Redlands",
+        "Redondo Beach", "Redwood City", "Rialto", "Richmond", "Riverside",
+        "Rocklin", "Roseville", "Sacramento", "Salinas", "San Bernardino",
+        "San Bruno", "San Diego", "San Francisco", "San Jose", "San Leandro",
+        "San Marcos", "San Mateo", "San Pablo", "San Rafael", "Santa Ana",
+        "Santa Barbara", "Santa Clara", "Santa Clarita", "Santa Cruz", "Santa Maria",
+        "Santa Monica", "Santa Rosa", "Santee", "Signal Hill", "Simi Valley",
+        "South Gate", "South San Francisco", "Stockton", "Sunnyvale", "Temecula",
+        "Thousand Oaks", "Torrance", "Tracy", "Tustin", "Union City",
+        "Upland", "Vacaville", "Vallejo", "Ventura", "Victorville",
+        "Visalia", "Vista", "Walnut Creek", "West Covina", "West Hollywood",
+        "West Sacramento", "Westminster", "Whittier", "Woodland", "Yorba Linda",
+        "Yuba City"
+    ]
+
+    const allowedCities = TX.concat(CA);
+
     //Regex rules
     var dateRange = /^2024-(?:09-(?:0[1-9]|[12][0-9]|30)|10-(?:0[1-9]|[12][0-9]|3[01])|11-(?:0[1-9]|[12][0-9]|30)|12-01)$/;
     var locaRange = /^[A-Za-z .'-]+,\s*(?:TX|Texas|CA|California)$/i;
@@ -59,17 +105,22 @@ function validateInput() {
             return
         }
     }
-    
-    if (!locaRange.test(originCity)) {
-        text = "Origin city must be a city in Texas or California."
-        out.innerHTML = text;
-        return
+    // validate city
+    function isValidCity(input) {
+        const city = input.split(",")[0].trim().toLowerCase();
+        return allowedCities.map(c => c.toLowerCase()).includes(city);
     }
 
-    if (!locaRange.test(destination)) {
-        text = "Destination city must be a city in Texas or California."
+    if (!locaRange.test(originCity) || !isValidCity(originCity)) {
+        text = "Origin city must be in Texas or California (e.g., Dallas, TX or San Jose, CA).";
         out.innerHTML = text;
-        return
+        return;
+    }
+
+    if (!locaRange.test(destination) || !isValidCity(destination)) {
+        text = "Destination city must be in Texas or California (e.g., Dallas, TX or San Jose, CA).";
+        out.innerHTML = text;
+        return;
     }
 
     if (!numberRange.test(numberAdults)) {
