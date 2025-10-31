@@ -155,8 +155,61 @@ function validateInput() {
     text += "From " + originCity + " To " + destination + "<br>" +
             "Passengers: <br> Adults: " + numberAdults + "; Children: " + numberChildren +
             "; Infants: " + numberInfants + "<br>";
-            out.innerHTML = text;
 
+    out.innerHTML += text;
 
+    fetch("flights.json")
+        .then(response => response.json())
+        .then(data => {
+            const userOrigin = originCity.trim();
+            const userDestination = destination.trim();
+            const userDate = departueDate;
 
+            const result = data.filter(flight =>
+                flight.origin.toLowerCase() === userOrigin.toLowerCase() &&
+                flight.destination.toLowerCase() === userDestination.toLowerCase() &&
+                flight.depart_date === userDate
+            );
+
+            let displayFlights = result;
+            if (result.length === 0) {
+                const newDate = new Date(userDate);
+                displayFlights = data.filter(flight => {
+                    const depDate = new Date(flight.depart_date);
+                    const diffTime = Math.abs(depDate - newDate) / (1000 * 60 * 60 * 24);
+                    return (
+                        flight.origin.toLowerCase() === userOrigin.toLowerCase() &&
+                        flight.destination.toLowerCase() === userDestination.toLowerCase() &&
+                        diffTime <= 3
+                    );
+                });
+            }
+
+            if (displayFlights.length > 0) {
+                let html = "<br><h3>Available Flights:</h3><br>";
+                displayFlights.forEach(flight => {
+                    html += `<div class="flight-item">
+                                <h4>${flight.flight_id}</h4>
+                                <p>Origin: ${flight.origin}</p>
+                                <p>Destination: ${flight.destination}</p>
+                                <p>Depart Date: ${flight.depart_date}</p>
+                                <p>Depart Time: ${flight.depart_time}</p>
+                                <p>Arrive Date: ${flight.arrive_date}</p>
+                                <p>Arrive Time: ${flight.arrive_time}</p>
+                                <p>Price: ${flight.price}</p>
+                                <p>Available Seats: ${flight.available_seats}</p>
+                            </div>`;
+                });
+                out.innerHTML += html;
+            } else {
+                out.innerHTML += "<br><h3>No flights found within ±3 days.</h3>";
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            out.innerHTML += "<br><h3>Failed to load flights.</h3>";
+        });
 }
+
+
+
