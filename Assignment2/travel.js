@@ -229,7 +229,7 @@ function validateInfoContact() {
     }
 
     // Check valid phone number
-    const phoneRegex = /^\( \d{3}\) \d{3}- \d{4}$/;
+    const phoneRegex = /^\(\d{3}\)\d{3}-\d{4}$/;
     if (!phoneRegex.test(p)) {
         alert("ERROR, PHONE NUMBER IS NOT VALID. Format: ( xxx) xxx- xxxx");
         console.log("ERROR, PHONE NUMBER IS NOT VALID");
@@ -266,6 +266,8 @@ function validateInfoContact() {
             "Phone: " + p + "<br>" +
             "Email: " + e + "<br>" +
             "Comment: " + c + "<br>";
+
+        // Store data in a JSON file
     }
     
 }
@@ -326,6 +328,12 @@ function validateInfoCars() {
             "Check In: " + checkIn + "<br>" +
             "Check Out: " + checkOut + "<br>";
     }
+
+    /* 
+    Create a XML file for all the avaiable cars. The XML file should include information about available cars
+    including car-id, the name of city, type of car, the check in date, check out date, and price per day for 
+    at least 20 cars.
+    */
 }
 
 /***** Style Page *****/
