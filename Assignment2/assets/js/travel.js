@@ -197,12 +197,13 @@ function validateDate(dateString) {
 /***** Validate Contact Us Form *****/
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 function validateInfoContact() {
-    var f, l, p, e, c;
+    var f, l, p, e, g, c;
     // Get the value of the input field
     f = document.getElementById("firstname").value;
     l = document.getElementById("lastname").value;
     p = document.getElementById("phone").value;
     e = document.getElementById("email").value;
+    g = document.querySelector(`input[name="gender"]:checked`).value;
     c = document.getElementById("comment").value;
 
     var valid = true;
@@ -229,9 +230,9 @@ function validateInfoContact() {
     }
 
     // Check valid phone number
-    const phoneRegex = /^\( \d{3}\) \d{3}- \d{4}$/;
+    const phoneRegex = /^\(\d{3}\)\d{3}-\d{4}$/;
     if (!phoneRegex.test(p)) {
-        alert("ERROR, PHONE NUMBER IS NOT VALID. Format: ( xxx) xxx- xxxx");
+        alert("ERROR, PHONE NUMBER IS NOT VALID. Format: (xxx)xxx-xxxx");
         console.log("ERROR, PHONE NUMBER IS NOT VALID");
         valid = false;
     }
@@ -259,15 +260,38 @@ function validateInfoContact() {
     }
 
     if (valid == true) {
-        document.getElementById("contactInfo").innerHTML = 
-            "Submitted Successfully! Here is the information you provided:<br><br>" +
-            "First Name: " + f + "<br>" +
-            "Last Name: " + l + "<br>" +
-            "Phone: " + p + "<br>" +
-            "Email: " + e + "<br>" +
-            "Comment: " + c + "<br>";
+        fetch('http://localhost:3000/contacts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                firstname: f,
+                lastname: l,
+                phone: p,
+                gender: g,
+                email: e,
+                comment: c
+            })
+        })
+        .then(res => res.json())
+        .then(data => console.log('Saved to local JSON:', data))
+        .catch(err => console.error('Error:', err));
     }
     
+}
+
+// New function for outputing our data
+function showData(data) {
+    var content = "";
+    for (i = 0; i < data.length; i++) {
+        content += "<p>" + 
+            "Firstname:" + data[i].firstname + "<br>" +
+            "Last Name: " + data[i].lastname + "<br>" +
+            "Phone: " + data[i].phone + "<br>" +
+            "Gender: " + data[i].gender + "<br>" +
+            "Email: " + data[i].email + "<br>" +
+            "Comment: " + data[i].comment + "</p>";
+    }
+    dataContainer.insertAdjacentHTML('beforeend', content);
 }
 
 /***** Validate Cars Form *****/
