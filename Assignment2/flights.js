@@ -163,20 +163,21 @@ function validateInput() {
         .then(data => {
             const userOrigin = originCity.trim();
             const userDestination = destination.trim();
-            const userDate = departueDate;
+            const userDateDepart = departueDate;
+            const userDateReturn = returnDate;
 
             const result = data.filter(flight =>
                 flight.origin.toLowerCase() === userOrigin.toLowerCase() &&
                 flight.destination.toLowerCase() === userDestination.toLowerCase() &&
-                flight.depart_date === userDate
+                flight.depart_date === userDateDepart
             );
 
             let displayFlights = result;
             if (result.length === 0) {
-                const newDate = new Date(userDate);
+                const userDepartDate = new Date(userDateDepart);
                 displayFlights = data.filter(flight => {
                     const depDate = new Date(flight.depart_date);
-                    const diffTime = Math.abs(depDate - newDate) / (1000 * 60 * 60 * 24);
+                    const diffTime = Math.abs(depDate - userDepartDate) / (1000 * 60 * 60 * 24);
                     return (
                         flight.origin.toLowerCase() === userOrigin.toLowerCase() &&
                         flight.destination.toLowerCase() === userDestination.toLowerCase() &&
@@ -204,6 +205,40 @@ function validateInput() {
             } else {
                 out.innerHTML += "<br><h3>No flights found within ±3 days.</h3>";
             }
+        
+        // return flights for roundtrip
+        if (tripType === "roundtrip") {
+            const returnDateObj = new Date(userDateReturn);
+            const returnFlights = data.filter(flight => {
+                const depDate = new Date(flight.depart_date);
+                const diffDays = Math.abs(depDate - returnDateObj) / (1000 * 60 * 60 * 24);
+                return (
+                    flight.origin.toLowerCase() === userDestination.toLowerCase() &&
+                    flight.destination.toLowerCase() === userOrigin.toLowerCase() &&
+                    diffDays <= 3
+                );
+            });
+
+            if (returnFlights.length > 0) {
+                let returnHtml = "<br><h3>Available Return Flights:</h3><br>";
+                returnFlights.forEach(flight => {
+                    returnHtml += `<div class="flight-item">
+                                <h4>${flight.flight_id}</h4>
+                                <p>Origin: ${flight.origin}</p>
+                                <p>Destination: ${flight.destination}</p>
+                                <p>Depart Date: ${flight.depart_date}</p>
+                                <p>Depart Time: ${flight.depart_time}</p>
+                                <p>Arrive Date: ${flight.arrive_date}</p>
+                                <p>Arrive Time: ${flight.arrive_time}</p>
+                                <p>Price: ${flight.price}</p>
+                                <p>Available Seats: ${flight.available_seats}</p>
+                            </div>`;
+                });
+                out.innerHTML += returnHtml;
+            } else {
+                out.innerHTML += "<br><h3>No return flights found within ±3 days.</h3>";
+            }
+        }
         })
         .catch(error => {
             console.error("Error:", error);
