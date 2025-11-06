@@ -284,3 +284,9 @@ button, input[type=button] {
     background-color: rgb(132, 190, 209);
     cursor: pointer;
 }
+
+.no-indent {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}

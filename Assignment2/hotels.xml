@@ -6,7 +6,7 @@
         <Name>Dallas Grand Hotel</Name>
         <City>Dallas</City>
         <AvailableRooms>10</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-16</Date>
         <PricePerNight currency="USD">200.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -14,7 +14,7 @@
         <Name>Parkside Suites</Name>
         <City>Dallas</City>
         <AvailableRooms>8</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-24</Date>
         <PricePerNight currency="USD">180.50</PricePerNight>
     </Hotel>
     <Hotel>
@@ -22,7 +22,7 @@
         <Name>Lakeshore Inn</Name>
         <City>Dallas</City>
         <AvailableRooms>12</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-03</Date>
         <PricePerNight currency="USD">160.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -30,7 +30,7 @@
         <Name>City Center Lodge</Name>
         <City>Dallas</City>
         <AvailableRooms>6</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-12-01</Date>
         <PricePerNight currency="USD">220.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -38,7 +38,7 @@
         <Name>Sunset Boulevard Hotel</Name>
         <City>Dallas</City>
         <AvailableRooms>9</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-07</Date>
         <PricePerNight currency="USD">195.75</PricePerNight>
     </Hotel>
 
@@ -48,7 +48,7 @@
         <Name>Sunset Boulevard Hotel</Name>
         <City>Los Angeles</City>
         <AvailableRooms>15</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-22</Date>
         <PricePerNight currency="USD">250.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -56,7 +56,7 @@
         <Name>Hollywood Grand Inn</Name>
         <City>Los Angeles</City>
         <AvailableRooms>7</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-12-01</Date>
         <PricePerNight currency="USD">300.50</PricePerNight>
     </Hotel>
     <Hotel>
@@ -64,7 +64,7 @@
         <Name>Venice Beach Suites</Name>
         <City>Los Angeles</City>
         <AvailableRooms>12</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-27</Date>
         <PricePerNight currency="USD">275.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -72,7 +72,7 @@
         <Name>Downtown LA Lodge</Name>
         <City>Los Angeles</City>
         <AvailableRooms>9</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-15</Date>
         <PricePerNight currency="USD">220.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -80,7 +80,7 @@
         <Name>Rodeo Drive Inn</Name>
         <City>Los Angeles</City>
         <AvailableRooms>5</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-20</Date>
         <PricePerNight currency="USD">350.75</PricePerNight>
     </Hotel>
 
@@ -90,7 +90,7 @@
         <Name>Riverwalk Resort</Name>
         <City>San Antonio</City>
         <AvailableRooms>11</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-07</Date>
         <PricePerNight currency="USD">180.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -98,7 +98,7 @@
         <Name>Alamo Plaza Hotel</Name>
         <City>San Antonio</City>
         <AvailableRooms>6</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-17</Date>
         <PricePerNight currency="USD">200.50</PricePerNight>
     </Hotel>
     <Hotel>
@@ -106,7 +106,7 @@
         <Name>Mission Valley Inn</Name>
         <City>San Antonio</City>
         <AvailableRooms>8</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-26</Date>
         <PricePerNight currency="USD">175.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -114,7 +114,7 @@
         <Name>Downtown San Antonio Lodge</Name>
         <City>San Antonio</City>
         <AvailableRooms>10</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-08</Date>
         <PricePerNight currency="USD">190.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -122,7 +122,7 @@
         <Name>La Hacienda Inn</Name>
         <City>San Antonio</City>
         <AvailableRooms>7</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-27</Date>
         <PricePerNight currency="USD">165.75</PricePerNight>
     </Hotel>
 
@@ -132,7 +132,7 @@
         <Name>Gaslamp Quarter Hotel</Name>
         <City>San Diego</City>
         <AvailableRooms>12</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-26</Date>
         <PricePerNight currency="USD">240.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -140,7 +140,7 @@
         <Name>La Jolla Shores Inn</Name>
         <City>San Diego</City>
         <AvailableRooms>9</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-18</Date>
         <PricePerNight currency="USD">280.50</PricePerNight>
     </Hotel>
     <Hotel>
@@ -148,7 +148,7 @@
         <Name>Coronado Bay Lodge</Name>
         <City>San Diego</City>
         <AvailableRooms>5</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-15</Date>
         <PricePerNight currency="USD">310.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -156,7 +156,7 @@
         <Name>Old Town Inn</Name>
         <City>San Diego</City>
         <AvailableRooms>8</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-23</Date>
         <PricePerNight currency="USD">220.00</PricePerNight>
     </Hotel>
     <Hotel>
@@ -164,7 +164,7 @@
         <Name>Pacific Beach Suites</Name>
         <City>San Diego</City>
         <AvailableRooms>11</AvailableRooms>
-        <Date>2025-11-06</Date>
+        <Date>2024-11-11</Date>
         <PricePerNight currency="USD">260.75</PricePerNight>
     </Hotel>
 </Hotels>

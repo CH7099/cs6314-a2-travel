@@ -142,9 +142,10 @@ function staySubmitHandler(event){
     rooms = Math.ceil((adults + children)/2);
 
     //Return validated data
-    result.innerHTML = "City Name: " + city + "<br>Check-In Date: " + checkin + 
-    "<br>Check-Out Date: " + checkout + "<br>Number of Adults: " + adults + "<br>Number of Children: " + children +
-    "<br>Number of Infants: " + infants + "<br>Number of Rooms: " + rooms;
+    result.innerHTML = "City Name: <p id='cityname' class='no-indent'>" + city + "</p><br>Check-In Date: <p id='checkindate' class='no-indent'>" + checkin + 
+    "</p><br>Check-Out Date: <p id='checkoutdate' class='no-indent'>" + checkout + "</p><br>Number of Adults: <p id='numadults' class='no-indent'>" + adults + 
+    "</p><br>Number of Children: <p id='numchildren' class='no-indent'>" + children + "</p><br>Number of Infants: <p id='numinfants' class='no-indent'>" + infants + 
+    "</p><br>Number of Rooms: <p id='numrooms' class='no-indent'>" + rooms + "</p>";
 }
 
 // Validate if a radio button is selected and return its value
