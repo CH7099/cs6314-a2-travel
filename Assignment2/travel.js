@@ -280,6 +280,7 @@ function validateInfoContact() {
             "First Name: " + f + "<br>" +
             "Last Name: " + l + "<br>" +
             "Phone: " + p + "<br>" +
+            "Gender: " + document.querySelector('input[name="gender"]:checked').value + "<br>" +
             "Email: " + e + "<br>" +
             "Comment: " + c + "<br>";
 
@@ -290,6 +291,7 @@ function validateInfoContact() {
                 "firstName": f,
                 "lastName": l,
                 "phoneNumber": p,
+                "gender": document.querySelector('input[name="gender"]:checked').value,
                 "email": e,
                 "comment": c
             } 
@@ -305,7 +307,7 @@ function validateInfoContact() {
             }
         };
 
-        xhttp.open("POST", "http://localhost:8000/saveUser.php", true); //Need to change URL based on server setup
+        xhttp.open("POST", "http://localhost:8000/saveUser.php", true); // Need to change URL based on server setup
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.send(userJSON);
     }
