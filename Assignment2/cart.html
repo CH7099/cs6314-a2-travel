@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Cars</title>
+        <title>Cart</title>
         <link rel="stylesheet" type="text/css" href="mystyle.css">
-        <script type="text/JavaScript" src="travel.js"></script>
+        <script type="text/JavaScript" src="cart.js"></script>
     </head>
-    <body id="cars">
+    <body id="cart">
         <div class="header">
-        <h1>Cars</h1>
+        <h1>Cart</h1>
     </div>
 
     <div class="row">
@@ -43,19 +43,13 @@
             <br>
         </div>
         <div class="column middle">
-            <h2>Search for Cars</h2>
-            <form>
-                City:<br>
-                <input id="city" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="city"><br><br>
-                Type of Car:<br>
-                <input id="carType" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="carType"><br><br>
-                Check in Date:<br>
-                <input id="checkIn" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkIn"><br><br>
-                Check out Date:<br>
-                <input id="checkOut" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkOut"><br><br>
-                <button type="button" onclick="validateInfoCars()">Submit</button>
-            </form>
-            <p id="carInfo"></p>
+            <div class="column left">
+                <h2>Selected Flight:</h3>
+                <p id="flightinfo"></p>
+            </div>
+            <div class="column right">
+                <h2>Passenger Information</h3>
+                <p id="passinfo"></p>
         </div>
     </div>
 
