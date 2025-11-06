@@ -310,6 +310,7 @@ function validateInfoContact() {
         xhttp.open("POST", "http://localhost:8000/saveUser.php", true); // Need to change URL based on server setup
         xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhttp.send(userJSON);
+        console.log("User data sent to server:", userJSON);
     }
     
 }
