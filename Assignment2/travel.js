@@ -148,6 +148,21 @@ function staySubmitHandler(event){
     "</p><br>Number of Rooms: <p id='numrooms' class='no-indent'>" + rooms + "</p>";
 }
 
+//Book stays
+function bookStays(){
+    //Pull user-id from JSON file
+    fetch('user.json')
+        .then(response => response.json()) // parse JSON
+        .then(data => {
+            const userId = data.User["user-id"];
+            console.log("Booking for user: " + userId);
+        })
+    .catch(error => console.error("Error fetching JSON:", error));
+
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 // Validate if a radio button is selected and return its value
 function validateSelectedRadioValue(radioGroupName) {
     // Use querySelector to find the checked radio button within the specified group
@@ -269,6 +284,30 @@ function validateInfoContact() {
             "Comment: " + c + "<br>";
 
         // Store data in a JSON file
+        let userData = {
+            User: {
+                "user-id": Math.floor(Math.random() * 1000000), // Random user ID
+                "firstName": f,
+                "lastName": l,
+                "phoneNumber": p,
+                "email": e,
+                "comment": c
+            } 
+        };
+
+        // Convert to JSON string (for saving or sending to server)
+        let userJSON = JSON.stringify(userData, null, 2);
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                console.log("Server response:", this.responseText);
+            }
+        };
+
+        xhttp.open("POST", "http://localhost:8000/saveUser.php", true); //Need to change URL based on server setup
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.send(userJSON);
     }
     
 }

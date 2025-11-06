@@ -53,6 +53,12 @@ body {
   min-height: 650px;              /* ensure columns have some height */
 }
 
+.column.next{
+    width: 15%;
+    float: left;
+    padding: 10px;
+}
+
 /*Left column*/
 .column.side {
     width: 15%;
