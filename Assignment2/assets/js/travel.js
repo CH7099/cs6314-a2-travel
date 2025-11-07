@@ -142,10 +142,152 @@ function staySubmitHandler(event){
     rooms = Math.ceil((adults + children)/2);
 
     //Return validated data
-    result.innerHTML = "City Name: " + city + "<br>Check-In Date: " + checkin + 
-    "<br>Check-Out Date: " + checkout + "<br>Number of Adults: " + adults + "<br>Number of Children: " + children +
-    "<br>Number of Infants: " + infants + "<br>Number of Rooms: " + rooms;
+    result.innerHTML = "City Name: <p id='cityname' class='no-indent'>" + city + "</p><br>Check-In Date: <p id='checkindate' class='no-indent'>" + checkin + 
+    "</p><br>Check-Out Date: <p id='checkoutdate' class='no-indent'>" + checkout + "</p><br>Number of Adults: <p id='numadults' class='no-indent'>" + adults + 
+    "</p><br>Number of Children: <p id='numchildren' class='no-indent'>" + children + "</p><br>Number of Infants: <p id='numinfants' class='no-indent'>" + infants + 
+    "</p><br>Number of Rooms: <p id='numrooms' class='no-indent'>" + rooms + "</p>";
+
+    //Load available hotels based on user criteria
+    loadHotels(city, checkin, checkout, rooms);
 }
+
+//Function used to load available hotels from hotels.xml following search
+function loadHotels(city, checkin, checkout, roomsNeeded) {
+    //Establish XMLHttpRequest
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "data/hotels.xml", true);
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            const xml = xhttp.responseXML;
+            const hotels = xml.getElementsByTagName("Hotel");//Pull hotels from hotels.xml
+            let resultHTML = "<h3>Available Hotels:</h3>"; //Result header
+
+            let found = false;
+            for (let i = 0; i < hotels.length; i++) {
+                //Extract details
+                const cityName = hotels[i].getElementsByTagName("City")[0].textContent;
+                const availableRooms = parseInt(hotels[i].getElementsByTagName("AvailableRooms")[0].textContent);
+                const inDate = hotels[i].getElementsByTagName("InDate")[0].textContent;
+                const outDate = hotels[i].getElementsByTagName("OutDate")[0].textContent;
+
+                //Check if hotel matches the search criteria (city, rooms needed, check-in/check-out dates)
+                if (cityName.toUpperCase() === city.toUpperCase() &&
+                    availableRooms >= roomsNeeded &&
+                    checkin >= inDate &&
+                    checkout <= outDate) {
+
+                    found = true;
+                    const hotelId = hotels[i].getElementsByTagName("HotelID")[0].textContent;
+                    const name = hotels[i].getElementsByTagName("Name")[0].textContent;
+                    const price = hotels[i].getElementsByTagName("PricePerNight")[0].textContent;
+
+                    //Create hotel option and append it to the divider
+                    resultHTML += `
+                        <div class="hotel-option">
+                            <input type="radio" name="selectedHotel" value="${hotelId}" data-name="${name}" data-price="${price}">
+                            <strong>${name}</strong> — $${price}/night<br>
+                            Available Rooms: ${availableRooms}
+                        </div><br>
+                    `;
+                }
+            }
+
+            //If no hotels are found based on the search, return the following message
+            if (!found) {
+                resultHTML += "<p>No hotels found for your criteria.</p>";
+            }
+
+            document.getElementById("hotelResults").innerHTML = resultHTML; //Return results
+        }
+    };
+    xhttp.send();
+}
+
+//Book stays
+function bookStays() {
+    const selected = document.querySelector('input[name="selectedHotel"]:checked'); //Find selected hotel
+    //Check if a hotel was selected; if not, throw error (alert)
+    if (!selected) {
+        alert("Please select a hotel to book.");
+        return;
+    }
+    //Hotel details (pulled directly)
+    const hotelId = selected.value;
+    const hotelName = selected.getAttribute("data-name");
+    const price = parseFloat(selected.getAttribute("data-price"));
+    const city = document.getElementById("cityname").textContent;
+    const checkin = document.getElementById("checkindate").textContent;
+    const checkout = document.getElementById("checkoutdate").textContent;
+    const adults = parseInt(document.getElementById("numadults").textContent);
+    const children = parseInt(document.getElementById("numchildren").textContent);
+    const infants = parseInt(document.getElementById("numinfants").textContent);
+    const rooms = parseInt(document.getElementById("numrooms").textContent);
+
+    //Hotel details (calculated)
+    const nights = (new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24); //Number of nights
+    const totalPrice = price * rooms * nights; //Total price (number of rooms * price per night * number of nights)
+    const bookingNumber = "BKG-" + Math.floor(Math.random() * 90000 + 10000);
+
+    //Load user JSON first
+    const xhttp1 = new XMLHttpRequest();
+    xhttp1.open("GET", "data/user.json", true); //GET request for user.json
+    xhttp1.onreadystatechange = function() {
+        if (xhttp1.readyState === 4) {
+            if (xhttp1.status === 200) {
+                const userData = JSON.parse(xhttp1.responseText);
+                const userId = userData.User["user-id"]; //Pull user-id value from user.json
+
+                //Booking object for hotel.json (selected hotel information)
+                const booking = {
+                    "Booking": {
+                        "user-id": userId,
+                        "booking-number": bookingNumber,
+                        "hotel-id": hotelId,
+                        "hotel-name": hotelName,
+                        "city": city,
+                        "check-in": checkin,
+                        "check-out": checkout,
+                        "adults": adults,
+                        "children": children,
+                        "infants": infants,
+                        "rooms": rooms,
+                        "price-per-night": price,
+                        "total-price": totalPrice
+                    }
+                };
+
+                console.log("Booking confirmed:", booking); //Log booking (debugging)
+
+                //Send booking to server
+                const xhttp2 = new XMLHttpRequest();
+                xhttp2.open("POST", "http://localhost:8000/hotels.php", true); //POST request to hotels.php (may need to change URL if different port used during setup)
+                xhttp2.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                //Server response handler (runs when connected)
+                xhttp2.onreadystatechange = function() {
+                    if (xhttp2.readyState === 4) {
+                        if (xhttp2.status === 200) {
+                            const response = JSON.parse(xhttp2.responseText); //XML response converted to JSON response
+                            if (response.success) { 
+                                alert("Booking confirmed! Your booking number: " + response.bookingNumber);
+                            } else {
+                                alert("Booking failed: " + JSON.stringify(response.error));
+                            }
+                        } else {
+                            alert("Error contacting server: " + xhttp2.status);
+                        }
+                    }
+                };
+                xhttp2.send(JSON.stringify(booking)); //Send booking object as JSON string
+
+            } else {
+                console.error("Failed to read user.json", xhttp1.status); //Error reading user.json (if user is missing or file is corrupted)
+            }
+        }
+    };
+    xhttp1.send();
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Validate if a radio button is selected and return its value
 function validateSelectedRadioValue(radioGroupName) {
@@ -197,13 +339,12 @@ function validateDate(dateString) {
 /***** Validate Contact Us Form *****/
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 function validateInfoContact() {
-    var f, l, p, e, g, c;
+    var f, l, p, e, c;
     // Get the value of the input field
     f = document.getElementById("firstname").value;
     l = document.getElementById("lastname").value;
     p = document.getElementById("phone").value;
     e = document.getElementById("email").value;
-    g = document.querySelector(`input[name="gender"]:checked`).value;
     c = document.getElementById("comment").value;
 
     var valid = true;
@@ -260,38 +401,44 @@ function validateInfoContact() {
     }
 
     if (valid == true) {
-        fetch('http://localhost:3000/contacts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                firstname: f,
-                lastname: l,
-                phone: p,
-                gender: g,
-                email: e,
-                comment: c
-            })
-        })
-        .then(res => res.json())
-        .then(data => console.log('Saved to local JSON:', data))
-        .catch(err => console.error('Error:', err));
+        document.getElementById("contactInfo").innerHTML = 
+            "Submitted Successfully! Here is the information you provided:<br><br>" +
+            "First Name: " + f + "<br>" +
+            "Last Name: " + l + "<br>" +
+            "Phone: " + p + "<br>" +
+            "Gender: " + document.querySelector('input[name="gender"]:checked').value + "<br>" +
+            "Email: " + e + "<br>" +
+            "Comment: " + c + "<br>";
+
+        // Store data in a JSON file
+        let userData = {
+            User: {
+                "user-id": Math.floor(Math.random() * 1000000), // Random user ID
+                "firstName": f,
+                "lastName": l,
+                "phoneNumber": p,
+                "gender": document.querySelector('input[name="gender"]:checked').value,
+                "email": e,
+                "comment": c
+            } 
+        };
+
+        // Convert to JSON string (for saving or sending to server)
+        let userJSON = JSON.stringify(userData, null, 2);
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                console.log("Server response:", this.responseText);
+            }
+        };
+
+        xhttp.open("POST", "http://localhost:8000/saveUser.php", true); // Need to change URL based on server setup
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhttp.send(userJSON);
+        console.log("User data sent to server:", userJSON);
     }
     
-}
-
-// New function for outputing our data
-function showData(data) {
-    var content = "";
-    for (i = 0; i < data.length; i++) {
-        content += "<p>" + 
-            "Firstname:" + data[i].firstname + "<br>" +
-            "Last Name: " + data[i].lastname + "<br>" +
-            "Phone: " + data[i].phone + "<br>" +
-            "Gender: " + data[i].gender + "<br>" +
-            "Email: " + data[i].email + "<br>" +
-            "Comment: " + data[i].comment + "</p>";
-    }
-    dataContainer.insertAdjacentHTML('beforeend', content);
 }
 
 /***** Validate Cars Form *****/
@@ -350,6 +497,12 @@ function validateInfoCars() {
             "Check In: " + checkIn + "<br>" +
             "Check Out: " + checkOut + "<br>";
     }
+
+    /* 
+    Create a XML file for all the avaiable cars. The XML file should include information about available cars
+    including car-id, the name of city, type of car, the check in date, check out date, and price per day for 
+    at least 20 cars.
+    */
 }
 
 /***** Style Page *****/
