@@ -146,19 +146,135 @@ function staySubmitHandler(event){
     "</p><br>Check-Out Date: <p id='checkoutdate' class='no-indent'>" + checkout + "</p><br>Number of Adults: <p id='numadults' class='no-indent'>" + adults + 
     "</p><br>Number of Children: <p id='numchildren' class='no-indent'>" + children + "</p><br>Number of Infants: <p id='numinfants' class='no-indent'>" + infants + 
     "</p><br>Number of Rooms: <p id='numrooms' class='no-indent'>" + rooms + "</p>";
+
+    //Load available hotels based on user criteria
+    loadHotels(city, checkin, checkout, rooms);
+}
+
+function loadHotels(city, checkin, checkout, roomsNeeded) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "hotels.xml", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const xml = xhr.responseXML;
+            const hotels = xml.getElementsByTagName("Hotel");
+            let resultHTML = "<h3>Available Hotels:</h3>";
+
+            let found = false;
+            for (let i = 0; i < hotels.length; i++) {
+                const cityName = hotels[i].getElementsByTagName("City")[0].textContent;
+                const availableRooms = parseInt(hotels[i].getElementsByTagName("AvailableRooms")[0].textContent);
+                const inDate = hotels[i].getElementsByTagName("InDate")[0].textContent;
+                const outDate = hotels[i].getElementsByTagName("OutDate")[0].textContent;
+
+                if (cityName.toUpperCase() === city.toUpperCase() &&
+                    availableRooms >= roomsNeeded &&
+                    checkin >= inDate &&
+                    checkout <= outDate) {
+
+                    found = true;
+                    const hotelId = hotels[i].getElementsByTagName("HotelID")[0].textContent;
+                    const name = hotels[i].getElementsByTagName("Name")[0].textContent;
+                    const price = hotels[i].getElementsByTagName("PricePerNight")[0].textContent;
+
+                    resultHTML += `
+                        <div class="hotel-option">
+                            <input type="radio" name="selectedHotel" value="${hotelId}" data-name="${name}" data-price="${price}">
+                            <strong>${name}</strong> — $${price}/night<br>
+                            Available Rooms: ${availableRooms}
+                        </div><br>
+                    `;
+                }
+            }
+
+            if (!found) {
+                resultHTML += "<p>No hotels found for your criteria.</p>";
+            }
+
+            document.getElementById("hotelResults").innerHTML = resultHTML;
+        }
+    };
+    xhr.send();
 }
 
 //Book stays
-function bookStays(){
-    //Pull user-id from JSON file
-    fetch('user.json')
-        .then(response => response.json()) // parse JSON
-        .then(data => {
-            const userId = data.User["user-id"];
-            console.log("Booking for user: " + userId);
-        })
-    .catch(error => console.error("Error fetching JSON:", error));
+function bookStays() {
+    const selected = document.querySelector('input[name="selectedHotel"]:checked');
+    if (!selected) {
+        alert("Please select a hotel to book.");
+        return;
+    }
 
+    const hotelId = selected.value;
+    const hotelName = selected.getAttribute("data-name");
+    const price = parseFloat(selected.getAttribute("data-price"));
+
+    const city = document.getElementById("cityname").textContent;
+    const checkin = document.getElementById("checkindate").textContent;
+    const checkout = document.getElementById("checkoutdate").textContent;
+    const adults = parseInt(document.getElementById("numadults").textContent);
+    const children = parseInt(document.getElementById("numchildren").textContent);
+    const infants = parseInt(document.getElementById("numinfants").textContent);
+    const rooms = parseInt(document.getElementById("numrooms").textContent);
+
+    const totalPrice = price * rooms;
+    const bookingNumber = "BKG-" + Math.floor(Math.random() * 90000 + 10000);
+
+    // Load user JSON first
+    const xhttp1 = new XMLHttpRequest();
+    xhttp1.open("GET", "user.json", true);
+    xhttp1.onreadystatechange = function() {
+        if (xhttp1.readyState === 4) {
+            if (xhttp1.status === 200) {
+                const userData = JSON.parse(xhttp1.responseText);
+                const userId = userData.User["user-id"];
+
+                const booking = {
+                    "Booking": {
+                        "user-id": userId,
+                        "booking-number": bookingNumber,
+                        "hotel-id": hotelId,
+                        "hotel-name": hotelName,
+                        "city": city,
+                        "check-in": checkin,
+                        "check-out": checkout,
+                        "adults": adults,
+                        "children": children,
+                        "infants": infants,
+                        "rooms": rooms,
+                        "price-per-night": price,
+                        "total-price": totalPrice
+                    }
+                };
+
+                console.log("Booking confirmed:", booking);
+
+                // Send booking to server
+                const xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "http://localhost:8000/hotels.php", true);
+                xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhttp.onreadystatechange = function() {
+                    if (xhttp.readyState === 4) {
+                        if (xhttp.status === 200) {
+                            const response = JSON.parse(xhttp.responseText);
+                            if (response.success) {
+                                alert("Booking confirmed! Your booking number: " + response.bookingNumber);
+                            } else {
+                                alert("Booking failed: " + JSON.stringify(response.error));
+                            }
+                        } else {
+                            alert("Error contacting server: " + xhttp.status);
+                        }
+                    }
+                };
+                xhttp.send(JSON.stringify(booking));
+
+            } else {
+                console.error("Failed to read user.json", xhttp1.status);
+            }
+        }
+    };
+    xhttp1.send();
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------
