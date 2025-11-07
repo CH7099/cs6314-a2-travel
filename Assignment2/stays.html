@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Stays</title>
-        <link rel="stylesheet" type="text/css" href="mystyle.css">
-        <script type="text/JavaScript" src="travel.js"></script>
-        <script src="jquery-3.7.1.js"></script>
-    </head>
-    <body id="stays">
-        <div class="header">
+<head>
+    <title>Stays</title>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
+    <script src="jquery-3.7.1.js"></script>
+    <script src="travel.js"></script>
+</head>
+<body id="stays">
+    <div class="header">
         <h1>Stays</h1>
     </div>
 
@@ -28,21 +28,22 @@
             <h2>Left Side</h2>
             <p class="prefselector">Choose background color: </p>
             <select id="colorpicker" onchange="colorChange()">
-                <option value="white" selected="true">White</option>
+                <option value="white" selected>White</option>
                 <option value="lightgray">Light Gray</option>
                 <option value="darkgray">Dark Gray</option>
             </select>
             <br>
             <p class="prefselector">Choose font size: </p>
             <select id="sizepicker" onchange="fontChange()">
-                <option value="12px" >12</option>
-                <option value="16px" selected="true">16</option>
+                <option value="12px">12</option>
+                <option value="16px" selected>16</option>
                 <option value="18px">18</option>
                 <option value="20px">20</option>
                 <option value="24px">24</option>
             </select>
             <br>
         </div>
+
         <div class="column middle">
             <div class="column next">
                 <h2>Main content 1</h2>
@@ -68,6 +69,7 @@
                     <input type="submit" value="Search">
                 </form>
             </div>
+
             <div class="column next">
                 <h2>Main Content 2</h2>
                 <p id="validationresult">
@@ -80,8 +82,10 @@
                     Number of Rooms: <br>
                 </p>
             </div>
+
             <div class="column next">
                 <h2>Main Content 3</h2>
+                <div id="hotelResults"> <!-- Search results populate here --> </div>
                 <button type="button" onclick="bookStays()">Book</button>
             </div>
         </div>
@@ -93,7 +97,8 @@
         </div>
     </div>
 
-    </body>
+    <script>
+        document.getElementById("staysform").addEventListener("submit", staySubmitHandler);
+    </script>
+</body>
 </html>
-
-
