@@ -38,6 +38,7 @@ function validateInput() {
     var tripType = document.getElementById("trip").value;
     var out = document.getElementById("out");
     var text = " ";
+    out.innerHTML = " ";
 
     const TX = [
         "Houston", "Dallas", "Austin", "San Antonio", "El Paso", "Fort Worth", "Arlington", "Corpus Christi",
@@ -141,20 +142,21 @@ function validateInput() {
         return
     }
 
+    text = `<h4>All your inputs are valid!</h4>
+        <p>Trip type: ${tripType === "roundtrip" ? "Round-trip" : "One-way"}</p>`;
 
-    text = "All your inputs are valid! <br>" + 
-            "Trip type: " + (tripType === "roundtrip" ? "Round-trip" : "One-way") + "<br>";
-            
-    if (tripType === "roundtrip") {
-        text += "Depart Date: " + departueDate + "<br> Return Date: " + returnDate + "<br>";
-    } else {
-        text += "Depart Date: " + departueDate + "<br>";
-        }         
-            
-            
-    text += "From " + originCity + " To " + destination + "<br>" +
-            "Passengers: <br> Adults: " + numberAdults + "; Children: " + numberChildren +
-            "; Infants: " + numberInfants + "<br>";
+     if (tripType === "roundtrip") {
+            text += `<p>Depart Date: ${departueDate}</p>
+               <p>Return Date: ${returnDate}</p>`
+        } else {
+            text += `<p>Depart Date: ${departueDate}</p>`
+        }
+    text += `<p>From ${originCity} To ${destination}</p>
+            <p>Passengers: </p>
+            <p>Adults: ${numberAdults}</p>
+            <p>Children: ${numberChildren}</p>
+            <p>Infants: ${numberInfants}</p>
+            `;
 
     out.innerHTML += text;
 
@@ -190,7 +192,7 @@ function validateInput() {
                 let html = "<br><h3>Available Flights:</h3><br>";
                 displayFlights.forEach(flight => {
                     html += `<div class="flight-item">
-                                <h4>${flight.flight_id}</h4>
+                                <h4>Available Flight: ${flight.flight_id}</h4>
                                 <p>Origin: ${flight.origin}</p>
                                 <p>Destination: ${flight.destination}</p>
                                 <p>Depart Date: ${flight.depart_date}</p>
@@ -199,8 +201,13 @@ function validateInput() {
                                 <p>Arrive Time: ${flight.arrive_time}</p>
                                 <p>Price: ${flight.price}</p>
                                 <p>Available Seats: ${flight.available_seats}</p>
+                                <button type="button" class="selectFlight" 
+                                    data-id ="${flight.flight_id}">
+                                    Select Outbound
+                                </button>
                             </div>`;
                 });
+                window.currentOutboundFlight = displayFlights;
                 out.innerHTML += html;
             } else {
                 out.innerHTML += "<br><h3>No flights found within ±3 days.</h3>";
@@ -232,8 +239,13 @@ function validateInput() {
                                 <p>Arrive Time: ${flight.arrive_time}</p>
                                 <p>Price: ${flight.price}</p>
                                 <p>Available Seats: ${flight.available_seats}</p>
+                                <button type="button" class="selectReturn" 
+                                    data-id ="${flight.flight_id}">
+                                    Select Return 
+                                </button>
                             </div>`;
                 });
+                window.currentReturnFlight = returnFlights;
                 out.innerHTML += returnHtml;
             } else {
                 out.innerHTML += "<br><h3>No return flights found within ±3 days.</h3>";
@@ -246,5 +258,62 @@ function validateInput() {
         });
 }
 
+function addToCart(selectedFlight, passengers, tripType, selectedFlightReturn = null) {
+    const cart = {
+        flight: selectedFlight,
+        passengers: passengers,
+        tripType: tripType,
+        selectedFlightReturn: selectedFlightReturn,
+        addedDate: Date.now()
+    };
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Flight added to cart successfully!");
+    window.location.href = "cart.html";
+}
 
+document.addEventListener("DOMContentLoaded", function() {
+    const out = document.getElementById("out");
+    let outboundFlight = null;
+    let returnFlight = null;
 
+    out.addEventListener("click", (e) => {
+        // handle outbound flight selection
+        if (e.target.classList.contains("selectFlight")) {
+            const id = e.target.dataset.id;
+            outboundFlight = (window.currentOutboundFlight || []).find(flight => flight.flight_id === id);
+            if (!outboundFlight) return;
+            const tripType = document.getElementById("trip").value;
+
+            // if oneway, add to cart directly
+            if (tripType === "oneway") {
+                const passengers = {
+                    adults: parseInt(document.getElementById("adults").value),
+                    children: parseInt(document.getElementById("children").value),
+                    infants: parseInt(document.getElementById("infants").value) ,  
+                };
+                addToCart(outboundFlight, passengers, tripType, null);
+            } else {
+                alert("Please select a return flight to complete the roundtrip.");
+            }
+            return;
+        }
+        // handle return flight selection
+        if (e.target.classList.contains("selectReturn")) {
+            const id = e.target.dataset.id;
+            returnFlight = (window.currentReturnFlight || []).find(flight => flight.flight_id === id);
+            
+            const tripType = document.getElementById("trip").value;
+
+            if (!outboundFlight) {
+                alert("Please select an outbound flight to complete the roundtrip.");
+                return;
+            }
+            const passengers = {
+                adults: parseInt(document.getElementById("adults").value),
+                children: parseInt(document.getElementById("children").value),
+                infants: parseInt(document.getElementById("infants").value) ,  
+            };
+            addToCart(outboundFlight, passengers, tripType, returnFlight);
+        }
+    });
+});
