@@ -53,8 +53,9 @@ body {
   min-height: 650px;              /* ensure columns have some height */
 }
 
+/*Used for cub-columns on stays.html*/
 .column.next{
-    width: 15%;
+    width: 20%;
     float: left;
     padding: 10px;
 }

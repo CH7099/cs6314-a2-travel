@@ -151,22 +151,26 @@ function staySubmitHandler(event){
     loadHotels(city, checkin, checkout, rooms);
 }
 
+//Function used to load available hotels from hotels.xml following search
 function loadHotels(city, checkin, checkout, roomsNeeded) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "hotels.xml", true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const xml = xhr.responseXML;
-            const hotels = xml.getElementsByTagName("Hotel");
-            let resultHTML = "<h3>Available Hotels:</h3>";
+    //Establish XMLHttpRequest
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "hotels.xml", true);
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            const xml = xhttp.responseXML;
+            const hotels = xml.getElementsByTagName("Hotel");//Pull hotels from hotels.xml
+            let resultHTML = "<h3>Available Hotels:</h3>"; //Result header
 
             let found = false;
             for (let i = 0; i < hotels.length; i++) {
+                //Extract details
                 const cityName = hotels[i].getElementsByTagName("City")[0].textContent;
                 const availableRooms = parseInt(hotels[i].getElementsByTagName("AvailableRooms")[0].textContent);
                 const inDate = hotels[i].getElementsByTagName("InDate")[0].textContent;
                 const outDate = hotels[i].getElementsByTagName("OutDate")[0].textContent;
 
+                //Check if hotel matches the search criteria (city, rooms needed, check-in/check-out dates)
                 if (cityName.toUpperCase() === city.toUpperCase() &&
                     availableRooms >= roomsNeeded &&
                     checkin >= inDate &&
@@ -177,6 +181,7 @@ function loadHotels(city, checkin, checkout, roomsNeeded) {
                     const name = hotels[i].getElementsByTagName("Name")[0].textContent;
                     const price = hotels[i].getElementsByTagName("PricePerNight")[0].textContent;
 
+                    //Create hotel option and append it to the divider
                     resultHTML += `
                         <div class="hotel-option">
                             <input type="radio" name="selectedHotel" value="${hotelId}" data-name="${name}" data-price="${price}">
@@ -187,28 +192,29 @@ function loadHotels(city, checkin, checkout, roomsNeeded) {
                 }
             }
 
+            //If no hotels are found based on the search, return the following message
             if (!found) {
                 resultHTML += "<p>No hotels found for your criteria.</p>";
             }
 
-            document.getElementById("hotelResults").innerHTML = resultHTML;
+            document.getElementById("hotelResults").innerHTML = resultHTML; //Return results
         }
     };
-    xhr.send();
+    xhttp.send();
 }
 
 //Book stays
 function bookStays() {
-    const selected = document.querySelector('input[name="selectedHotel"]:checked');
+    const selected = document.querySelector('input[name="selectedHotel"]:checked'); //Find selected hotel
+    //Check if a hotel was selected; if not, throw error (alert)
     if (!selected) {
         alert("Please select a hotel to book.");
         return;
     }
-
+    //Hotel details (pulled directly)
     const hotelId = selected.value;
     const hotelName = selected.getAttribute("data-name");
     const price = parseFloat(selected.getAttribute("data-price"));
-
     const city = document.getElementById("cityname").textContent;
     const checkin = document.getElementById("checkindate").textContent;
     const checkout = document.getElementById("checkoutdate").textContent;
@@ -217,18 +223,21 @@ function bookStays() {
     const infants = parseInt(document.getElementById("numinfants").textContent);
     const rooms = parseInt(document.getElementById("numrooms").textContent);
 
-    const totalPrice = price * rooms;
+    //Hotel details (calculated)
+    const nights = (new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24); //Number of nights
+    const totalPrice = price * rooms * nights; //Total price (number of rooms * price per night * number of nights)
     const bookingNumber = "BKG-" + Math.floor(Math.random() * 90000 + 10000);
 
-    // Load user JSON first
+    //Load user JSON first
     const xhttp1 = new XMLHttpRequest();
-    xhttp1.open("GET", "user.json", true);
+    xhttp1.open("GET", "user.json", true); //GET request for user.json
     xhttp1.onreadystatechange = function() {
         if (xhttp1.readyState === 4) {
             if (xhttp1.status === 200) {
                 const userData = JSON.parse(xhttp1.responseText);
-                const userId = userData.User["user-id"];
+                const userId = userData.User["user-id"]; //Pull user-id value from user.json
 
+                //Booking object for hotel.json (selected hotel information)
                 const booking = {
                     "Booking": {
                         "user-id": userId,
@@ -247,30 +256,31 @@ function bookStays() {
                     }
                 };
 
-                console.log("Booking confirmed:", booking);
+                console.log("Booking confirmed:", booking); //Log booking (debugging)
 
-                // Send booking to server
-                const xhttp = new XMLHttpRequest();
-                xhttp.open("POST", "http://localhost:8000/hotels.php", true);
-                xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                xhttp.onreadystatechange = function() {
-                    if (xhttp.readyState === 4) {
-                        if (xhttp.status === 200) {
-                            const response = JSON.parse(xhttp.responseText);
-                            if (response.success) {
+                //Send booking to server
+                const xhttp2 = new XMLHttpRequest();
+                xhttp2.open("POST", "http://localhost:8000/hotels.php", true); //POST request to hotels.php (may need to change URL if different port used during setup)
+                xhttp2.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                //Server response handler (runs when connected)
+                xhttp2.onreadystatechange = function() {
+                    if (xhttp2.readyState === 4) {
+                        if (xhttp2.status === 200) {
+                            const response = JSON.parse(xhttp2.responseText); //XML response converted to JSON response
+                            if (response.success) { 
                                 alert("Booking confirmed! Your booking number: " + response.bookingNumber);
                             } else {
                                 alert("Booking failed: " + JSON.stringify(response.error));
                             }
                         } else {
-                            alert("Error contacting server: " + xhttp.status);
+                            alert("Error contacting server: " + xhttp2.status);
                         }
                     }
                 };
-                xhttp.send(JSON.stringify(booking));
+                xhttp2.send(JSON.stringify(booking)); //Send booking object as JSON string
 
             } else {
-                console.error("Failed to read user.json", xhttp1.status);
+                console.error("Failed to read user.json", xhttp1.status); //Error reading user.json (if user is missing or file is corrupted)
             }
         }
     };
