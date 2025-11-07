@@ -53,6 +53,13 @@ body {
   min-height: 650px;              /* ensure columns have some height */
 }
 
+/*Used for cub-columns on stays.html*/
+.column.next{
+    width: 20%;
+    float: left;
+    padding: 10px;
+}
+
 /*Left column*/
 .column.side {
     width: 15%;
@@ -175,7 +182,6 @@ button, input[type=button] {
     
 }
 
-/* Duration section styles - specific to cruises page */
 #cruises .duration {
     display: flex;
     align-items: center;
@@ -250,7 +256,23 @@ button, input[type=button] {
     border-radius: 4px;
 }
 
-/* Submit button styles - specific to cruises page */
+.rooms {
+    margin-left: 40px;
+    margin-right: 200px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.rooms input[type="number"] {
+
+    width: 60px;
+    padding: 6px 5px;
+    margin: 4px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 #cruises .submit {
     display: flex;
     align-items: center;
@@ -268,4 +290,10 @@ button, input[type=button] {
     border-radius: 6px;
     background-color: rgb(132, 190, 209);
     cursor: pointer;
+}
+
+.no-indent {
+    display: inline;
+    margin: 0;
+    padding: 0;
 }

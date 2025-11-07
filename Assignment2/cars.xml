@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Cars>
+    <!-- Texas Cars -->
+    <Car>
+        <CarID>CAR001</CarID>
+        <City>Dallas</City>
+        <Type>Economy</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">30.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR002</CarID>
+        <City>Houston</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">50.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR003</CarID>
+        <City>Austin</City>
+        <Type>Compact</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">45.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR004</CarID>
+        <City>Waco</City>
+        <Type>Midsize</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">80.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR005</CarID>
+        <City>Dallas</City>
+        <Type>Economy</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">30.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR006</CarID>
+        <City>Houston</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">50.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR007</CarID>
+        <City>Austin</City>
+        <Type>Compact</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">45.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR008</CarID>
+        <City>Waco</City>
+        <Type>Midsize</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">80.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR009</CarID>
+        <City>Dallas</City>
+        <Type>Economy</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">30.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR010</CarID>
+        <City>Houston</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">50.00</PricePerDay>
+    </Car>
+    <!-- California Cars -->
+    <Car>
+        <CarID>CAR011</CarID>
+        <City>Los Angeles</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">120.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR012</CarID>
+        <City>San Francisco</City>
+        <Type>Midsize</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">200.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR013</CarID>
+        <City>San Francisco</City>
+        <Type>Economy</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">70.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR014</CarID>
+        <City>San Jose</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">175.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR015</CarID>
+        <City>Los Angeles</City>
+        <Type>Compact</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">85.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR016</CarID>
+        <City>San Francisco</City>
+        <Type>Midsize</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">200.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR017</CarID>
+        <City>San Francisco</City>
+        <Type>Economy</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">70.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR018</CarID>
+        <City>San Jose</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">175.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR019</CarID>
+        <City>Los Angeles</City>
+        <Type>Compact</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">85.00</PricePerDay>
+    </Car>
+    <Car>
+        <CarID>CAR020</CarID>
+        <City>San Francisco</City>
+        <Type>Midsize</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">200.00</PricePerDay>
+    </Car>
+</Cars>

@@ -19,6 +19,7 @@
             <a href="cars.html">Cars</a>
             <a href="cruises.html">Cruises</a>
             <a href="contact-us.html">Contact us</a>
+            <a href="cart.html">Cart</a>
         </div>
     </div>
 
@@ -63,21 +64,26 @@
                 </div> <br>
 
                 <div class="guests">
-                    <label for="guests">Guests:</label>
+                    <label for="guests">Number of Guests:</label>
                     <div class="group-container">
                         <div class="group">
                             <label for="adults">Adults</label>
-                            <input type="number" id="adults" name="adults" >
+                            <input type="number" id="adults" name="adults" min="0">
                         </div>
                         <div class="group">
                             <label for="children">Children</label>
-                            <input type="number" id="children" name="children" >
+                            <input type="number" id="children" name="children" min="0">
                         </div>
                         <div class="group">
                             <label for="infants">Infants</label>
                             <input type="number" id="infants" name="infants" min="0">
                         </div>  
                     </div>
+                </div>
+
+                <div class="rooms">
+                    <label for="rooms">Number of Rooms:</label>
+                    <input type="number" id="rooms" name="rooms" min="0">
                 </div>
 
                 <br>
