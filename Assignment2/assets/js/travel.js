@@ -453,13 +453,6 @@ function validateInfoCars() {
 
     var valid = true;
 
-    // Check city should be alphabetic characters only
-    if (!validateAlpha(city) || city.length == 0) {
-        alert("ERROR, CITY IS NOT ALPHABETIC");
-        console.log("ERROR, CITY IS NOT ALPHABETIC");
-        valid = false;
-    }
-
     // Check if car type is correctly selected
     var carsTypes = ["Economy", "SUV", "Compact", "Midsize"];
     if (!carsTypes.includes(carType)) {
@@ -490,12 +483,14 @@ function validateInfoCars() {
     }
 
     if (valid == true) {
+        console.log("Submitted Successfully! Here is the information you provided");
         document.getElementById("carInfo").innerHTML = 
-            "Submitted Successfully! Here is the information you provided:<br><br>" +
-            "City: " + city + "<br>" +
+            "City Name: " + city + "<br>" +
             "Car Type: " + carType + "<br>" +
-            "Check In: " + checkIn + "<br>" +
-            "Check Out: " + checkOut + "<br>";
+            "Check-In Date: " + checkIn + "<br>" +
+            "Check-Out Date: " + checkOut + "<br>";
+
+        loadCars(city, carType, checkIn, checkOut);
     }
 
     /* 
@@ -503,6 +498,54 @@ function validateInfoCars() {
     including car-id, the name of city, type of car, the check in date, check out date, and price per day for 
     at least 20 cars.
     */
+}
+
+// Function used to load available cars from cars.xml following search
+function loadCars(city, type, checkin, checkout) {
+    // Establish XMLHttpRequest
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "data/cars.xml", true);
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            const xml = xhttp.responseXML;
+            const cars = xml.getElementsByTagName("Car");
+            let resultHTML = ""; 
+
+            let found = false;
+            for (let i = 0; i < cars.length; i++) {
+                // Extract details
+                const cityName = cars[i].getElementsByTagName("City")[0].textContent;
+                const carType = cars[i].getElementsByTagName("Type")[0].textContent;
+                const inDate = cars[i].getElementsByTagName("CheckinDate")[0].textContent;
+                const outDate = cars[i].getElementsByTagName("CheckoutDate")[0].textContent;
+
+                // Check if car matches the search criteria (city, type, checkin, checkout)
+                if (cityName.toUpperCase() === city.toUpperCase() && carType.toUpperCase() === type.toUpperCase() &&
+                    checkin >= inDate && checkout <= outDate) {
+                        found = true;
+                        const carID = cars[i].getElementsByTagName("CarID")[0].textContent;
+                        const price = cars[i].getElementsByTagName("PricePerDay")[0].textContent;
+
+                        // Create car option and append it to the divider
+                        resultHTML += `
+                            <div class="car-option">
+                                <input type="radio" name="selectedCar" value="${carID}" data-name="${carType}" data-price="${price}">
+                                <strong>${carType}</strong> — $${price}/day<br>
+                            </div><br>
+                        `;
+                }
+            }
+            
+            // If no cars are found based on the search, return the following message
+            if (!found) {
+                resultHTML += "<p>No cars found for your criteria.</p>";
+            }
+
+            // Return results
+            document.getElementById("carResults").innerHTML = resultHTML; 
+        }
+    };
+    xhttp.send();
 }
 
 /***** Style Page *****/
