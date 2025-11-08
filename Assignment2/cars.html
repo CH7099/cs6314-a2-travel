@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Cars</title>
-        <link rel="stylesheet" type="text/css" href="mystyle.css">
-        <script type="text/JavaScript" src="travel.js"></script>
+        <link rel="stylesheet" type="text/css" href="assets/css/mystyle.css">
+        <script type="text/javascript" src="assets/js/travel.js"></script>
     </head>
     <body id="cars">
         <div class="header">
@@ -42,20 +42,40 @@
             </select>
             <br>
         </div>
+
         <div class="column middle">
-            <h2>Search for Cars</h2>
-            <form>
-                City:<br>
-                <input id="city" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="city"><br><br>
-                Type of Car:<br>
-                <input id="carType" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="carType"><br><br>
-                Check in Date:<br>
-                <input id="checkIn" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkIn"><br><br>
-                Check out Date:<br>
-                <input id="checkOut" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkOut"><br><br>
-                <button type="button" onclick="validateInfoCars()">Submit</button>
-            </form>
-            <p id="carInfo"></p>
+            <div class="column next">
+                    <h2>Search for Cars</h2>
+                <form>
+                    City:<br>
+                    <input id="city" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="city" style="width: 200px;"><br><br>
+                    Type of Car:<br>
+                    <input id="carType" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="carType" style="width: 200px;"><br><br>
+                    Check in Date:<br>
+                    <input id="checkIn" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkIn" min="2024-09-01" max="2024-12-01" required><br><br>
+                    Check out Date:<br>
+                    <input id="checkOut" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkOut" min="2024-09-01" max="2024-12-01" required><br><br>
+                    <button type="button" onclick="validateInfoCars()">Search</button>
+                </form>
+            </div>
+
+            <div class="column next">
+                <h2>Car Information</h2>
+                <p id="carInfo">
+                    City Name: <br>
+                    Car Type: <br>
+                    Check-In Date: <br>
+                    Check-Out Date: <br>
+                </p>
+            </div>
+            
+            <div class="column next">
+                <h2>Cars Results</h2>
+                <div id="carResults"> <!-- Search results populate here --> </div>
+                <h2>Suggest Cars</h2>
+                <div id="suggestCars"> <!-- Suggest results populate here --> </div>
+                <button type="button" onclick="bookCar()">Book</button>
+            </div>
         </div>
     </div>
 

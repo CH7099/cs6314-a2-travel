@@ -155,7 +155,7 @@ function staySubmitHandler(event){
 function loadHotels(city, checkin, checkout, roomsNeeded) {
     //Establish XMLHttpRequest
     const xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "hotels.xml", true);
+    xhttp.open("GET", "data/hotels.xml", true);
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
             const xml = xhttp.responseXML;
@@ -230,7 +230,7 @@ function bookStays() {
 
     //Load user JSON first
     const xhttp1 = new XMLHttpRequest();
-    xhttp1.open("GET", "user.json", true); //GET request for user.json
+    xhttp1.open("GET", "data/user.json", true); //GET request for user.json
     xhttp1.onreadystatechange = function() {
         if (xhttp1.readyState === 4) {
             if (xhttp1.status === 200) {
@@ -373,7 +373,7 @@ function validateInfoContact() {
     // Check valid phone number
     const phoneRegex = /^\(\d{3}\)\d{3}-\d{4}$/;
     if (!phoneRegex.test(p)) {
-        alert("ERROR, PHONE NUMBER IS NOT VALID. Format: ( xxx) xxx- xxxx");
+        alert("ERROR, PHONE NUMBER IS NOT VALID. Format: (xxx)xxx-xxxx");
         console.log("ERROR, PHONE NUMBER IS NOT VALID");
         valid = false;
     }
@@ -453,15 +453,8 @@ function validateInfoCars() {
 
     var valid = true;
 
-    // Check city should be alphabetic characters only
-    if (!validateAlpha(city) || city.length == 0) {
-        alert("ERROR, CITY IS NOT ALPHABETIC");
-        console.log("ERROR, CITY IS NOT ALPHABETIC");
-        valid = false;
-    }
-
     // Check if car type is correctly selected
-    var carsTypes = ["Economy", "SUV", "Compact", "Midsize"];
+    var carsTypes = ["Economy", "SUV", "Compact", "Midsize", ""];
     if (!carsTypes.includes(carType)) {
         alert("ERROR, CAR TYPE IS INVALID. Valid types are: Economy, SUV, Compact, Midsize");
         console.log("ERROR, CAR TYPE IS INVALID");
@@ -490,19 +483,129 @@ function validateInfoCars() {
     }
 
     if (valid == true) {
+        console.log("Submitted Successfully! Here is the information you provided");
         document.getElementById("carInfo").innerHTML = 
-            "Submitted Successfully! Here is the information you provided:<br><br>" +
-            "City: " + city + "<br>" +
+            "City Name: " + city + "<br>" +
             "Car Type: " + carType + "<br>" +
-            "Check In: " + checkIn + "<br>" +
-            "Check Out: " + checkOut + "<br>";
+            "Check-In Date: " + checkIn + "<br>" +
+            "Check-Out Date: " + checkOut + "<br>";
+
+        let userID = 299040; // For testing purpose
+        loadCars(city, carType, checkIn, checkOut, "carResult");
+        loadSuggestedCars(userID, checkIn, checkOut);
+        document.querySelector("form").reset();
     }
+}
+
+// Function used to load available cars from cars.xml following search
+function loadCars(city, type, checkin, checkout, resultType) {
+    console.log("Loading cars for:", city, type, checkin, checkout, resultType);
+    // Establish XMLHttpRequest
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "data/cars.xml", true);
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            const xml = xhttp.responseXML;
+            const cars = xml.getElementsByTagName("Car");
+            let resultHTML = ""; 
+
+            let found = false;
+            for (let i = 0; i < cars.length; i++) {
+                // Extract details
+                const cityName = cars[i].getElementsByTagName("City")[0].textContent;
+                const carType = cars[i].getElementsByTagName("Type")[0].textContent;
+                const inDate = cars[i].getElementsByTagName("CheckinDate")[0].textContent;
+                const outDate = cars[i].getElementsByTagName("CheckoutDate")[0].textContent;
+
+                // Check if car matches the search criteria (city, type, checkin, checkout)
+                if (cityName.toUpperCase() === city.toUpperCase() && carType.toUpperCase() === type.toUpperCase() &&
+                    checkin >= inDate && checkout <= outDate) {
+                        found = true;
+                        const carID = cars[i].getElementsByTagName("CarID")[0].textContent;
+                        const price = cars[i].getElementsByTagName("PricePerDay")[0].textContent;
+
+                        // Create car option and append it to the divider
+                        resultHTML += `
+                            <div class="car-option">
+                                <strong>${cityName}</strong><br>
+                                <input type="radio" name="selectedCar" value="${carID}" data-type="${carType}" data-price="${price}" data-city="${cityName}">
+                                <strong>${carType}</strong> — $${price}/day<br>
+                            </div><br>
+                        `;
+                }
+            }
+            
+            // If no cars are found based on the search, return the following message
+            if (!found) {
+                resultHTML = "<p>No cars found for your criteria.</p>";
+            }
+
+            // Return results
+            if (resultType == "carResult") {
+                document.getElementById("carResults").innerHTML = resultHTML; 
+            } else if (resultType == "suggestResult") {
+                if (!found) {
+                    document.getElementById("suggestCars").innerHTML = resultHTML;
+                } else {
+                    document.getElementById("suggestCars").innerHTML += resultHTML;
+                }
+            }
+            
+        }
+    };
+    xhttp.send();
+}
+
+// Function used to load suggested available cars from cars.xml following user's interests & perferences
+function loadSuggestedCars(user, checkin, checkout) {
+    const xhttp = new XMLHttpRequest();
 
     /* 
-    Create a XML file for all the avaiable cars. The XML file should include information about available cars
-    including car-id, the name of city, type of car, the check in date, check out date, and price per day for 
-    at least 20 cars.
-    */
+     * Get User previous city and car type from booking information for cars
+     *
+     * Assume the user the current User-id is 299040
+     */
+    xhttp.open("GET", "data/carsBooked.xml", true);
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            const xml = xhttp.responseXML;
+            const carsBooked = xml.getElementsByTagName("CarBooked");
+
+            for (let i = 0; i < carsBooked.length; i++) {
+                // Extract details
+                const userId = carsBooked[i].getElementsByTagName("User-id")[0].textContent;
+                console.log("Loading suggested cars..." + userId + " VS " + user);
+                if (userId == user) {
+                    const city = carsBooked[i].getElementsByTagName("City")[0].textContent;
+                    const carType = carsBooked[i].getElementsByTagName("Type")[0].textContent;
+
+                    console.log("Loading cars in suggested...");
+                    loadCars(city, carType, checkin, checkout, "suggestResult");
+                }
+            }
+        }
+    };
+    xhttp.send();
+}
+
+// Function used to book selected car
+function bookCar() {
+    // Find selected car
+    const selected = document.querySelector('input[name="selectedCar"]:checked');
+
+    // Check if a car was selected; if not, throw error (alert)
+    if (!selected) {
+        alert("Please select a car to book.");
+        return;
+    }
+
+    // Car details
+    const carID = selected.value;
+    const city = selected.getAttribute("data-city");
+    const type = selected.getAttribute("data-type");
+    //const checkin = ;
+    //const checkout = ;
+    const price = parseFloat(selected.getAttribute("data-price"));
 }
 
 /***** Style Page *****/

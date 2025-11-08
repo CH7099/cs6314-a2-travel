@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CarsBooked>
+    <CarBooked>
+        <User-id>299040</User-id>
+        <BookingID>219283</BookingID>
+        <CarID>D009</CarID>
+        <City>Dallas</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-11-01</CheckinDate>
+        <CheckoutDate>2024-12-01</CheckoutDate>
+        <PricePerDay currency="USD">30.00</PricePerDay>
+    </CarBooked>
+    <CarBooked>
+        <User-id>299040</User-id>
+        <BookingID>419234</BookingID>
+        <CarID>D021</CarID>
+        <City>Dallas</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-09-19</CheckinDate>
+        <CheckoutDate>2024-12-01</CheckoutDate>
+        <PricePerDay currency="USD">60.00</PricePerDay>
+    </CarBooked>
+    <CarBooked>
+        <User-id>299040</User-id>
+        <BookingID>574023</BookingID>
+        <CarID>S014</CarID>
+        <City>Sacramento</City>
+        <Type>SUV</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-12-01</CheckoutDate>
+        <PricePerDay currency="USD">175.00</PricePerDay>
+    </CarBooked>
+    <CarBooked>
+        <User-id>123892</User-id>
+        <BookingID>123456</BookingID>
+        <CarID>R016</CarID>
+        <City>Richmond</City>
+        <Type>Midsize</Type>
+        <CheckinDate>2024-11-15</CheckinDate>
+        <CheckoutDate>2024-11-20</CheckoutDate>
+        <PricePerDay currency="USD">200.00</PricePerDay>
+    </CarBooked>
+</CarsBooked>
