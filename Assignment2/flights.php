@@ -44,7 +44,7 @@ if (empty($userId) || empty($flightId) || $seats <= 0) {
 }
 
 // Read flights.json
-$flightsFile = 'flights.json';
+$flightsFile = 'data/flights.json';
 if (!file_exists($flightsFile)) {
     http_response_code(500);
     echo json_encode(['error' => 'Flights data file not found']);

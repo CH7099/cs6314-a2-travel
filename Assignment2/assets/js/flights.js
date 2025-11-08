@@ -10,16 +10,20 @@ const reDate = document.querySelector(".returnLabel");
 
 
 // Hide return date by default
-reDate.style.display = "none";
+if (reDate) {
+    reDate.style.display = "none";
+}
 
 // Show return date when round-trip is selected
-tripSelect.addEventListener("change", function() {
-    if (tripSelect.value === "roundtrip") {
-        reDate.style.display = "block";
-    } else {
-        reDate.style.display = "none";
-    }
-});
+if (tripSelect && reDate) {
+    tripSelect.addEventListener("change", function() {
+        if (tripSelect.value === "roundtrip") {
+            reDate.style.display = "block";
+        } else {
+            reDate.style.display = "none";
+        }
+    });
+}
 
 // click to show the passengers form
 function passengerToggle() {
@@ -188,7 +192,7 @@ function validateInput() {
         return `${city}, ${state}`;
     }
 
-    fetch("flights.json")
+    fetch("data/flights.json")
         .then(response => response.json())
         .then(data => {
             const userOrigin = originCity.trim();
@@ -199,13 +203,13 @@ function validateInput() {
             const normalizedUserOrigin = normalizeLocation(userOrigin);
             const normalizedUserDestination = normalizeLocation(userDestination);
 
-            const result = data.filter(flight => {
+            const result = data.filter(flight => {  
                 const normalizedFlightOrigin = normalizeLocation(flight.origin);
                 const normalizedFlightDestination = normalizeLocation(flight.destination);
                 return (
                     normalizedFlightOrigin === normalizedUserOrigin &&
                     normalizedFlightDestination === normalizedUserDestination &&
-                    flight.depart_date === userDateDepart
+                    flight.depart_date === userDateDepart && flight.available_seats >= totalPassengers
                 );
             });
 
@@ -220,7 +224,7 @@ function validateInput() {
                     return (
                         normalizedFlightOrigin === normalizedUserOrigin &&
                         normalizedFlightDestination === normalizedUserDestination &&
-                        diffTime <= 3
+                        diffTime <= 3 && flight.available_seats >= totalPassengers
                     );
                 });
             }
@@ -252,18 +256,34 @@ function validateInput() {
         
         // return flights for roundtrip
         if (tripType === "roundtrip") {
-            const returnDateObj = new Date(userDateReturn);
-            const returnFlights = data.filter(flight => {
+            const normalizedReturnOrigin = normalizedUserDestination;
+            const normalizedReturnDestination = normalizedUserOrigin;
+
+        let returnFlights = data.filter(flight => {
                 const normalizedFlightOrigin = normalizeLocation(flight.origin);
                 const normalizedFlightDestination = normalizeLocation(flight.destination);
-                const depDate = new Date(flight.depart_date);
-                const diffDays = Math.abs(depDate - returnDateObj) / (1000 * 60 * 60 * 24);
                 return (
-                    normalizedFlightOrigin === normalizedUserDestination &&
-                    normalizedFlightDestination === normalizedUserOrigin &&
-                    diffDays <= 3
+                    normalizedFlightOrigin === normalizedReturnOrigin &&
+                    normalizedFlightDestination === normalizedReturnDestination &&
+                    flight.depart_date === userDateReturn && flight.available_seats >= totalPassengers
                 );
             });
+
+        if (returnFlights.length === 0) {
+            const returnDateObj = new Date(userDateReturn);
+            returnFlights = data.filter(flight => {
+            const o = normalizeLocation(flight.origin);
+            const d = normalizeLocation(flight.destination);
+            const depDate = new Date(flight.depart_date);
+            const diffDays = Math.abs(depDate - returnDateObj) / (1000 * 60 * 60 * 24);
+            return (
+                o === normalizedReturnOrigin &&
+                d === normalizedReturnDestination &&
+                diffDays <= 3 &&
+                flight.available_seats >= totalPassengers
+      );
+    });
+  }
 
             if (returnFlights.length > 0) {
                 let returnHtml = "<br><h3>Available Return Flights:</h3><br>";

@@ -60,6 +60,37 @@ body {
     padding: 10px;
 }
 
+/*Cart page specific styles for aligned columns*/
+
+#cart .cart-container .column.next {
+    float: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    box-sizing: border-box;
+    min-height: 300px;
+    background-color: #f9f9f9;
+    width: 100%;
+}
+
+#cart .cart-container .column.next h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    width: 100%;
+    border-bottom: 2px solid #84becd;
+    padding-bottom: 5px;
+    font-size: 1.2em;
+}
+
+#cart .cart-container .column.next p {
+    margin: 5px 0;
+    width: 100%;
+    word-wrap: break-word;
+}
+
 /*Left column*/
 .column.side {
     width: 15%;

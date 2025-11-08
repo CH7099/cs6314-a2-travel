@@ -3,6 +3,7 @@
     <head>
         <title>Cart</title>
         <link rel="stylesheet" type="text/css" href="assets/css/mystyle.css">
+        <script type="text/javascript" src="assets/js/travel.js"></script>
         <script type="text/JavaScript" src="assets/js/cart.js"></script>
         <script src="assets/js/jquery-3.7.1.js"></script>
     </head>
@@ -44,23 +45,29 @@
             <br>
         </div>
         <div class="column middle">
-            <div class="column next">
-                <h2>Selected Flights:</h3>
-                <p id="flightinfo"></p>
-                <h2>Passenger Information:</h3>
-                <p id="passinfo"></p>
-                <h2>Total Price:</h3>
-                <p id="totalpriceinfo"></p>    
+            <div class="cart-container">
+                <div class="column next">
+                    <h3>Passenger Information:</h3>
+                    <p id="passinfo"></p>
+                </div>
 
+                <div class="column next">
+                    <h3>Selected Flights:</h3>
+                    <p id="flightinfo"></p>
+                    <h3>Total Price:</h3>
+                    <p id="totalpriceinfo"></p>    
+                </div>
+                
+                <div class="column next">
+                    <h3>Selected Car:</h3>
+                    <p id="carinfo"></p>
+                </div>
+                
+                <div class="column next">
+                    <h3>Selected Hotel:</h3>
+                    <p id="hotelinfo"></p>
+                </div>
             </div>
-            
-            <div class ="column next">
-                <h2>Selected Car:</h2>
-                <p id="carinfo"></p>
-            </div>
-            <div class="column next">
-                <h2>Selected Hotel:</h2>
-                <p id="hotelinfo"></p>
         </div>
     </div>
 
