@@ -56,11 +56,11 @@
                   </div> 
                 <div class="date">
                     <label for="departDate">Depart Date:</label>
-                    <input type="date" id="departDate" name="departDate">
+                    <input type="date" id="departDate" name="departDate" min="2024-09-01" max="2024-12-01">
 
                     <div class="returnLabel">
                     <label for="returnDate">Return Date:</label>
-                    <input type="date" id="returnDate" name="returnDate">
+                    <input type="date" id="returnDate" name="returnDate" min="2024-09-01" max="2024-12-01">
                 </div>
                 </div>
                 </div>
@@ -86,16 +86,16 @@
                 <div class="passengersForm" id="passengersForm" hidden>
                     <div class="group">
                         <label for="adults">Adults</label>
-                        <input type="number" id="adults" name="adults" >
+                        <input type="number" id="adults" name="adults" min="0" max="4" value="0">
                     </div>
                     <div class="group">
                         <label for="children">Children</label>
-                        <input type="number" id="children" name="children" >
+                        <input type="number" id="children" name="children" min="0" max="4" value="0">
                     </div>
 
                     <div class="group">
                         <label for="infants">Infants</label>
-                        <input type="number" id="infants" name="infants" >
+                        <input type="number" id="infants" name="infants" min="0" max="4" value="0">
                     </div>              
                 </div>
                 <br>
@@ -116,6 +116,21 @@
             <h3 id="Names">Nicholas Aminzadeh, NHA190001 | Changhui Sun, CXS240024 | Thi Vu, TAV180002</h3>
         </div>
     </div>
-    <script type="text/JavaScript" src="flights.js"></script>
+
+    <!--Passenger information input-->
+    <div id="passengerModal" class="modal">
+        <div class="modal-content">
+            <h4>Enter Passenger Details</h4>
+            <p>Please enter the details for each passenger</p>
+            <div id="passengerFormContainer"></div>
+
+            <div class="modal-buttons">
+                <button id="modalCancelBtn" type="button">Cancel</button>
+                <button id="modalConfirmBtn" type="button">Confirm & Add to Cart</button>
+            </div>
+
+        </div>
+    </div>
+    <script type="text/JavaScript" src="flights.js"></script>    
     </body>
 </html>
