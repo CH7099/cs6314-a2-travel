@@ -1,6 +1,7 @@
 function loadCart(){
     
     loadFlight(); //Load flight info
+    //loadFlight(); //Load flight info
     loadHotel(); //Load hotel info
 }
 
@@ -8,7 +9,7 @@ function loadCart(){
 function loadHotel(){
     //Retrieve user information from json file
     const xhttp1 = new XMLHttpRequest();
-    xhttp1.open("GET", "hotel.json", true);
+    xhttp1.open("GET", "data/hotel.json", true);
     xhttp1.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             const hotel = JSON.parse(this.responseText);
