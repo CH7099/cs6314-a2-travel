@@ -454,7 +454,7 @@ function validateInfoCars() {
     var valid = true;
 
     // Check if car type is correctly selected
-    var carsTypes = ["Economy", "SUV", "Compact", "Midsize"];
+    var carsTypes = ["Economy", "SUV", "Compact", "Midsize", ""];
     if (!carsTypes.includes(carType)) {
         alert("ERROR, CAR TYPE IS INVALID. Valid types are: Economy, SUV, Compact, Midsize");
         console.log("ERROR, CAR TYPE IS INVALID");
@@ -490,18 +490,16 @@ function validateInfoCars() {
             "Check-In Date: " + checkIn + "<br>" +
             "Check-Out Date: " + checkOut + "<br>";
 
-        loadCars(city, carType, checkIn, checkOut);
+        let userID = 299040; // For testing purpose
+        loadCars(city, carType, checkIn, checkOut, "carResult");
+        loadSuggestedCars(userID, checkIn, checkOut);
+        document.querySelector("form").reset();
     }
-
-    /* 
-    Create a XML file for all the avaiable cars. The XML file should include information about available cars
-    including car-id, the name of city, type of car, the check in date, check out date, and price per day for 
-    at least 20 cars.
-    */
 }
 
 // Function used to load available cars from cars.xml following search
-function loadCars(city, type, checkin, checkout) {
+function loadCars(city, type, checkin, checkout, resultType) {
+    console.log("Loading cars for:", city, type, checkin, checkout, resultType);
     // Establish XMLHttpRequest
     const xhttp = new XMLHttpRequest();
     xhttp.open("GET", "data/cars.xml", true);
@@ -529,6 +527,7 @@ function loadCars(city, type, checkin, checkout) {
                         // Create car option and append it to the divider
                         resultHTML += `
                             <div class="car-option">
+                                <strong>${cityName}</strong><br>
                                 <input type="radio" name="selectedCar" value="${carID}" data-name="${carType}" data-price="${price}">
                                 <strong>${carType}</strong> — $${price}/day<br>
                             </div><br>
@@ -538,11 +537,52 @@ function loadCars(city, type, checkin, checkout) {
             
             // If no cars are found based on the search, return the following message
             if (!found) {
-                resultHTML += "<p>No cars found for your criteria.</p>";
+                resultHTML = "<p>No cars found for your criteria.</p>";
             }
 
             // Return results
-            document.getElementById("carResults").innerHTML = resultHTML; 
+            if (resultType == "carResult") {
+                document.getElementById("carResults").innerHTML = resultHTML; 
+            } else if (resultType == "suggestResult") {
+                if (!found) {
+                    document.getElementById("suggestCars").innerHTML = resultHTML;
+                } else {
+                    document.getElementById("suggestCars").innerHTML += resultHTML;
+                }
+            }
+            
+        }
+    };
+    xhttp.send();
+}
+
+// Function used to load suggested available cars from cars.xml following user's interests & perferences
+function loadSuggestedCars(user, checkin, checkout) {
+    const xhttp = new XMLHttpRequest();
+
+    /* 
+     * Get User previous city and car type from booking information for cars
+     *
+     * Assume the user the current User-id is 299040
+     */
+    xhttp.open("GET", "data/carsBooked.xml", true);
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            const xml = xhttp.responseXML;
+            const carsBooked = xml.getElementsByTagName("CarBooked");
+
+            for (let i = 0; i < carsBooked.length; i++) {
+                // Extract details
+                const userId = carsBooked[i].getElementsByTagName("User-id")[0].textContent;
+                console.log("Loading suggested cars..." + userId + " VS " + user);
+                if (userId == user) {
+                    const city = carsBooked[i].getElementsByTagName("City")[0].textContent;
+                    const carType = carsBooked[i].getElementsByTagName("Type")[0].textContent;
+
+                    console.log("Loading cars in suggested...");
+                    loadCars(city, carType, checkin, checkout, "suggestResult");
+                }
+            }
         }
     };
     xhttp.send();

@@ -48,14 +48,14 @@
                     <h2>Search for Cars</h2>
                 <form>
                     City:<br>
-                    <input id="city" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="city"><br><br>
+                    <input id="city" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="city" style="width: 200px;"><br><br>
                     Type of Car:<br>
-                    <input id="carType" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="carType"><br><br>
+                    <input id="carType" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="carType" style="width: 200px;"><br><br>
                     Check in Date:<br>
                     <input id="checkIn" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkIn" min="2024-09-01" max="2024-12-01" required><br><br>
                     Check out Date:<br>
                     <input id="checkOut" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkOut" min="2024-09-01" max="2024-12-01" required><br><br>
-                    <button type="button" onclick="validateInfoCars()">Submit</button>
+                    <button type="button" onclick="validateInfoCars()">Search</button>
                 </form>
             </div>
 
@@ -72,6 +72,8 @@
             <div class="column next">
                 <h2>Cars Results</h2>
                 <div id="carResults"> <!-- Search results populate here --> </div>
+                <h2>Suggest Cars</h2>
+                <div id="suggestCars"> <!-- Suggest results populate here --> </div>
                 <button type="button">Book</button>
             </div>
         </div>
