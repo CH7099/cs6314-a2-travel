@@ -528,7 +528,7 @@ function loadCars(city, type, checkin, checkout, resultType) {
                         resultHTML += `
                             <div class="car-option">
                                 <strong>${cityName}</strong><br>
-                                <input type="radio" name="selectedCar" value="${carID}" data-name="${carType}" data-price="${price}">
+                                <input type="radio" name="selectedCar" value="${carID}" data-type="${carType}" data-price="${price}" data-city="${cityName}">
                                 <strong>${carType}</strong> — $${price}/day<br>
                             </div><br>
                         `;
@@ -586,6 +586,26 @@ function loadSuggestedCars(user, checkin, checkout) {
         }
     };
     xhttp.send();
+}
+
+// Function used to book selected car
+function bookCar() {
+    // Find selected car
+    const selected = document.querySelector('input[name="selectedCar"]:checked');
+
+    // Check if a car was selected; if not, throw error (alert)
+    if (!selected) {
+        alert("Please select a car to book.");
+        return;
+    }
+
+    // Car details
+    const carID = selected.value;
+    const city = selected.getAttribute("data-city");
+    const type = selected.getAttribute("data-type");
+    //const checkin = ;
+    //const checkout = ;
+    const price = parseFloat(selected.getAttribute("data-price"));
 }
 
 /***** Style Page *****/
