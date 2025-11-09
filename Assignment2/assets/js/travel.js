@@ -490,9 +490,22 @@ function validateInfoCars() {
             "Check-In Date: " + checkIn + "<br>" +
             "Check-Out Date: " + checkOut + "<br>";
 
-        let userID = 299040; // For testing purpose
-        loadCars(city, carType, checkIn, checkOut, "carResult");
-        loadSuggestedCars(userID, checkIn, checkOut);
+        // Load user JSON
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "data/user.json", true);
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4) {
+                if (xhttp.status === 200) {
+                    const userData = JSON.parse(xhttp.responseText);
+                    const userID = userData.User["user-id"];
+                    console.log("User ID for suggestions:", userID);
+                    loadCars(city, carType, checkIn, checkOut, "carResult");
+                    loadSuggestedCars(userID, checkIn, checkOut);
+                }
+            }
+        };
+        xhttp.send();
+
         //document.querySelector("form").reset();
     }
 }
@@ -536,17 +549,13 @@ function loadCars(city, type, checkin, checkout, resultType) {
                 }
             }
             
-            // If no cars are found based on the search, return the following message
-            if (!found) {
-                resultHTML = "<p>No cars found for your criteria.</p>";
-            }
-
             // Return results
             if (resultType == "carResult") {
                 document.getElementById("carResults").innerHTML = resultHTML; 
             } else if (resultType == "suggestResult") {
-                if (!found) {
-                    document.getElementById("suggestCars").innerHTML = resultHTML;
+                if (!found && document.getElementById("suggestCars").innerHTML === "") {
+                    // If no cars are found based on the search, return the following message
+                    document.getElementById("suggestCars").innerHTML = "<p>No cars found for your criteria.</p>";
                 } else {
                     document.getElementById("suggestCars").innerHTML += resultHTML;
                 }
@@ -649,7 +658,6 @@ function bookCar() {
                     if (xhttp2.readyState === 4) {
                         if (xhttp2.status === 200) {
                             console.log("Server response:", xhttp2.responseText);
-                            const response = JSON.parse(xhttp2.responseText);
                             alert("Booking confirmed! Your booking number: " + bookingNumber);
 
                             // Update available car XML
