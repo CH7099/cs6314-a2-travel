@@ -493,7 +493,7 @@ function validateInfoCars() {
         let userID = 299040; // For testing purpose
         loadCars(city, carType, checkIn, checkOut, "carResult");
         loadSuggestedCars(userID, checkIn, checkOut);
-        document.querySelector("form").reset();
+        //document.querySelector("form").reset();
     }
 }
 
@@ -569,17 +569,14 @@ function loadSuggestedCars(user, checkin, checkout) {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
             const xml = xhttp.responseXML;
-            const carsBooked = xml.getElementsByTagName("CarBooked");
+            const carsBooked = xml.getElementsByTagName("Booking");
 
             for (let i = 0; i < carsBooked.length; i++) {
                 // Extract details
                 const userId = carsBooked[i].getElementsByTagName("User-id")[0].textContent;
-                console.log("Loading suggested cars..." + userId + " VS " + user);
                 if (userId == user) {
                     const city = carsBooked[i].getElementsByTagName("City")[0].textContent;
                     const carType = carsBooked[i].getElementsByTagName("Type")[0].textContent;
-
-                    console.log("Loading cars in suggested...");
                     loadCars(city, carType, checkin, checkout, "suggestResult");
                 }
             }
@@ -590,6 +587,7 @@ function loadSuggestedCars(user, checkin, checkout) {
 
 // Function used to book selected car
 function bookCar() {
+    console.log("Booking car...");
     // Find selected car
     const selected = document.querySelector('input[name="selectedCar"]:checked');
 
@@ -603,9 +601,70 @@ function bookCar() {
     const carID = selected.value;
     const city = selected.getAttribute("data-city");
     const type = selected.getAttribute("data-type");
-    //const checkin = ;
-    //const checkout = ;
+    const checkin = document.getElementById("checkIn").value;
+    const checkout = document.getElementById("checkOut").value;
     const price = parseFloat(selected.getAttribute("data-price"));
+
+    // Calculate total price
+    console.log("Calculating days...");
+    console.log("Checkin: " + checkin);
+    console.log("Checkout: " + checkout);
+    const days = (new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24);
+    console.log("Number of days: " + days);
+    const totalPrice = price * days;
+
+    // Generate booking number
+    const bookingNumber = "BKG-" + Math.floor(Math.random() * 90000 + 10000);
+
+    // Load user JSON
+    const xhttp1 = new XMLHttpRequest();
+    xhttp1.open("GET", "data/user.json", true);
+    xhttp1.onreadystatechange = function () {
+        if (xhttp1.readyState === 4) {
+            if (xhttp1.status === 200) {
+                const userData = JSON.parse(xhttp1.responseText);
+                const userID = userData.User["user-id"];
+
+                // Booking object for carsBooked.xml (selected car information)
+                const booking = "<Booking>" +
+                "<User-id>" + userID + "</User-id>" +
+                "<BookingID>" + bookingNumber + "</BookingID>" +
+                "<CarID>" + carID + "</CarID>" +
+                "<City>" + city + "</City>" +
+                "<Type>" + type + "</Type>" +
+                "<CheckinDate>" + checkin + "</CheckinDate>" +
+                "<CheckoutDate>" + checkout + "</CheckoutDate>" +
+                "<PricePerDay currency=\"USD\">" + price + "</PricePerDay>" +
+                "<TotalPrice currency=\"USD\">" + totalPrice + "</TotalPrice>" +
+                "</Booking>";
+
+                console.log("Booking confirmed:" + booking);
+
+                // Send boooking to server
+                const xhttp2 = new XMLHttpRequest();
+                xhttp2.open("POST", "http://localhost:8000/cars.php", true);
+                xhttp2.setRequestHeader("Content-Type", "application/xml");
+                xhttp2.onreadystatechange = function() {
+                    if (xhttp2.readyState === 4) {
+                        if (xhttp2.status === 200) {
+                            console.log("Server response:", xhttp2.responseText);
+                            const response = JSON.parse(xhttp2.responseText);
+                            alert("Booking confirmed! Your booking number: " + response.bookingNumber);
+                        } else {
+                            console.error("Failed to contact server:", xhttp2.status);
+                            alert("Error saving booking. Check console for details.");
+                        }
+                    }
+                };
+                // Send booking object
+                xhttp2.send(booking);
+            } else {
+                //Error reading user.json (if user is missing or file is corrupted)
+                console.error("Failed to read user.json", xhttp1.status);
+            }
+        }
+    };
+    xhttp1.send();
 }
 
 /***** Style Page *****/
