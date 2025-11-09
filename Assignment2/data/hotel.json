@@ -1,17 +1,17 @@
 {
     "Hotel": {
         "user-id": 299040,
-        "booking-number": "BKG-92911",
-        "hotel-id": "DAL001",
-        "hotel-name": "Dallas Grand Hotel",
+        "booking-number": "BKG-48018",
+        "hotel-id": "DAL003",
+        "hotel-name": "Lakeshore Inn",
         "city": "Dallas",
-        "check-in": "2024-11-13",
+        "check-in": "2024-11-29",
         "check-out": "2024-12-01",
         "adults": 1,
         "children": 0,
         "infants": 0,
         "rooms": 1,
-        "price-per-night": 200,
-        "total-price": 200
+        "price-per-night": 160,
+        "total-price": 320
     }
 }

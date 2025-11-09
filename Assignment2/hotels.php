@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 //Read incoming JSON 
@@ -56,7 +59,7 @@ $totalPrice = floatval($booking['total-price']);
 
 // --------------------------------------------- AVAILABILITY UPDATE ------------------------------------------------------------
 // Update hotels.xml (availability)
-$xmlFile = "hotels.xml";
+$xmlFile = __DIR__ . "/data/hotels.xml";
 
 //Check for file; return error if missing
 if (!file_exists($xmlFile)) {
@@ -99,7 +102,7 @@ if (!$xml->asXML($xmlFile)) {
 }
 
 //Save booking information to hotel.json
-$bookingFile = "hotel.json";
+$bookingFile =  __DIR__ . "/data/hotel.json";
 $bookingToSave = [
     "Hotel" => $booking
 ];
