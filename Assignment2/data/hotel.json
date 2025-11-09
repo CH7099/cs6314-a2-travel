@@ -1,17 +1,17 @@
 {
     "Hotel": {
-        "user-id": 299040,
-        "booking-number": "BKG-48018",
+        "user-id": 49402,
+        "booking-number": "BKG-32751",
         "hotel-id": "DAL003",
         "hotel-name": "Lakeshore Inn",
         "city": "Dallas",
-        "check-in": "2024-11-29",
+        "check-in": "2024-11-13",
         "check-out": "2024-12-01",
         "adults": 1,
         "children": 0,
         "infants": 0,
         "rooms": 1,
         "price-per-night": 160,
-        "total-price": 320
+        "total-price": 2880
     }
 }

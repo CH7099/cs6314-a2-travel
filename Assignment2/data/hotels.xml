@@ -23,7 +23,7 @@
         <HotelID>DAL003</HotelID>
         <Name>Lakeshore Inn</Name>
         <City>Dallas</City>
-        <AvailableRooms>11</AvailableRooms>
+        <AvailableRooms>10</AvailableRooms>
         <InDate>2024-11-01</InDate>
         <OutDate>2024-12-01</OutDate>
         <PricePerNight currency="USD">160.00</PricePerNight>

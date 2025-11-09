@@ -1,10 +1,11 @@
 {
   "User": {
-    "user-id": 299040,
+    "user-id": 49402,
     "firstName": "Test",
-    "lastName": "A",
+    "lastName": "C",
     "phoneNumber": "(999)999-9999",
+    "gender": "male",
     "email": "test@gmail.com",
-    "comment": "Aaaaaaaaaaaaaaaaaa"
+    "comment": "BBBBBBBBBBBBBBBBBBBBBBBBBBB"
   }
 }

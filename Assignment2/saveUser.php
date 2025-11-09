@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 $jsonData = file_get_contents("php://input");
 
 // Save it to a JSON file in the same directory
-$file = 'user.json';
+$file = __DIR__ .'/data/user.json';
 if(file_put_contents($file, $jsonData)) {
     echo "User data saved successfully!";
 } else {
