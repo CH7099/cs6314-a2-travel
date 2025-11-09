@@ -423,6 +423,9 @@ function validateInfoContact() {
             } 
         };
 
+        //Store userId in local storage specifically for flights
+        localStorage.setItem("user_id", userData.User["user-id"]);
+
         // Convert to JSON string (for saving or sending to server)
         let userJSON = JSON.stringify(userData, null, 2);
         var xhttp = new XMLHttpRequest();
