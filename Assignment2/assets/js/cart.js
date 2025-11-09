@@ -1,8 +1,17 @@
 function loadCart(){
     
-    loadFlight(); //Load flight info
-    //loadFlight(); //Load flight info
-    loadHotel(); //Load hotel info
+    loadFlight();   // Load flight info
+    loadCar();      // Load car info
+    loadHotel();    // Load hotel info
+}
+
+// Function to get user ID
+function getUserID() {
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "data/user.json", false);
+    xhttp.send();
+
+    return JSON.parse(xhttp.responseText).User["user-id"];
 }
 
 //Function to load/display hotel booking information
@@ -29,6 +38,51 @@ function loadHotel(){
     xhttp1.send();
 }
 
+// Function to load/display car rental booking information
+function loadCar() {
+    console.log("Loading car booking information...");
+    // Retrieve user information from xml file
+    const user = getUserID();
+    console.log("User ID:", user);
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "data/carsBooked.xml", true);
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            const xml = xhttp.responseXML;
+            const carsBooked = xml.getElementsByTagName("Booking");
+            
+
+            for (let i = 0; i < carsBooked.length; i++) {
+                const userID = carsBooked[i].getElementsByTagName("User-id")[0].textContent;
+                console.log("Current user id: " + user + " VS Looking up user id: " + userID);
+                // Get user data
+                if (userID == user) {
+                    console.log("Got user data");
+                    const bookID = carsBooked[i].getElementsByTagName("BookingID")[0].textContent;
+                    const carID = carsBooked[i].getElementsByTagName("CarID")[0].textContent;
+                    const city = carsBooked[i].getElementsByTagName("City")[0].textContent;
+                    const type = carsBooked[i].getElementsByTagName("Type")[0].textContent;
+                    const checkIn = carsBooked[i].getElementsByTagName("CheckinDate")[0].textContent;
+                    const checkOut = carsBooked[i].getElementsByTagName("CheckoutDate")[0].textContent;
+                    const price = carsBooked[i].getElementsByTagName("PricePerDay")[0].textContent;
+                    const total = carsBooked[i].getElementsByTagName("TotalPrice")[0].textContent;
+
+                    document.getElementById("carinfo").innerHTML =
+                    "User-ID: " + userID + "<br>"+
+                    "Booking Number: " + bookID + "<br>"+
+                    "Car-ID: " + carID + "<br>"+
+                    "City: " + city + "<br>" +
+                    "Car Type: " + type + "<br>" +
+                    "Check-In Date: " + checkIn + "<br>" +
+                    "Check-Out Date: " + checkOut + "<br>" + 
+                    "Price per Day: $" + price + "<br>"+
+                    "Total Price: $" + total + "<br>";
+                }
+            }
+        }
+    };
+    xhttp.send();
+}
 
 function loadFlight(){
     const flightInfo = document.getElementById("flightinfo");

@@ -12,7 +12,7 @@
     <TotalPrice currency="USD">900.00</TotalPrice>
   </Booking>
   <Booking>
-    <User-id>299040</User-id>
+    <User-id>298040</User-id>
     <BookingID>574023</BookingID>
     <CarID>S014</CarID>
     <City>Sacramento</City>
