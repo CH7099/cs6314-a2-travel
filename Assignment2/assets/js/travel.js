@@ -516,7 +516,7 @@ function loadCars(city, type, checkin, checkout, resultType) {
                 const carType = cars[i].getElementsByTagName("Type")[0].textContent;
                 const inDate = cars[i].getElementsByTagName("CheckinDate")[0].textContent;
                 const outDate = cars[i].getElementsByTagName("CheckoutDate")[0].textContent;
-                const available = cars[i].getElementsByTagName("Avaliable")[0].textContent;
+                const available = cars[i].getElementsByTagName("Available")[0].textContent;
 
                 // Check if car matches the search criteria (city, type, checkin, checkout) and it is avaliable
                 if (cityName.toUpperCase() === city.toUpperCase() && carType.toUpperCase() === type.toUpperCase() &&
@@ -650,9 +650,10 @@ function bookCar() {
                         if (xhttp2.status === 200) {
                             console.log("Server response:", xhttp2.responseText);
                             const response = JSON.parse(xhttp2.responseText);
-                            alert("Booking confirmed! Your booking number: " + response.bookingNumber);
+                            alert("Booking confirmed! Your booking number: " + bookingNumber);
 
-                            // Update available cars XML
+                            // Update available car XML
+                            updateCar(carID);
                         } else {
                             console.error("Failed to contact server:", xhttp2.status);
                             alert("Error saving booking. Check console for details.");
@@ -670,8 +671,25 @@ function bookCar() {
     xhttp1.send();
 }
 
-function updateCar() {
+function updateCar(carID) {
+    console.log("Updating car availability for CarID: " + carID);
 
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "http://localhost:8000/updateCar.php", true);
+    xhttp.setRequestHeader("Content-Type", "text/plain");
+
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4) {
+            if (xhttp.status === 200) {
+                const response = JSON.parse(xhttp.responseText);
+                console.log(response.message);
+            } else {
+                console.error("Failed to update car:", xhttp.status, xhttp.responseText);
+            }
+        }
+    };
+
+    xhttp.send(carID);
 }
 
 /***** Style Page *****/

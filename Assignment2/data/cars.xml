@@ -1,230 +1,230 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Cars>
-    <!-- Texas Cars -->
-    <Car>
-        <CarID>A003</CarID>
-        <City>Austin</City>
-        <Type>Compact</Type>
-        <CheckinDate>2024-09-12</CheckinDate>
-        <CheckoutDate>2024-10-23</CheckoutDate>
-        <PricePerDay currency="USD">45.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <Car>
-        <CarID>A007</CarID>
-        <City>Austin</City>
-        <Type>Economy</Type>
-        <CheckinDate>2024-10-15</CheckinDate>
-        <CheckoutDate>2024-12-1</CheckoutDate>
-        <PricePerDay currency="USD">45.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>D001</CarID>
-        <City>Dallas</City>
-        <Type>Economy</Type>
-        <CheckinDate>2024-09-01</CheckinDate>
-        <CheckoutDate>2024-10-20</CheckoutDate>
-        <PricePerDay currency="USD">30.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>D005</CarID>
-        <City>Dallas</City>
-        <Type>Midsize</Type>
-        <CheckinDate>2024-11-15</CheckinDate>
-        <CheckoutDate>2024-11-30</CheckoutDate>
-        <PricePerDay currency="USD">30.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <Car>
-        <CarID>D009</CarID>
-        <City>Dallas</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-11-01</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">30.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>D021</CarID>
-        <City>Dallas</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-09-19</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">60.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <Car>
-        <CarID>D022</CarID>
-        <City>Dallas</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-10-15</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">50.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>H002</CarID>
-        <City>Houston</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-10-19</CheckinDate>
-        <CheckoutDate>2024-12-1</CheckoutDate>
-        <PricePerDay currency="USD">50.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <Car>
-        <CarID>H006</CarID>
-        <City>Houston</City>
-        <Type>Compact</Type>
-        <CheckinDate>2024-10-01</CheckinDate>
-        <CheckoutDate>2024-10-30</CheckoutDate>
-        <PricePerDay currency="USD">50.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>H010</CarID>
-        <City>Houston</City>
-        <Type>Economy</Type>
-        <CheckinDate>2024-09-19</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">50.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>W004</CarID>
-        <City>Waco</City>
-        <Type>Midsize</Type>
-        <CheckinDate>2024-09-01</CheckinDate>
-        <CheckoutDate>2024-09-29</CheckoutDate>
-        <PricePerDay currency="USD">80.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>W008</CarID>
-        <City>Waco</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-09-15</CheckinDate>
-        <CheckoutDate>2024-11-20</CheckoutDate>
-        <PricePerDay currency="USD">80.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <!-- California Cars -->
-    <Car>
-        <CarID>B011</CarID>
-        <City>Banning</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-09-01</CheckinDate>
-        <CheckoutDate>2024-10-20</CheckoutDate>
-        <PricePerDay currency="USD">120.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>B015</CarID>
-        <City>Banning</City>
-        <Type>Compact</Type>
-        <CheckinDate>2024-11-15</CheckinDate>
-        <CheckoutDate>2024-11-20</CheckoutDate>
-        <PricePerDay currency="USD">90.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <Car>
-        <CarID>B019</CarID>
-        <City>Banning</City>
-        <Type>Compact</Type>
-        <CheckinDate>2024-10-18</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">85.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>O020</CarID>
-        <City>Oxnard</City>
-        <Type>Midsize</Type>
-        <CheckinDate>2024-09-12</CheckinDate>
-        <CheckoutDate>2024-10-23</CheckoutDate>
-        <PricePerDay currency="USD">180.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>O023</CarID>
-        <City>Oxnard</City>
-        <Type>Midsize</Type>
-        <CheckinDate>2024-10-12</CheckinDate>
-        <CheckoutDate>2024-10-23</CheckoutDate>
-        <PricePerDay currency="USD">210.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>R012</CarID>
-        <City>Richmond</City>
-        <Type>Midsize</Type>
-        <CheckinDate>2024-09-19</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">190.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <Car>
-        <CarID>R013</CarID>
-        <City>Richmond</City>
-        <Type>Economy</Type>
-        <CheckinDate>2024-11-15</CheckinDate>
-        <CheckoutDate>2024-11-20</CheckoutDate>
-        <PricePerDay currency="USD">70.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>    
-    <Car>
-        <CarID>R016</CarID>
-        <City>Richmond</City>
-        <Type>Midsize</Type>
-        <CheckinDate>2024-11-15</CheckinDate>
-        <CheckoutDate>2024-11-20</CheckoutDate>
-        <PricePerDay currency="USD">200.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <Car>
-        <CarID>R017</CarID>
-        <City>Richmond</City>
-        <Type>Economy</Type>
-        <CheckinDate>2024-10-01</CheckinDate>
-        <CheckoutDate>2024-10-30</CheckoutDate>
-        <PricePerDay currency="USD">70.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>S014</CarID>
-        <City>Sacramento</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-11-15</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">175.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
-    <Car>
-        <CarID>S018</CarID>
-        <City>Sacramento</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-09-12</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">170.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>SJ023</CarID>
-        <City>San Jose</City>
-        <Type>SUV</Type>
-        <CheckinDate>2024-11-15</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">165.00</PricePerDay>
-        <Avaliable>Yes</Avaliable>
-    </Car>
-    <Car>
-        <CarID>SJ024</CarID>
-        <City>San Jose</City>
-        <Type>Compact</Type>
-        <CheckinDate>2024-09-12</CheckinDate>
-        <CheckoutDate>2024-12-01</CheckoutDate>
-        <PricePerDay currency="USD">180.00</PricePerDay>
-        <Avaliable>No</Avaliable>
-    </Car>
+  <!-- Texas Cars -->
+  <Car>
+    <CarID>A003</CarID>
+    <City>Austin</City>
+    <Type>Compact</Type>
+    <CheckinDate>2024-09-12</CheckinDate>
+    <CheckoutDate>2024-10-23</CheckoutDate>
+    <PricePerDay currency="USD">45.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <Car>
+    <CarID>A007</CarID>
+    <City>Austin</City>
+    <Type>Economy</Type>
+    <CheckinDate>2024-10-15</CheckinDate>
+    <CheckoutDate>2024-12-1</CheckoutDate>
+    <PricePerDay currency="USD">45.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>D001</CarID>
+    <City>Dallas</City>
+    <Type>Economy</Type>
+    <CheckinDate>2024-09-01</CheckinDate>
+    <CheckoutDate>2024-10-20</CheckoutDate>
+    <PricePerDay currency="USD">30.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>D005</CarID>
+    <City>Dallas</City>
+    <Type>Midsize</Type>
+    <CheckinDate>2024-11-15</CheckinDate>
+    <CheckoutDate>2024-11-30</CheckoutDate>
+    <PricePerDay currency="USD">30.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <Car>
+    <CarID>D009</CarID>
+    <City>Dallas</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-11-01</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">30.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>D021</CarID>
+    <City>Dallas</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-09-19</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">60.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>D022</CarID>
+    <City>Dallas</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-10-15</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">50.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>H002</CarID>
+    <City>Houston</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-10-19</CheckinDate>
+    <CheckoutDate>2024-12-1</CheckoutDate>
+    <PricePerDay currency="USD">50.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <Car>
+    <CarID>H006</CarID>
+    <City>Houston</City>
+    <Type>Compact</Type>
+    <CheckinDate>2024-10-01</CheckinDate>
+    <CheckoutDate>2024-10-30</CheckoutDate>
+    <PricePerDay currency="USD">50.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>H010</CarID>
+    <City>Houston</City>
+    <Type>Economy</Type>
+    <CheckinDate>2024-09-19</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">50.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>W004</CarID>
+    <City>Waco</City>
+    <Type>Midsize</Type>
+    <CheckinDate>2024-09-01</CheckinDate>
+    <CheckoutDate>2024-09-29</CheckoutDate>
+    <PricePerDay currency="USD">80.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>W008</CarID>
+    <City>Waco</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-09-15</CheckinDate>
+    <CheckoutDate>2024-11-20</CheckoutDate>
+    <PricePerDay currency="USD">80.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <!-- California Cars -->
+  <Car>
+    <CarID>B011</CarID>
+    <City>Banning</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-09-01</CheckinDate>
+    <CheckoutDate>2024-10-20</CheckoutDate>
+    <PricePerDay currency="USD">120.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>B015</CarID>
+    <City>Banning</City>
+    <Type>Compact</Type>
+    <CheckinDate>2024-11-15</CheckinDate>
+    <CheckoutDate>2024-11-20</CheckoutDate>
+    <PricePerDay currency="USD">90.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <Car>
+    <CarID>B019</CarID>
+    <City>Banning</City>
+    <Type>Compact</Type>
+    <CheckinDate>2024-10-18</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">85.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>O020</CarID>
+    <City>Oxnard</City>
+    <Type>Midsize</Type>
+    <CheckinDate>2024-09-12</CheckinDate>
+    <CheckoutDate>2024-10-23</CheckoutDate>
+    <PricePerDay currency="USD">180.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>O023</CarID>
+    <City>Oxnard</City>
+    <Type>Midsize</Type>
+    <CheckinDate>2024-10-12</CheckinDate>
+    <CheckoutDate>2024-10-23</CheckoutDate>
+    <PricePerDay currency="USD">210.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>R012</CarID>
+    <City>Richmond</City>
+    <Type>Midsize</Type>
+    <CheckinDate>2024-09-19</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">190.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <Car>
+    <CarID>R013</CarID>
+    <City>Richmond</City>
+    <Type>Economy</Type>
+    <CheckinDate>2024-11-15</CheckinDate>
+    <CheckoutDate>2024-11-20</CheckoutDate>
+    <PricePerDay currency="USD">70.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>R016</CarID>
+    <City>Richmond</City>
+    <Type>Midsize</Type>
+    <CheckinDate>2024-11-15</CheckinDate>
+    <CheckoutDate>2024-11-20</CheckoutDate>
+    <PricePerDay currency="USD">200.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <Car>
+    <CarID>R017</CarID>
+    <City>Richmond</City>
+    <Type>Economy</Type>
+    <CheckinDate>2024-10-01</CheckinDate>
+    <CheckoutDate>2024-10-30</CheckoutDate>
+    <PricePerDay currency="USD">70.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>S014</CarID>
+    <City>Sacramento</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-11-15</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">175.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <Car>
+    <CarID>S018</CarID>
+    <City>Sacramento</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-09-12</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">170.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
+  <Car>
+    <CarID>SJ023</CarID>
+    <City>San Jose</City>
+    <Type>SUV</Type>
+    <CheckinDate>2024-11-15</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">165.00</PricePerDay>
+    <Available>Yes</Available>
+  </Car>
+  <Car>
+    <CarID>SJ024</CarID>
+    <City>San Jose</City>
+    <Type>Compact</Type>
+    <CheckinDate>2024-09-12</CheckinDate>
+    <CheckoutDate>2024-12-01</CheckoutDate>
+    <PricePerDay currency="USD">180.00</PricePerDay>
+    <Available>No</Available>
+  </Car>
 </Cars>
