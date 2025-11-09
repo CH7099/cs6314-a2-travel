@@ -516,10 +516,11 @@ function loadCars(city, type, checkin, checkout, resultType) {
                 const carType = cars[i].getElementsByTagName("Type")[0].textContent;
                 const inDate = cars[i].getElementsByTagName("CheckinDate")[0].textContent;
                 const outDate = cars[i].getElementsByTagName("CheckoutDate")[0].textContent;
+                const available = cars[i].getElementsByTagName("Avaliable")[0].textContent;
 
-                // Check if car matches the search criteria (city, type, checkin, checkout)
+                // Check if car matches the search criteria (city, type, checkin, checkout) and it is avaliable
                 if (cityName.toUpperCase() === city.toUpperCase() && carType.toUpperCase() === type.toUpperCase() &&
-                    checkin >= inDate && checkout <= outDate) {
+                    checkin >= inDate && checkout <= outDate && available == "Yes") {
                         found = true;
                         const carID = cars[i].getElementsByTagName("CarID")[0].textContent;
                         const price = cars[i].getElementsByTagName("PricePerDay")[0].textContent;
@@ -650,6 +651,8 @@ function bookCar() {
                             console.log("Server response:", xhttp2.responseText);
                             const response = JSON.parse(xhttp2.responseText);
                             alert("Booking confirmed! Your booking number: " + response.bookingNumber);
+
+                            // Update available cars XML
                         } else {
                             console.error("Failed to contact server:", xhttp2.status);
                             alert("Error saving booking. Check console for details.");
@@ -665,6 +668,10 @@ function bookCar() {
         }
     };
     xhttp1.send();
+}
+
+function updateCar() {
+
 }
 
 /***** Style Page *****/
