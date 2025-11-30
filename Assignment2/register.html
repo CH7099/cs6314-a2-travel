@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Cars</title>
+        <title>Register</title>
         <link rel="stylesheet" type="text/css" href="assets/css/mystyle.css">
         <script type="text/javascript" src="assets/js/travel.js"></script>
     </head>
-    <body id="cars">
+    <body id="home">
         <div class="header">
-        <h1>Cars</h1>
+        <h1>Register</h1>
     </div>
 
     <div class="row">
@@ -43,40 +43,31 @@
             </select>
             <br>
         </div>
-
         <div class="column middle">
-            <div class="column next">
-                    <h2>Search for Cars</h2>
-                <form>
-                    City:<br>
-                    <input id="city" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="city" style="width: 200px;"><br><br>
-                    Type of Car:<br>
-                    <input id="carType" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="carType" style="width: 200px;"><br><br>
-                    Check in Date:<br>
-                    <input id="checkIn" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkIn" min="2024-09-01" max="2024-12-01" required><br><br>
-                    Check out Date:<br>
-                    <input id="checkOut" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="checkOut" min="2024-09-01" max="2024-12-01" required><br><br>
-                    <button type="button" onclick="validateInfoCars()">Search</button>
-                </form>
-            </div>
-
-            <div class="column next">
-                <h2>Car Information</h2>
-                <p id="carInfo">
-                    City Name: <br>
-                    Car Type: <br>
-                    Check-In Date: <br>
-                    Check-Out Date: <br>
-                </p>
-            </div>
-            
-            <div class="column next">
-                <h2>Cars Results</h2>
-                <div id="carResults"> <!-- Search results populate here --> </div>
-                <h2>Suggest Cars</h2>
-                <div id="suggestCars"> <!-- Suggest results populate here --> </div>
-                <button type="button" onclick="bookCar()">Book</button>
-            </div>
+            <h2>Register Form</h2>
+            <form id="registerForm">
+                First name:<br>
+                <input id="firstname" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="firstname" required><br><br>
+                Last name:<br>
+                <input id="lastname" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="lastname" required><br><br>
+                Date of Birth:<br>
+                <input id="dob" type="date" onfocus="myFocus(this)" onblur="myBlur(this)" name="dob" required><br><br>
+                Gender:<br>
+                <input type="radio" name="gender" value="male">
+                <label >Male</label>
+                <input type="radio" name="gender" value="female">
+                <label >Female</label><br><br>
+                Phone Number:<br>
+                <input id="phone" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="phone" required><br><br>
+                Email:<br>
+                <input id="email" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="email" required><br><br>
+                Password:<br>
+                <input id="password" type="password" onfocus="myFocus(this)" onblur="myBlur(this)" name="password" required><br><br>
+                Re-Enter Password:<br>
+                <input id="rePassword" type="password" onfocus="myFocus(this)" onblur="myBlur(this)" name="rePassword" required><br><br>
+                <button type="button" onclick="validateRegisterForm()">Submit</button>
+            </form>
+            <p id="registerValid"></p>
         </div>
     </div>
 
