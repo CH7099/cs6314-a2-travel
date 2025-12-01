@@ -821,6 +821,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
         const userDisplay = document.getElementById("namedrop");
         if (userDisplay) {
             userDisplay.textContent = storedName;
+        } else {
+            userDisplay.textContent = "";
         }
     }
 });
