@@ -8,3 +8,37 @@ You can run the project by:
 There are default values set for the files for user.json and hotel.json (left over from testing). Running the required actions on each page will overwrite them.
 
 *PHP will need to be added to your system PATH environment variable
+
+---------------------------------------------------------------------------------------
+1） Install MySQL
+2） Import the database
+    data/db/create_database.sql
+    data/db/users.sql
+3） Edit db.php
+    $servername = "localhost";
+    $username   = "travel_user";   // or root
+    $password   = "Travel123!";    // or your own password
+    $database   = "travel_db";
+4） Start the PHP server     
+    php -S localhost:8000
+5） Entering the following URL in your browser: http://localhost:8000/home.html
+
+
+-------------------------------------------------------------
+Login Accounts You Can Use
+These are preloaded via users.sql.
+
+| Phone        | Password   | First Name | Last Name |
+| ------------ | ---------- | ---------- | --------- |
+| 222-222-2222 | Alice123   | Alice      | Admin     |
+| 333-333-3333 | John123    | John       | Miller    |
+| 444-444-4444 | Emma123    | Emma       | Brown     |
+| 555-555-5555 | Michael123 | Michael    | Clark     |
+| 666-666-6666 | Sarah123   | Sarah      | Walker    |
+
+
+
+
+
+
+
