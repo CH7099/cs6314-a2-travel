@@ -446,3 +446,13 @@ button, input[type=button] {
     margin-bottom: 4px;
     font-weight: bold;
 }
+
+/* Login/Register form layout */
+.login-register-container {
+    display: flex;
+    gap: 20px;
+}
+
+.login-register-container > div {
+    flex: 1;
+}
