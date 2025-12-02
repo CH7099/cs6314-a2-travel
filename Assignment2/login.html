@@ -7,8 +7,8 @@
     </head>
     <body id="home">
         <div class="header">
-        <h1 style="display:inline">Register</h1>
-        <h1 id="namedrop" style="display:inline"></h1>
+        <h1>Login</h1>
+        <h1 id="namedrop"></h1>
     </div>
 
     <div class="row">
@@ -16,13 +16,13 @@
             <a href="home.html">Home</a>
             <a href="register.html">Register</a>
             <a href="login.html">Login</a>
-            <a href="account.html">Account</a>
-            <a href="stays.html">Stays</a>
-            <a href="flights.html">Flights</a>
-            <a href="cars.html">Cars</a>
-            <a href="cruises.html">Cruises</a>
-            <a href="contact-us.html">Contact us</a>
-            <a href="cart.html">Cart</a>
+            <a id="account" href="account.html">Account</a>
+            <a id="stays" href="stays.html">Stays</a>
+            <a id="flights" href="flights.html">Flights</a>
+            <a id="cars" href="cars.html">Cars</a>
+            <a id="cruises" href="cruises.html">Cruises</a>
+            <a id="contact-us" href="contact-us.html">Contact us</a>
+            <a id="cart" href="cart.html">Cart</a>
         </div>
     </div>
 
@@ -48,15 +48,16 @@
         </div>
         <div class="column middle">
             <h2>Login</h2>
-            <form method="post" action="login.php" onsubmit="return validateLoginForm();">
-                <input type="hidden" name="action" value="login">
+            <form method="post" action="login.php">
                 Phone Number:<br>
-                <input type="text" name="phone" id="login_phone" onfocus="myFocus(this)" onblur="myBlur(this)" required placeholder="ddd-ddd-dddd"><br><br>
+                <input type="text" name="phone" placeholder="ddd-ddd-dddd" required><br><br>
                 Password:<br>
-                <input type="password" name="password" id="login_password" required><br><br>
+                <input type="password" name="password" required><br><br>
                 <button type="submit">Login</button>
             </form>
-            <p style="color: red;"><?php echo $login_message; ?></p>    
+
+            <!-- Print login message -->
+            <?php include "login.php"; ?> 
         </div>
     </div>
 

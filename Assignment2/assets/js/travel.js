@@ -732,93 +732,6 @@ function updateCar(carID) {
     xhttp.send(carID);
 }
 
-/***** Validate Register Form *****/
-//----------------------------------------------------------------------------------------------------------------------------------------------------------
-function validateRegisterForm() {
-    var f, l, dob, pn, e, pw;
-    // Get the value of the input field
-    f = document.getElementById("firstname").value;
-    l = document.getElementById("lastname").value;
-    dob = doocument.getElementById("dob").value;
-    pn = document.getElementById("phone").value;
-    e = document.getElementById("email").value;
-    pw = document.getElementById("password").value;
-    rePW = document.getElementById("rePassword").value;
-
-    var valid = true;
-
-    //  User must enter FirstName, LastName.
-    if (!f) {
-        alert("ERROR, FIRST NAME REQUIRED");
-        console.log("ERROR, FIRST NAME REQUIRED");
-        valid = false;
-    }
-    if (!l) {
-        alert("ERROR, LAST NAME REQUIRED");
-        console.log("ERROR, LAST NAME REQUIRED");
-        valid = false;
-    }
-
-    // Check unique phone number
-
-    // Check valid phone number
-    if (!pn) {
-        alert("ERROR, PHONE NUMBER REQUIRED");
-        console.log("ERROR, PHONE NUMBER REQUIRED");
-        valid = false;
-    } else if (!/^\d{3}-\d{3}-\d{4}$/.test(p)) {
-        alert("ERROR, PHONE NUMBER IS NOT VALID. Format: ddd-ddd-dddd");
-        console.log("ERROR, PHONE NUMBER IS NOT VALID");
-        valid = false;
-    }
-
-    // User must enter the same Password two times.
-    if (!pw || !rePW) {
-        alert("ERROR, PASSWORD REQUIRED");
-        console.log("ERROR, PASSWORD REQUIRED");
-        valid = false;
-    } else if (!(pw === rePW)) {
-        alert("ERROR, PASSWORD MUST BE THE SAME");
-        console.log("ERROR, PASSWORD MUST BE THE SAME");
-        valid = false;
-    }
-
-    // Check if password is at least 8 characters long
-    if (pw.length < 8) {
-        alert("ERROR, PASSWORD MUST BE AT LEAST 8 CHARACTERS LONG");
-        console.log("ERROR, PASSWORD MUST BE AT LEAST 8 CHARACTERS LONG");
-        valid = false;
-    }
-
-    // Date of birth must have 2 digits for month, 2 digits fore day, and four digits for year
-    if (!dob) {
-        alert("ERROR, DATE OF BIRTH REQUIRED");
-        console.log("ERROR, DATE OF BIRTH REQUIRED");
-        valid = false;
-    }
-
-
-    if (!e) {
-        alert("ERROR, EMAIL REQUIRED");
-        console.log("ERROR, EMAIL REQUIRED");
-        valid = false;
-    }
-    // Check if email address contains @ and .
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(e)) {
-        alert("ERROR, EMAIL IS NOT VALID");
-        console.log("ERROR, EMAIL IS NOT VALID");
-        valid = false;
-    }
-
-    if (valid == true) {
-        document.getElementById("registerValid").innerHTML = "Submitted Successfully!";
-
-        // Insert the user’s information into the “users” table in your database
-        
-    }
-}
-
 /***** Style Page *****/
 //Change BG of input field on focus/blur
 function myFocus(x) {
@@ -853,5 +766,24 @@ document.addEventListener("DOMContentLoaded", ()=>{
         } else {
             userDisplay.textContent = "";
         }
+    }
+
+    // Check if user is logged in then display navigation links
+    if (storedName) {
+        // Show these links only when logged in
+        const showOnLogin = ["account", "stays", "flights", "cars", "cruises", "contact-us", "cart"];
+
+        showOnLogin.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = "inline-block";
+        });
+    } else {
+        // If user is NOT logged in, hide these links
+        const hideOnLogout = ["account", "stays", "flights", "cars", "cruises", "contact-us", "cart"];
+
+        hideOnLogout.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = "none";
+        });
     }
 });
