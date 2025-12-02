@@ -234,6 +234,7 @@ function bookStays() {
     xhttp1.onreadystatechange = function() {
         if (xhttp1.readyState === 4) {
             if (xhttp1.status === 200) {
+                if(localStorage.getItem("user_id") === null){
                 const userData = JSON.parse(xhttp1.responseText);
                 const userId = userData.User["user-id"]; //Pull user-id value from user.json
 
@@ -255,6 +256,27 @@ function bookStays() {
                         "total-price": totalPrice
                     }
                 };
+                } else {
+                    const userId = localStorage.getItem("user_id");
+                    //Booking object for hotel.json (selected hotel information)
+                    const booking = {
+                    "Booking": {
+                        "user-id": userId,
+                        "booking-number": bookingNumber,
+                        "hotel-id": hotelId,
+                        "hotel-name": hotelName,
+                        "city": city,
+                        "check-in": checkin,
+                        "check-out": checkout,
+                        "adults": adults,
+                        "children": children,
+                        "infants": infants,
+                        "rooms": rooms,
+                        "price-per-night": price,
+                        "total-price": totalPrice
+                    }
+                };
+            }
 
                 console.log("Booking confirmed:", booking); //Log booking (debugging)
 
@@ -411,9 +433,16 @@ function validateInfoContact() {
             "Comment: " + c + "<br>";
 
         // Store data in a JSON file
+        let userID_temp;
+        if(localStorage.getItem("user_id") === null){
+            userID_temp = Math.floor(Math.random() * 1000000); // Random user ID
+            localStorage.setItem("user_id", userID_temp);
+        } else {
+            userID_temp = localStorage.getItem("user_id");
+        }
         let userData = {
             User: {
-                "user-id": Math.floor(Math.random() * 1000000), // Random user ID
+                "user-id": userID_temp,
                 "firstName": f,
                 "lastName": l,
                 "phoneNumber": p,
