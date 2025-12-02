@@ -117,4 +117,20 @@ if (file_put_contents($bookingFile, json_encode($bookingToSave, JSON_PRETTY_PRIN
     http_response_code(500);
     echo json_encode(["error" => "Failed to write hotel.json"]);
 }
+
+//--------------------------------------------- DATABASE CONNECTION ------------------------------------------------------------
+// Database connection parameters
+$servername = "localhost";
+$username = "travel_user";     
+$password = "Travel123!";         
+$database = "assignment4"; 
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 ?>
