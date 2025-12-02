@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Register</title>
+        <link rel="stylesheet" type="text/css" href="assets/css/mystyle.css">
+        <script type="text/javascript" src="assets/js/travel.js"></script>
+    </head>
+    <body id="home">
+        <div class="header">
+        <h1 style="display:inline">Register</h1>
+        <h1 id="namedrop" style="display:inline"></h1>
+    </div>
+
+    <div class="row">
+        <div class="topnav">
+            <a href="home.html">Home</a>
+            <a href="register.html">Register</a>
+            <a href="login.html">Login</a>
+            <a href="account.html">Account</a>
+            <a href="stays.html">Stays</a>
+            <a href="flights.html">Flights</a>
+            <a href="cars.html">Cars</a>
+            <a href="cruises.html">Cruises</a>
+            <a href="contact-us.html">Contact us</a>
+            <a href="cart.html">Cart</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column side">
+            <h2>Left Side</h2>
+            <p class="prefselector">Choose background color: </p>
+            <select id="colorpicker" onchange="colorChange()">
+                <option value="white" selected="true">White</option>
+                <option value="lightgray">Light Gray</option>
+                <option value="darkgray">Dark Gray</option>
+            </select>
+            <br>
+            <p class="prefselector">Choose font size: </p>
+            <select id="sizepicker" onchange="fontChange()">
+                <option value="12px" >12</option>
+                <option value="16px" selected="true">16</option>
+                <option value="18px">18</option>
+                <option value="20px">20</option>
+                <option value="24px">24</option>
+            </select>
+            <br>
+        </div>
+        <div class="column middle">
+            <h2>Login</h2>
+            <form method="post" action="login_register.php" onsubmit="return validateLoginForm();">
+                <input type="hidden" name="action" value="login">
+                Phone Number:<br>
+                <input type="text" name="phone" id="login_phone" onfocus="myFocus(this)" onblur="myBlur(this)" required placeholder="ddd-ddd-dddd"><br><br>
+                Password:<br>
+                <input type="password" name="password" id="login_password" required><br><br>
+                <button type="submit">Login</button>
+            </form>
+            <p style="color: red;"><?php echo $login_message; ?></p>    
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="footer">
+            <h3 id="Names">Nicholas Aminzadeh, NHA190001 | Changhui Sun, CXS240024 | Thi Vu, TAV180002</h3>
+        </div>
+    </div>
+
+    </body>
+</html>
