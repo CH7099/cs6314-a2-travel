@@ -136,7 +136,7 @@ if ($conn->connect_error) {
 // Insert data
 $sql = $conn->prepare("INSERT INTO Hotels (user_id, booking_number, hotel_id, hotel_name, city, check_in, check_out, adults, children, infants, rooms, price_per_night, total_price) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$sql->bind_param("issssssiiddid", $userId, $bookingNumber, $hotelId, $hotelName, $city, $checkIn, $checkOut, $adults, $children, $infants, $rooms, $pricePerNight, $totalPrice);
+$sql->bind_param("issssssiiiidd", $userId, $bookingNumber, $hotelId, $hotelName, $city, $checkIn, $checkOut, $adults, $children, $infants, $rooms, $pricePerNight, $totalPrice);
 if ($conn->query($sql) === TRUE) {
     // Success
     echo json_encode(["success" => "Database insertion successful"]);

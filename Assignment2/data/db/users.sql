@@ -1,13 +1,15 @@
 USE travel_db;
 
 CREATE TABLE IF NOT EXISTS users (
+    userid INT AUTO_INCREMENT,
     phone VARCHAR(12) PRIMARY KEY,
     password_hash VARCHAR(255) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     dob DATE NOT NULL,
     gender VARCHAR(10),
-    email VARCHAR(100) NOT NULL
+    email VARCHAR(100) NOT NULL,
+    isadmin BOOLEAN DEFAULT FALSE
 );
 
 -- Sample Users
