@@ -1,7 +1,176 @@
 <?php
 header('Content-Type: application/json');
+include "db.php";
 
-// Only allow POST requests
+// Handle GET request for searching flights
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Get search parameters
+    $origin = trim($_GET['origin'] ?? '');
+    $destination = trim($_GET['destination'] ?? '');
+    $departDate = trim($_GET['depart_date'] ?? '');
+    $returnDate = trim($_GET['return_date'] ?? '');
+    $tripType = trim($_GET['trip_type'] ?? 'oneway');
+    $totalPassengers = intval($_GET['total_passengers'] ?? 0);
+
+    // Validate required parameters
+    if (empty($origin) || empty($destination) || empty($departDate) || $totalPassengers <= 0) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing required parameters: origin, destination, depart_date, total_passengers']);
+        exit;
+    }
+
+    // Normalize location function
+    function normalizeLocation($location) {
+        if (empty($location)) return "";
+        $parts = array_map('trim', explode(",", $location));
+        if (count($parts) !== 2) return strtolower($location);
+        $city = strtolower(trim($parts[0]));
+        $state = strtolower(trim($parts[1]));
+        // Normalize state abbreviations
+        if ($state === "texas") $state = "tx";
+        if ($state === "california") $state = "ca";
+        return $city . ", " . $state;
+    }
+
+    $normalizedOrigin = normalizeLocation($origin);
+    $normalizedDestination = normalizeLocation($destination);
+
+    // Search outbound flights
+    // First, try exact date match
+    $stmt = $conn->prepare("SELECT flight_id, origin, destination, departure_date, arrival_date, 
+                            TIME_FORMAT(departure_time, '%H:%i') as depart_time,
+                            TIME_FORMAT(arrival_time, '%H:%i') as arrive_time,
+                            available_seats, price
+                            FROM flights 
+                            WHERE LOWER(origin) = ? AND LOWER(destination) = ? 
+                            AND departure_date = ? AND available_seats >= ?
+                            ORDER BY departure_time");
+    $stmt->bind_param("sssi", $normalizedOrigin, $normalizedDestination, $departDate, $totalPassengers);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $outboundFlights = [];
+    while ($row = $result->fetch_assoc()) {
+        $outboundFlights[] = [
+            'flight_id' => $row['flight_id'],
+            'origin' => $row['origin'],
+            'destination' => $row['destination'],
+            'depart_date' => $row['departure_date'],
+            'arrive_date' => $row['arrival_date'],
+            'depart_time' => $row['depart_time'],
+            'arrive_time' => $row['arrive_time'],
+            'available_seats' => intval($row['available_seats']),
+            'price' => floatval($row['price'])
+        ];
+    }
+
+    // If no exact match, search within ±3 days
+    if (empty($outboundFlights)) {
+        $departDateObj = new DateTime($departDate);
+        $dateMin = $departDateObj->modify('-3 days')->format('Y-m-d');
+        $dateMax = (new DateTime($departDate))->modify('+3 days')->format('Y-m-d');
+        
+        $stmt = $conn->prepare("SELECT flight_id, origin, destination, departure_date, arrival_date,
+                                TIME_FORMAT(departure_time, '%H:%i') as depart_time,
+                                TIME_FORMAT(arrival_time, '%H:%i') as arrive_time,
+                                available_seats, price
+                                FROM flights 
+                                WHERE LOWER(origin) = ? AND LOWER(destination) = ? 
+                                AND departure_date BETWEEN ? AND ? AND available_seats >= ?
+                                ORDER BY ABS(DATEDIFF(departure_date, ?)), departure_time");
+        $stmt->bind_param("sssssis", $normalizedOrigin, $normalizedDestination, $dateMin, $dateMax, $totalPassengers, $departDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $outboundFlights[] = [
+                'flight_id' => $row['flight_id'],
+                'origin' => $row['origin'],
+                'destination' => $row['destination'],
+                'depart_date' => $row['departure_date'],
+                'arrive_date' => $row['arrival_date'],
+                'depart_time' => $row['depart_time'],
+                'arrive_time' => $row['arrive_time'],
+                'available_seats' => intval($row['available_seats']),
+                'price' => floatval($row['price'])
+            ];
+        }
+    }
+
+    $returnFlights = [];
+    // Search return flights for roundtrip
+    if ($tripType === "roundtrip" && !empty($returnDate)) {
+        $normalizedReturnOrigin = $normalizedDestination;
+        $normalizedReturnDestination = $normalizedOrigin;
+
+        // First, try exact date match
+        $stmt = $conn->prepare("SELECT flight_id, origin, destination, departure_date, arrival_date,
+                                TIME_FORMAT(departure_time, '%H:%i') as depart_time,
+                                TIME_FORMAT(arrival_time, '%H:%i') as arrive_time,
+                                available_seats, price
+                                FROM flights 
+                                WHERE LOWER(origin) = ? AND LOWER(destination) = ? 
+                                AND departure_date = ? AND available_seats >= ?
+                                ORDER BY departure_time");
+        $stmt->bind_param("sssi", $normalizedReturnOrigin, $normalizedReturnDestination, $returnDate, $totalPassengers);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $returnFlights[] = [
+                'flight_id' => $row['flight_id'],
+                'origin' => $row['origin'],
+                'destination' => $row['destination'],
+                'depart_date' => $row['departure_date'],
+                'arrive_date' => $row['arrival_date'],
+                'depart_time' => $row['depart_time'],
+                'arrive_time' => $row['arrive_time'],
+                'available_seats' => intval($row['available_seats']),
+                'price' => floatval($row['price'])
+            ];
+        }
+
+        // If no exact match, search within ±3 days
+        if (empty($returnFlights)) {
+            $returnDateObj = new DateTime($returnDate);
+            $dateMin = $returnDateObj->modify('-3 days')->format('Y-m-d');
+            $dateMax = (new DateTime($returnDate))->modify('+3 days')->format('Y-m-d');
+            
+            $stmt = $conn->prepare("SELECT flight_id, origin, destination, departure_date, arrival_date,
+                                    TIME_FORMAT(departure_time, '%H:%i') as depart_time,
+                                    TIME_FORMAT(arrival_time, '%H:%i') as arrive_time,
+                                    available_seats, price
+                                    FROM flights 
+                                    WHERE LOWER(origin) = ? AND LOWER(destination) = ? 
+                                    AND departure_date BETWEEN ? AND ? AND available_seats >= ?
+                                    ORDER BY ABS(DATEDIFF(departure_date, ?)), departure_time");
+            $stmt->bind_param("sssssis", $normalizedReturnOrigin, $normalizedReturnDestination, $dateMin, $dateMax, $totalPassengers, $returnDate);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $returnFlights[] = [
+                    'flight_id' => $row['flight_id'],
+                    'origin' => $row['origin'],
+                    'destination' => $row['destination'],
+                    'depart_date' => $row['departure_date'],
+                    'arrive_date' => $row['arrival_date'],
+                    'depart_time' => $row['depart_time'],
+                    'arrive_time' => $row['arrive_time'],
+                    'available_seats' => intval($row['available_seats']),
+                    'price' => floatval($row['price'])
+                ];
+            }
+        }
+    }
+
+    // Return JSON response
+    echo json_encode([
+        'outbound' => $outboundFlights,
+        'return' => $returnFlights
+    ]);
+
+    $conn->close();
+    exit;
+}
+
+// Handle POST request for booking flights
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed']);

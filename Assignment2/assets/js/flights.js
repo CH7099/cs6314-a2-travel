@@ -179,6 +179,83 @@ function validateInput() {
 
     out.innerHTML += text;
 
+    // Search flights - moved to flights.php (GET request)
+    // Call backend API to search flights from database
+    const searchParams = new URLSearchParams({
+        origin: originCity.trim(),
+        destination: destination.trim(),
+        depart_date: departureDate,
+        return_date: returnDate,
+        trip_type: tripType,
+        total_passengers: totalPassengers
+    });
+
+    fetch("flights.php?" + searchParams.toString())
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                out.innerHTML += "<br><h3>Error: " + data.error + "</h3>";
+                return;
+            }
+
+            // Display outbound flights
+            if (data.outbound && data.outbound.length > 0) {
+                let html = "<br><h3>Available Flights:</h3><br>";
+                data.outbound.forEach(flight => {
+                    html += `<div class="flight-item">
+                                <h4>Available Flight: ${flight.flight_id}</h4>
+                                <p>Origin: ${flight.origin}</p>
+                                <p>Destination: ${flight.destination}</p>
+                                <p>Depart Date: ${flight.depart_date}</p>
+                                <p>Depart Time: ${flight.depart_time}</p>
+                                <p>Arrive Date: ${flight.arrive_date}</p>
+                                <p>Arrive Time: ${flight.arrive_time}</p>
+                                <p>Price: ${flight.price}</p>
+                                <p>Available Seats: ${flight.available_seats}</p>
+                                <button type="button" class="selectFlight" 
+                                    data-id ="${flight.flight_id}">
+                                    Select Outbound
+                                </button>
+                            </div>`;
+                });
+                window.currentOutboundFlight = data.outbound;
+                out.innerHTML += html;
+            } else {
+                out.innerHTML += "<br><h3>No flights found within ±3 days.</h3>";
+            }
+
+            // Display return flights for roundtrip
+            if (tripType === "roundtrip" && data.return && data.return.length > 0) {
+                let returnHtml = "<br><h3>Available Return Flights:</h3><br>";
+                data.return.forEach(flight => {
+                    returnHtml += `<div class="flight-item">
+                                <h4>${flight.flight_id}</h4>
+                                <p>Origin: ${flight.origin}</p>
+                                <p>Destination: ${flight.destination}</p>
+                                <p>Depart Date: ${flight.depart_date}</p>
+                                <p>Depart Time: ${flight.depart_time}</p>
+                                <p>Arrive Date: ${flight.arrive_date}</p>
+                                <p>Arrive Time: ${flight.arrive_time}</p>
+                                <p>Price: ${flight.price}</p>
+                                <p>Available Seats: ${flight.available_seats}</p>
+                                <button type="button" class="selectReturn" 
+                                    data-id ="${flight.flight_id}">
+                                    Select Return 
+                                </button>
+                            </div>`;
+                });
+                window.currentReturnFlight = data.return;
+                out.innerHTML += returnHtml;
+            } else if (tripType === "roundtrip") {
+                out.innerHTML += "<br><h3>No return flights found within ±3 days.</h3>";
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            out.innerHTML += "<br><h3>Failed to load flights.</h3>";
+        });
+
+    /*  Search functionality moved to flights.php
     // normalize city
     function normalizeLocation(location) {
         if (!location) return "";
@@ -315,6 +392,7 @@ function validateInput() {
             console.error("Error:", error);
             out.innerHTML += "<br><h3>Failed to load flights.</h3>";
         });
+    */
 }
 
 
@@ -396,114 +474,34 @@ function openPassengerModal(totalPassengers, onConfirm) {
   };
 }
   
-async function addToCart(selectedFlight, passengers, tripType, 
+// Add flight to cart (save to localStorage, booking will happen later in cart page)
+function addToCart(selectedFlight, passengers, tripType, 
     selectedFlightReturn = null, passengersDetails = null) {
-    const totalPassengers = passengers.adults + passengers.children + passengers.infants;
-    const seatsNeeded = totalPassengers;
-    let bookingNumbers = []
+    
+    // Validate that passenger details are provided
+    if (!passengersDetails || passengersDetails.length === 0) {
+        alert("Please enter passenger information before adding to cart.");
+        return;
+    }
 
+    // Create cart object with flight and passenger information
+    const cart = {
+        flight: selectedFlight,
+        passengers: passengers,
+        tripType: tripType,
+        selectedFlightReturn: selectedFlightReturn,
+        passengersDetails: passengersDetails,
+        addedDate: Date.now()
+    };
+
+    // Save to localStorage
     try {
-        // Book outbound
-        const bookOutbound = await fetch("flights.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                action: "book",
-                user_id: userId,
-                flight_id: selectedFlight.flight_id,
-                seats: seatsNeeded
-            })
-        });
-
-        // Read and check outbound booking response
-        const outboundResult = await bookOutbound.json();
-        
-        // Check for errors
-        if (!bookOutbound.ok) {
-            throw new Error(outboundResult.error || `Outbound flight booking failed with status ${bookOutbound.status}`);
-        }
-        if (!outboundResult.success) {
-            throw new Error(outboundResult.error || "Outbound flight booking failed");
-        }
-
-        // Extract booking number
-        if (outboundResult.booking && outboundResult.booking.booking_number) {
-            bookingNumbers.push(outboundResult.booking.booking_number);
-            console.log("Outbound flight booked with booking number:", outboundResult.booking.booking_number);
-        } else if (outboundResult.booking_number) {
-            // Fallback for direct booking_number in response
-            bookingNumbers.push(outboundResult.booking_number);
-            console.log("Outbound flight booked with booking number:", outboundResult.booking_number);
-        }
-
-        // Roundtrip reservation
-        if (selectedFlightReturn && tripType === "roundtrip") {
-            const bookReturn = await fetch("flights.php", {
-                method: "POST", 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    action: "book",
-                    user_id: userId,
-                    flight_id: selectedFlightReturn.flight_id,
-                    seats: seatsNeeded
-                })
-            });
-
-            // Read and check return booking response
-            const returnResult = await bookReturn.json();
-            
-            // Check for errors
-            if (!bookReturn.ok) {
-                throw new Error(returnResult.error || `Return flight booking failed with status ${bookReturn.status}`);
-            }
-            if (!returnResult.success) {
-                throw new Error(returnResult.error || "Return flight booking failed");
-            }
-
-            // Extract booking number for return flight
-            if (returnResult.booking && returnResult.booking.booking_number) {
-                bookingNumbers.push(returnResult.booking.booking_number);
-                console.log("Return flight booked with booking number:", returnResult.booking.booking_number);
-            } else if (returnResult.booking_number) {
-                // Fallback for direct booking_number in response
-                bookingNumbers.push(returnResult.booking_number);
-                console.log("Return flight booked with booking number:", returnResult.booking_number);
-            }
-        }
-
-            // Store booking numbers in cart
-        const cart = {
-            flight: selectedFlight,
-            passengers: passengers,
-            tripType: tripType,
-            selectedFlightReturn: selectedFlightReturn,
-            bookingNumber: bookingNumbers.length > 0 ? bookingNumbers[0] : null,
-            bookingNumbers: bookingNumbers, 
-            passengersDetails: passengersDetails,
-            addedDate: Date.now()
-        };
-
         localStorage.setItem("cart", JSON.stringify(cart));
-
         alert("Flight added to cart successfully!");
         window.location.href = "cart.html";
-        //const totalPassengers = passengers.adults + passengers.children + passengers.infants;
-
-        //openPassengerModal(totalPassengers, (passengersDetails) => {
-        //    cart.passengers_details = passengersDetails;
-        //    localStorage.setItem("cart", JSON.stringify(cart));
-        //    alert("Flight added to cart successfully!");
-        //    window.location.href = "cart.html";
-        //});
-
-
     } catch (error) {
-        console.error("Error booking flight:", error);
-        alert("Please enter the passenger information");
+        console.error("Error saving to cart:", error);
+        alert("Failed to add flight to cart. Please try again.");
     }
 }
 
