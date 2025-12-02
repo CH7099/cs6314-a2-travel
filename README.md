@@ -10,18 +10,18 @@ There are default values set for the files for user.json and hotel.json (left ov
 *PHP will need to be added to your system PATH environment variable
 
 ---------------------------------------------------------------------------------------
-1） Install MySQL
-2） Import the database
-    data/db/create_database.sql
-    data/db/users.sql
-3） Edit db.php
-    $servername = "localhost";
-    $username   = "travel_user";   // or root
-    $password   = "Travel123!";    // or your own password
-    $database   = "travel_db";
-4） Start the PHP server     
-    php -S localhost:8000
-5） Entering the following URL in your browser: http://localhost:8000/home.html
+1） Install MySQL  
+2） Import the database  
+    data/db/create_database.sql  
+    data/db/users.sql  
+3） Edit db.php  
+    $servername = "localhost";  
+    $username   = "travel_user";   // or root  
+    $password   = "Travel123!";    // or your own password  
+    $database   = "travel_db";  
+4） Start the PHP server       
+    php -S localhost:8000  
+5） Entering the following URL in your browser: http://localhost:8000/home.html  
 
 
 -------------------------------------------------------------
