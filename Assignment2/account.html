@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Cart</title>
+        <title>Account</title>
         <link rel="stylesheet" type="text/css" href="assets/css/mystyle.css">
         <script type="text/javascript" src="assets/js/travel.js"></script>
-        <script type="text/JavaScript" src="assets/js/cart.js"></script>
-        <script src="assets/js/jquery-3.7.1.js"></script>
+        <script type="text/javascript" src="assets/js/helper.js"></script>
     </head>
-    <body id="cart">
+    <body id="account">
         <div class="header">
-        <h1 style="display:inline">Cart</h1>
+        <h1 style="display:inline">Account</h1>
         <h1 id="namedrop" style="display:inline"></h1>
     </div>
 
     <div class="row">
         <div class="topnav">
             <a href="home.html">Home</a>
-            <a href="login_register.php">Register</a>
-            <a href="register.html">Register</a>
             <a href="account.html">Account</a>
+            <a href="register.html">Register</a>
             <a href="stays.html">Stays</a>
             <a href="flights.html">Flights</a>
             <a href="cars.html">Cars</a>
@@ -49,29 +47,9 @@
             <br>
         </div>
         <div class="column middle">
-            <div class="cart-container">
-                <div class="column next">
-                    <h3>Passenger Information:</h3>
-                    <p id="passinfo"></p>
-                </div>
-
-                <div class="column next">
-                    <h3>Selected Flights:</h3>
-                    <p id="flightinfo"></p>
-                    <h3>Total Price:</h3>
-                    <p id="totalpriceinfo"></p>    
-                </div>
-                
-                <div class="column next">
-                    <h3>Selected Car:</h3>
-                    <p id="carinfo"></p>
-                </div>
-                
-                <div class="column next">
-                    <h3>Selected Hotel:</h3>
-                    <p id="hotelinfo"></p>
-                </div>
-            </div>
+            <h2>Main content</h2>
+            <h3>Current Date/Time: </h3>
+            <p id="datetimenow"></p>
         </div>
     </div>
 

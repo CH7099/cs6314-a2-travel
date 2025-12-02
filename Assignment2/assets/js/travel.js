@@ -814,4 +814,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
     if (document.body.id === "stays"){
         document.getElementById("staysform").addEventListener("submit", staySubmitHandler); //REQUIRED to prevent immediate page refresh
     }
+
+    //Check if user is logged in via local storage; if yes, display user name at top of screen
+    const storedName = localStorage.getItem("user_name");
+    if (storedName) {
+        const userDisplay = document.getElementById("namedrop");
+        if (userDisplay) {
+            userDisplay.textContent = storedName;
+        } else {
+            userDisplay.textContent = "";
+        }
+    }
 });
