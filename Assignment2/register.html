@@ -46,7 +46,20 @@
             <br>
         </div>
         <div class="column middle">
-            <h2>Register Form</h2>
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1;">
+                    <h2>Login</h2>
+                    <form id="loginForm">
+                        Email:<br>
+                        <input id="loginEmail" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="loginEmail" required><br><br>
+                        Password:<br>
+                        <input id="loginPassword" type="password" onfocus="myFocus(this)" onblur="myBlur(this)" name="loginPassword" required><br><br>
+                        <button type="button" onclick="validateLoginForm()">Login</button>
+                    </form>
+                    <p id="loginValid"></p>
+                </div>
+                <div style="flex: 1;">
+                    <h2>Register Form</h2>
             <form id="registerForm">
                 First name:<br>
                 <input id="firstname" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="firstname" required><br><br>
@@ -70,6 +83,8 @@
                 <button type="button" onclick="validateRegisterForm()">Submit</button>
             </form>
             <p id="registerValid"></p>
+                </div>
+            </div>
         </div>
     </div>
 
