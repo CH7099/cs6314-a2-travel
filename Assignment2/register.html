@@ -47,45 +47,20 @@
             <br>
         </div>
         <div class="column middle">
-            <div style="display: flex; gap: 20px;">
-                <div style="flex: 1;">
-                    <h2>Login</h2>
-                    <form id="loginForm">
-                        Email:<br>
-                        <input id="loginEmail" type="text" onfocus="myFocus(this)" onblur="myBlur(this)" name="loginEmail" required><br><br>
-                        Password:<br>
-                        <input id="loginPassword" type="password" onfocus="myFocus(this)" onblur="myBlur(this)" name="loginPassword" required><br><br>
-                        <button type="button" onclick="validateLoginForm()">Login</button>
-                    </form>
-                    <p id="loginValid"></p>
-                </div>
-                <div style="flex: 1;">
-                <h2>Register Form</h2>
-                <form method="post" action="login_register.php" id="registerForm">
-                    First name:<br>
-                    <input id="firstname" type="text" name="firstname" required><br><br>
-                    Last name:<br>
-                    <input id="lastname" type="text" name="lastname" required><br><br>
-                    Date of Birth:<br>
-                    <input id="dob" type="date" name="dob" required><br><br>
-                    Gender:<br>
-                    <input type="radio" name="gender" value="male">
-                    <label >Male</label>
-                    <input type="radio" name="gender" value="female">
-                    <label >Female</label><br><br>
-                    Phone Number:<br>
-                    <input id="phone" type="text" name="phone" required><br><br>
-                    Email:<br>
-                    <input id="email" type="text" name="email" required><br><br>
-                    Password:<br>
-                    <input id="password" type="password" name="password" required><br><br>
-                    Re-Enter Password:<br>
-                    <input id="rePassword" type="password" name="rePassword" required><br><br>
-                    <button type="submit" name="register">Register</button>
-                </form>
-                <p style="color: red;"><?php echo $register_message; ?></p>
-                </div>
-            </div>
+            <h2>Register Form</h2>
+            <form method="post" action="register.php" id="registerForm">
+                <input type="hidden" name="action" value="register">
+                <input type="text" name="first_name" placeholder="First Name" required><br>
+                <input type="text" name="last_name" placeholder="Last Name" required><br>
+                <input type="date" name="dob" placeholder="Date of Birth" required><br>
+                <input type="radio" name="gender" value="male"> Male <input type="radio" name="gender" value="female"> Female<br>
+                <input type="text" name="phone" placeholder="Phone" required placeholder="ddd-ddd-dddd"><br>
+                <input type="email" name="email" placeholder="Email" required><br>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required><br>
+                <button type="submit" name="register">Register</button>
+            </form>
+            <p style="color: red;"><?php echo $register_message; ?></p>
         </div>
     </div>
 

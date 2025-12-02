@@ -6,14 +6,15 @@ $register_message = "";
 
 /* Register */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "register") {
-    $phone    = $_POST["phone"];
-    $password = $_POST["password"];
-    $confirm  = $_POST["confirm_password"];
     $first    = $_POST["first_name"];
     $last     = $_POST["last_name"];
     $dob      = $_POST["dob"];
     $gender   = $_POST["gender"] ?? "";
+    $phone    = $_POST["phone"];
     $email    = $_POST["email"];
+    $password = $_POST["password"];
+    $confirm  = $_POST["confirm_password"];
+    
 
     /* Validate the form */
     /* All required fields must be filled */
