@@ -13,23 +13,23 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Sample Users
-INSERT INTO users (phone, password_hash, first_name, last_name, dob, gender, email) VALUES
+INSERT INTO users (phone, password_hash, first_name, last_name, dob, gender, email, isadmin) VALUES
 ('222-222-2222',
  '$2y$10$vgF7eA10P89eT7daEEnbOuZT7I5N5f5m0C0fiILgZz3nEQzDAu1h2',
- 'Alice', 'Admin', '1990-01-01', 'female', 'admin@example.com'),
+ 'Alice', 'Admin', '1990-01-01', 'female', 'admin@example.com', '1'),
 
 ('333-333-3333',
  '$2y$10$4FaVjjnJabceVZ8QFJEXEurH/MBvPkfm4nrD.dNyNhI9i8ZtQc.5y',
- 'John', 'Miller', '1998-06-16', 'male', 'john.miller@example.com'),
+ 'John', 'Miller', '1998-06-16', 'male', 'john.miller@example.com', '0'),
 
 ('444-444-4444',
  '$2y$10$4FaVjjnJabceVZ8QFJEXEurH/MBvPkfm4nrD.dNyNhI9i8ZtQc.5y',
- 'Emma', 'Brown', '2000-09-22', 'female', 'emma.brown@example.com'),
+ 'Emma', 'Brown', '2000-09-22', 'female', 'emma.brown@example.com', '0'),
 
 ('555-555-5555',
  '$2y$10$4FaVjjnJabceVZ8QFJEXEurH/MBvPkfm4nrD.dNyNhI9i8ZtQc.5y',
- 'Michael', 'Clark', '1995-12-03', 'male', 'michael.clark@example.com'),
+ 'Michael', 'Clark', '1995-12-03', 'male', 'michael.clark@example.com', '0'),
 
 ('666-666-6666',
  '$2y$10$4FaVjjnJabceVZ8QFJEXEurH/MBvPkfm4nrD.dNyNhI9i8ZtQc.5y',
- 'Sarah', 'Walker', '1999-03-18', 'female', 'sarah.walker@example.com');
+ 'Sarah', 'Walker', '1999-03-18', 'female', 'sarah.walker@example.com', '0');
