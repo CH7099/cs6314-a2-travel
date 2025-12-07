@@ -38,6 +38,7 @@ function fontChange(){
 
 //STAYS PAGE FUNCTIONS
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
+/*
 function staySubmitHandler(event){
     event.preventDefault(); //Necessary to prevent immediate refresh
 
@@ -307,6 +308,246 @@ function bookStays() {
         }
     };
     xhttp1.send();
+}
+*/
+function staySubmitHandler(event) {
+    event.preventDefault();
+
+    const p = "City Name: <br>Check-In Date: <br>Check-Out Date: <br>Number of Adults: <br>Number of Children: <br>Number of Infants: <br>Number of Rooms: <br></br>";
+
+    // Allowed cities (TX + CA)
+    const citiesTX = ["Houston","Dallas","Austin","San Antonio","El Paso","Fort Worth","Arlington","Corpus Christi",
+        "Plano","Laredo","Lubbock","Garland","Irving","Amarillo","Grand Prairie","Brownsville","Pasadena","Frisco","McKinney",
+        "Killeen","McAllen","Waco","Carrollton","Denton","Midland"];
+    const citiesCA = ["Adelanto","Agoura Hills","Alameda","Albany","Alhambra","Anaheim","Antioch","Apple Valley","Arcadia","Artesia",
+        "Bakersfield","Baldwin Park","Banning","Beaumont","Bell","Berkeley","Beverly Hills","Brentwood","Burbank","Calabasas",
+        "Carlsbad","Carson","Cathedral City","Cerritos","Chico","Chino","Chula Vista","Clovis","Colton","Compton","Concord","Corona",
+        "Costa Mesa","Culver City","Cupertino","Daly City","Davis","Delano","Diamond Bar","Downey","Dublin","Eastvale","El Cajon",
+        "El Monte","El Segundo","Fairfield","Folsom","Fontana","Fountain Valley","Fremont","Fresno","Fullerton","Garden Grove",
+        "Gardena","Glendale","Glendora","Goleta","Hacienda Heights","Hawaiian Gardens","Hawthorne","Hayward","Hemet","Hesperia",
+        "Huntington Beach","Indio","Irvine","La Habra","Laguna Niguel","Lake Elsinore","Lakewood","Lancaster","Lodi","Lomita",
+        "Long Beach","Los Angeles","Lynwood","Madera","Manhattan Beach","Manteca","Menlo Park","Merced","Milpitas","Mission Viejo",
+        "Modesto","Montebello","Monterey Park","Moreno Valley","Mountain View","Napa","National City","Newark","Norwalk","Novato",
+        "Oakland","Oceanside","Ontario","Orange","Oxnard","Palm Desert","Palm Springs","Palmdale","Palo Alto","Paramount",
+        "Pasadena","Petaluma","Pico Rivera","Piedmont","Pinole","Placentia","Pomona","Port Hueneme","Rancho Cordova","Rancho Cucamonga",
+        "Redding","Redlands","Redondo Beach","Redwood City","Rialto","Richmond","Riverside","Rocklin","Roseville","Sacramento",
+        "Salinas","San Bernardino","San Bruno","San Diego","San Francisco","San Jose","San Leandro","San Marcos","San Mateo","San Pablo",
+        "San Rafael","Santa Ana","Santa Barbara","Santa Clara","Santa Clarita","Santa Cruz","Santa Maria","Santa Monica","Santa Rosa",
+        "Santee","Signal Hill","Simi Valley","South Gate","South San Francisco","Stockton","Sunnyvale","Temecula","Thousand Oaks",
+        "Torrance","Tracy","Tustin","Union City","Upland","Vacaville","Vallejo","Ventura","Victorville","Visalia","Vista","Walnut Creek",
+        "West Covina","West Hollywood","West Sacramento","Westminster","Whittier","Woodland","Yorba Linda","Yuba City"];
+
+    const allowedCities = [...citiesTX, ...citiesCA];
+
+    const city = document.getElementById("city").value.trim();
+    const checkin = document.getElementById("check-in").value;
+    const checkout = document.getElementById("check-out").value;
+    const adults = Number(document.getElementById("adults").value);
+    const children = Number(document.getElementById("children").value);
+    const infants = Number(document.getElementById("infants").value);
+    const result = document.getElementById("validationresult");
+
+    if (!allowedCities.some(c => c.toUpperCase() === city.toUpperCase())) {
+        alert("ERROR: You must choose a city in either Texas or California.");
+        result.innerHTML = "";
+        return;
+    }
+
+    const arr = new Date(checkin);
+    const dep = new Date(checkout);
+    if (arr >= dep) {
+        alert("ERROR: Check-in date must be before check-out date.");
+        result.innerHTML = "";
+        return;
+    }
+
+    if (isNaN(adults) || adults <= 0 || isNaN(children) || children < 0 || isNaN(infants) || infants < 0) {
+        alert("ERROR: Invalid guest numbers.");
+        result.innerHTML = "";
+        return;
+    }
+
+    const rooms = Math.ceil((adults + children) / 2);
+
+    result.innerHTML = `City: ${city}<br>
+                        Check-In: ${checkin}<br>
+                        Check-Out: ${checkout}<br>
+                        Adults: ${adults}<br>
+                        Children: ${children}<br>
+                        Infants: ${infants}<br>
+                        Rooms: ${rooms}<br>`;
+
+    // Set hidden inputs for booking
+    document.getElementById("hiddenCity").value = city;
+    document.getElementById("hiddenCheckin").value = checkin;
+    document.getElementById("hiddenCheckout").value = checkout;
+    document.getElementById("hiddenAdults").value = adults;
+    document.getElementById("hiddenChildren").value = children;
+    document.getElementById("hiddenInfants").value = infants;
+    document.getElementById("hiddenRooms").value = rooms;
+
+    loadHotels(city);
+}
+
+function bookStays() {
+    const selected = document.querySelector('input[name="selectedHotel"]:checked');
+    if (!selected) {
+        alert("Please select a hotel to book.");
+        return;
+    }
+
+    const hotelId = selected.value;
+    const price = parseFloat(selected.getAttribute("data-price"));
+    const city = document.getElementById("hiddenCity").value;
+    const checkin = document.getElementById("hiddenCheckin").value;
+    const checkout = document.getElementById("hiddenCheckout").value;
+    const adults = parseInt(document.getElementById("hiddenAdults").value);
+    const children = parseInt(document.getElementById("hiddenChildren").value);
+    const infants = parseInt(document.getElementById("hiddenInfants").value);
+    const rooms = parseInt(document.getElementById("hiddenRooms").value);
+
+    const nights = (new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24);
+    const totalPrice = price * rooms * nights;
+
+    // Collect guest info in modal
+    collectGuestInfo(adults, children, infants, function(guests) {
+        if (!guests || guests.length === 0) return;
+
+        const bookingData = {
+            hotel_id: hotelId,
+            city: city,
+            checkin: checkin,
+            checkout: checkout,
+            rooms: rooms,
+            price_per_night: price,
+            total_price: totalPrice,
+            guests: guests
+        };
+
+        console.log("Booking data:", bookingData);
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "book_hotel.php", true);
+        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState === 4) {
+                if (xhttp.status === 200) {
+                    let resp = {};
+                    try {
+                        resp = JSON.parse(xhttp.responseText);
+                    } catch (e) {
+                        console.error("Invalid JSON response", e, xhttp.responseText);
+                        alert("Booking failed: invalid server response");
+                        return;
+                    }
+
+                    if (resp.success) {
+                        alert("Booking confirmed! Booking #: " + resp.booking_number);
+                        document.getElementById("hotelResults").innerHTML = "";
+                    } else {
+                        alert("Booking failed: " + resp.error);
+                    }
+                } else {
+                    alert("Error contacting server: " + xhttp.status);
+                }
+            }
+        };
+
+        xhttp.send(JSON.stringify(bookingData));
+    });
+}
+
+function collectGuestInfo(adults, children, infants, callback) {
+    const totalGuests = adults + children + infants;
+    const guestFieldsContainer = document.getElementById("guestFields");
+    guestFieldsContainer.innerHTML = "";
+
+    for (let i = 0; i < totalGuests; i++) {
+        let category = i < adults ? "Adult" : (i < adults + children ? "Child" : "Infant");
+
+        const div = document.createElement("div");
+        div.classList.add("guest-group");
+        div.innerHTML = `
+            <h4>${category} Guest #${i+1}</h4>
+            <label>First Name: <input type="text" name="first_name" required></label>
+            <label>Last Name: <input type="text" name="last_name" required></label>
+            <label>Date of Birth: <input type="date" name="dob" required></label>
+            <label>SSN: <input type="text" name="ssn" required></label>
+        `;
+        guestFieldsContainer.appendChild(div);
+    }
+
+    document.getElementById("guestModal").style.display = "block";
+
+    const guestForm = document.getElementById("guestForm");
+    guestForm.onsubmit = function(event) {
+        event.preventDefault();
+        const guests = [];
+        const groups = guestFieldsContainer.getElementsByClassName("guest-group");
+
+        for (let group of groups) {
+            const first_name = group.querySelector('input[name="first_name"]').value.trim();
+            const last_name = group.querySelector('input[name="last_name"]').value.trim();
+            const dob = group.querySelector('input[name="dob"]').value.trim();
+            const ssn = group.querySelector('input[name="ssn"]').value.trim();
+
+            if (!first_name || !last_name || !dob || !ssn) {
+                alert("All fields are required.");
+                return;
+            }
+
+            const category = group.querySelector("h4").innerText.split(" ")[0].toLowerCase();
+            guests.push({ first_name, last_name, dob, ssn, category });
+        }
+
+        closeGuestModal();
+        callback(guests);
+    };
+}
+
+function closeGuestModal() {
+    document.getElementById("guestModal").style.display = "none";
+}
+
+function loadHotels(city) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "get_hotels.php?city=" + encodeURIComponent(city), true);
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === 4) {
+            if (xhttp.status === 200) {
+                let hotels = [];
+                try {
+                    hotels = JSON.parse(xhttp.responseText);
+                } catch (e) {
+                    console.error("Invalid JSON response", e);
+                    document.getElementById("hotelResults").innerHTML = "<p>Error loading hotels.</p>";
+                    return;
+                }
+
+                let html = "<h3>Available Hotels:</h3>";
+                if (hotels.length === 0) {
+                    html += "<p>No hotels found for your criteria.</p>";
+                } else {
+                    hotels.forEach(hotel => {
+                        html += `<div class="hotel-option">
+                                    <input type="radio" name="selectedHotel" value="${hotel.hotel_id}" 
+                                           data-name="${hotel.name}" data-price="${hotel.price_per_night}">
+                                    <strong>${hotel.name}</strong> — $${hotel.price_per_night}/night
+                                </div><br>`;
+                    });
+                }
+
+                document.getElementById("hotelResults").innerHTML = html;
+            } else {
+                console.error("Error loading hotels:", xhttp.status);
+                document.getElementById("hotelResults").innerHTML = "<p>Error contacting server.</p>";
+            }
+        }
+    };
+
+    xhttp.send();
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------

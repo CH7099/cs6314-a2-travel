@@ -106,5 +106,25 @@
     <script>
         document.getElementById("staysform").addEventListener("submit", staySubmitHandler);
     </script>
+
+    <input type="hidden" id="hiddenCity">
+    <input type="hidden" id="hiddenCheckin">
+    <input type="hidden" id="hiddenCheckout">
+    <input type="hidden" id="hiddenAdults">
+    <input type="hidden" id="hiddenChildren">
+    <input type="hidden" id="hiddenInfants">
+    <input type="hidden" id="hiddenRooms">
+
+
+    <div id="guestModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeGuestModal()">&times;</span>
+            <h3>Enter Guest Information</h3>
+            <form id="guestForm">
+                <div id="guestFields"></div>
+                <button type="submit">Submit Guests</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
