@@ -779,14 +779,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
         });
         document.getElementById("logoutLink").style.display = "none"; //Hide logout link
     }
-});
 
-//Logout handler
-document.getElementById("logoutLink")?.addEventListener("click", function() {
-    // Clear local storage on logout
-    localStorage.removeItem("user_name"); 
-    localStorage.removeItem("user_id");
-    alert("You have been logged out.");
-    // Redirect to home page after logout
-    window.location.href = "index.html";
+    const logoutButton = document.getElementById("logoutLink");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", function() {
+            localStorage.removeItem("user_name"); 
+            localStorage.removeItem("user_id");
+            alert("You have been logged out.");
+            window.location.href = "home.html";
+        });
+    }
 });
