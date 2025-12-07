@@ -9,14 +9,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST["password"];
 
     if (!$phone || !$password) {
-        $_SESSION["login_message"] = "Please enter both phone and password.";
-        header("Location: login.html");
+        echo "<script>alert('Please enter both phone and password.'); window.location='login.html';</script>";
         exit();
     }
 
     // Check if the phone number exists in the database
     $stmt = $conn->prepare(
-        "SELECT phone, password_hash, first_name, last_name 
+        "SELECT userid, phone, password_hash, first_name, last_name 
          FROM users 
          WHERE phone = ?"
     );
@@ -25,16 +24,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows !== 1) {
-        $_SESSION["login_message"] = "Invalid phone or password.";
-        header("Location: login.html");
+        echo "<script>alert('Invalid phone or password.'); window.location='login.html';</script>";
         exit();
     }
 
     $row = $result->fetch_assoc();
 
     if (!password_verify($password, $row["password_hash"])) {
-        $_SESSION["login_message"] = "Invalid phone or password.";
-        header("Location: login.html");
+        echo "<script>alert('Invalid phone or password.'); window.location='login.html';</script>";
         exit();
     }
 
@@ -42,20 +39,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $_SESSION["phone"]      = $row["phone"];
     $_SESSION["first_name"] = $row["first_name"];
     $_SESSION["last_name"]  = $row["last_name"];
+    $_SESSION["userid"]     = $row["userid"];
 
-    // Save user name to browser storage
+    // Save user name and userid to browser local storage and redirect
     echo "
     <script>
         localStorage.setItem('user_name', '" . $row['first_name'] . " " . $row['last_name'] . "');
+        localStorage.setItem('user_id', '" . $row['userid'] . "');
         window.location = 'home.html';
     </script>";
     exit();
 }
 
-// If not POST, only show the message
+// Optional: if the page is loaded without POST
 if (isset($_SESSION["login_message"])) {
-    echo "<p style='color:red'>" . $_SESSION["login_message"] . "</p>";
+    echo "<script>alert('" . $_SESSION["login_message"] . "');</script>";
     unset($_SESSION["login_message"]);
 }
-
 ?>

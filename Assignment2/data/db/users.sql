@@ -1,8 +1,8 @@
 USE travel_db;
 
 CREATE TABLE IF NOT EXISTS users (
-    userid INT AUTO_INCREMENT,
-    phone VARCHAR(12) PRIMARY KEY,
+    userid INT AUTO_INCREMENT PRIMARY KEY,
+    phone VARCHAR(12) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
