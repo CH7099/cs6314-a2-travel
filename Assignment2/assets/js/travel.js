@@ -757,7 +757,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         document.getElementById("staysform").addEventListener("submit", staySubmitHandler); //REQUIRED to prevent immediate page refresh
     }
 
-    //Check if user is logged in via local storage; if yes, display user name at top of screen
+    //Check if user is logged in via local storage; if yes, display user name at top of screen and show logout link
     const storedName = localStorage.getItem("user_name");
     if (storedName) {
         const userDisplay = document.getElementById("namedrop");
@@ -766,24 +766,27 @@ document.addEventListener("DOMContentLoaded", ()=>{
         } else {
             userDisplay.textContent = "";
         }
+        document.getElementById("logoutLink").style.display = "inline"; //Show logout link
     }
 
-    // Check if user is logged in then display navigation links
-    if (storedName) {
-        // Show these links only when logged in
-        const showOnLogin = ["account", "stays", "flights", "cars", "cruises", "contact-us", "cart"];
-
-        showOnLogin.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.style.display = "inline-block";
+    // Check if user is logged in then permit access to certain links; if not, block access and alert user to log in
+    if (!storedName) {
+        document.querySelectorAll("a.requires-login").forEach(link => {
+            link.addEventListener("click", function (event) {
+                event.preventDefault();
+                alert("You must log in before accessing this page.");
+            });
         });
-    } else {
-        // If user is NOT logged in, hide these links
-        const hideOnLogout = ["account", "stays", "flights", "cars", "cruises", "contact-us", "cart"];
-
-        hideOnLogout.forEach(id => {
-            const el = document.getElementById(id);
-            //if (el) el.style.display = "none";
-        });
+        document.getElementById("logoutLink").style.display = "none"; //Hide logout link
     }
+});
+
+//Logout handler
+document.getElementById("logoutLink")?.addEventListener("click", function() {
+    // Clear local storage on logout
+    localStorage.removeItem("user_name"); 
+    localStorage.removeItem("user_id");
+    alert("You have been logged out.");
+    // Redirect to home page after logout
+    window.location.href = "index.html";
 });
