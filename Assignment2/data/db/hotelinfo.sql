@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS Hotel_Booking (
 
 -- Guests table
 CREATE TABLE IF NOT EXISTS Guests (
-    SSN VARCHAR(20) PRIMARY KEY,
+    guestid INT AUTO_INCREMENT PRIMARY KEY,
+    SSN VARCHAR(20),
     hotel_booking_id varchar(20),
     first_name VARCHAR(100),
     last_name VARCHAR(100),
