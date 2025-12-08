@@ -444,6 +444,7 @@ function bookStays() {
 
                     if (resp.success) {
                         alert("Booking confirmed! Booking #: " + resp.booking_number);
+                        localStorage.setItem("hotel_booking_id", resp.booking_number);
                         document.getElementById("hotelResults").innerHTML = "";
                     } else {
                         alert("Booking failed: " + resp.error);
