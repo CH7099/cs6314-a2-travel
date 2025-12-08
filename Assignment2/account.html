@@ -8,60 +8,111 @@
     </head>
     <body id="account">
         <div class="header">
-        <h1 style="display:inline">Account</h1>
-        <h1 id="namedrop" style="display:inline"></h1>
-        <button id="logoutLink" style="display:none">Log Out</button>
-    </div>
-
-    <div class="row">
-        <div class="topnav">
-            <a href="home.html">Home</a>
-            <a href="register.html">Register</a>
-            <a href="login.html">Login</a>
-            <a href="account.html" class="requires-login">Account</a>
-            <a href="stays.html" class="requires-login">Stays</a>
-            <a href="flights.html" class="requires-login">Flights</a>
-            <a href="cars.html" class="requires-login">Cars</a>
-            <a href="cruises.html" class="requires-login">Cruises</a>
-            <a href="contact-us.html" class="requires-login">Contact us</a>
-            <a href="cart.html" class="requires-login">Cart</a>
+            <h1 style="display:inline">Account</h1>
+            <h1 id="namedrop" style="display:inline"></h1>
+            <button id="logoutLink" style="display:none">Log Out</button>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="column side">
-            <h2>Left Side</h2>
-            <p class="prefselector">Choose background color: </p>
-            <select id="colorpicker" onchange="colorChange()">
-                <option value="white" selected="true">White</option>
-                <option value="lightgray">Light Gray</option>
-                <option value="darkgray">Dark Gray</option>
-            </select>
-            <br>
-            <p class="prefselector">Choose font size: </p>
-            <select id="sizepicker" onchange="fontChange()">
-                <option value="12px" >12</option>
-                <option value="16px" selected="true">16</option>
-                <option value="18px">18</option>
-                <option value="20px">20</option>
-                <option value="24px">24</option>
-            </select>
-            <br>
-        </div>
-        <div class="column middle">
-            <div class="requires-admin">
-                <h2>Load Hotels from XML into SQL</h2>
-                <button id="loadHotelsBtn">Load Hotels</button>
-                <div id="result"></div>
+        <div class="row">
+            <div class="topnav">
+                <a href="home.html">Home</a>
+                <a href="register.html">Register</a>
+                <a href="login.html">Login</a>
+                <a href="account.html" class="requires-login">Account</a>
+                <a href="stays.html" class="requires-login">Stays</a>
+                <a href="flights.html" class="requires-login">Flights</a>
+                <a href="cars.html" class="requires-login">Cars</a>
+                <a href="cruises.html" class="requires-login">Cruises</a>
+                <a href="contact-us.html" class="requires-login">Contact us</a>
+                <a href="cart.html" class="requires-login">Cart</a>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="footer">
-            <h3 id="Names">Nicholas Aminzadeh, NHA190001 | Changhui Sun, CXS240024 | Thi Vu, TAV180002</h3>
+        <div class="row">
+            <div class="column side">
+                <h2>Left Side</h2>
+                <p class="prefselector">Choose background color: </p>
+                <select id="colorpicker" onchange="colorChange()">
+                    <option value="white" selected="true">White</option>
+                    <option value="lightgray">Light Gray</option>
+                    <option value="darkgray">Dark Gray</option>
+                </select>
+                <br>
+                <p class="prefselector">Choose font size: </p>
+                <select id="sizepicker" onchange="fontChange()">
+                    <option value="12px" >12</option>
+                    <option value="16px" selected="true">16</option>
+                    <option value="18px">18</option>
+                    <option value="20px">20</option>
+                    <option value="24px">24</option>
+                </select>
+                <br>
+            </div>
+            <div class="column middle">
+                <div>
+                    <h2>Lookup by Booking ID (User)</h2>
+                    <div>
+                        <label>Flight Booking ID: <input id="flightBookingId" type="text"></label>
+                        <button onclick="queryFlightBooking()">Get Flight Booking</button>
+                    </div>
+                    <div>
+                        <label>Hotel Booking ID: <input id="hotelBookingId" type="text"></label>
+                        <button onclick="queryHotelBooking()">Get Hotel Booking</button>
+                    </div>
+                    <div>
+                        <label>Flight Booking ID (Passengers): <input id="flightBookingIdPassengers" type="text"></label>
+                        <button onclick="queryPassengers()">Get Passengers</button>
+                    </div>
+                    <div>
+                        <button onclick="querySeptemberBookings()">Get All Bookings (Sep 2024)</button>
+                    </div>
+                    <div>
+                        <label>Search Bookings by SSN: <input id="ssnQuery" type="text"></label>
+                        <button onclick="queryBySSN()">Search by SSN</button>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="requires-admin">
+                    <h2>Admin Queries</h2>
+                    <div>
+                        <label>Texas city substring (e.g. "Dallas, TX"): <input id="texasCity" type="text" placeholder="e.g. Dallas, TX"></label>
+                        <button onclick="adminFlightsFromTexasSepOct()">Flights from Texas (Sep–Oct 2024)</button>
+                        <button onclick="adminFlightsFromTexasNoInfant()">Flights from Texas (no infants) (Sep–Oct 2024)</button>
+                    </div>
+
+                    <div>
+                        <label>Texas hotel city substring (e.g. "Austin, TX"): <input id="texasHotelCity" type="text" placeholder="e.g. Austin, TX"></label>
+                        <button onclick="adminHotelsInTexasSepOct()">Hotels in Texas (Sep–Oct 2024)</button>
+                    </div>
+
+                    <div>
+                        <button onclick="adminMostExpensiveHotels()">Most Expensive Booked Hotels (Top 10)</button>
+                        <button onclick="adminMostExpensiveFlights()">Most Expensive Booked Flights (Top 10)</button>
+                    </div>
+
+                    <div>
+                        <button onclick="adminFlightsWithInfant()">Flights with Infant</button>
+                        <button onclick="adminFlightsWithInfantAnd5Children()">Flights with Infant and ≥5 Children</button>
+                    </div>
+
+                    <div>
+                        <label>California arrival substring (e.g. "Los Angeles, CA"): <input id="californiaCity" type="text" placeholder="e.g. Los Angeles, CA"></label>
+                        <button onclick="adminCountFlightsArrivingCaliforniaSepOct()">Count Flights Arriving to CA (Sep–Oct 2024)</button>
+                    </div>
+
+                    <hr>
+
+                    <div id="result" style="white-space:pre-wrap;margin-top:18px;border:1px solid #ddd;padding:12px;"></div>
+                </div>
+            </div>
         </div>
-    </div>
 
+        <div class="row">
+            <div class="footer">
+                <h3 id="Names">Nicholas Aminzadeh, NHA190001 | Changhui Sun, CXS240024 | Thi Vu, TAV180002</h3>
+            </div>
+        </div>
     </body>
 </html>
