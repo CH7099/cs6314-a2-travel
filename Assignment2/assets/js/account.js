@@ -95,6 +95,18 @@ function queryBySSN() {
 */
 
 document.addEventListener("DOMContentLoaded", function() {
+    if(localStorage.getItem("is_admin") !== "1") {
+        const adminElements = document.getElementsByClassName("requires-admin");
+        for(let i = 0; i < adminElements.length; i++) {
+            adminElements[i].style.display = "none";
+        }
+    } else {
+        const adminElements = document.getElementsByClassName("requires-admin");
+        for(let i = 0; i < adminElements.length; i++) {
+            adminElements[i].style.display = "block";
+        }
+    }
+    
     document.getElementById("loadHotelsBtn").addEventListener("click", function() {
         const resultDiv = document.getElementById("result");
 

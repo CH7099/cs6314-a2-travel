@@ -1026,6 +1026,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         logoutButton.addEventListener("click", function() {
             localStorage.removeItem("user_name"); 
             localStorage.removeItem("user_id");
+            localStorage.removeItem("is_admin");
             alert("You have been logged out.");
             window.location.href = "home.html";
         });

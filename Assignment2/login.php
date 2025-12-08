@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Check if the phone number exists in the database
     $stmt = $conn->prepare(
-        "SELECT userid, phone, password_hash, first_name, last_name 
+        "SELECT userid, phone, password_hash, first_name, last_name, isadmin 
          FROM users 
          WHERE phone = ?"
     );
@@ -40,12 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $_SESSION["first_name"] = $row["first_name"];
     $_SESSION["last_name"]  = $row["last_name"];
     $_SESSION["userid"]     = $row["userid"];
+    $_SESSION["isadmin"]    = $row["isadmin"];
 
     // Save user name and userid to browser local storage and redirect
     echo "
     <script>
         localStorage.setItem('user_name', '" . $row['first_name'] . " " . $row['last_name'] . "');
         localStorage.setItem('user_id', '" . $row['userid'] . "');
+        localStorage.setItem('is_admin', '" . $row['isadmin'] . "');
         window.location = 'home.html';
     </script>";
     exit();
