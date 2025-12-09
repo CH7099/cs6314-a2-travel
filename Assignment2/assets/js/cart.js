@@ -398,9 +398,8 @@ function displayBookingInfo(bookingData) {
         if (passengerInfoContainer) passengerInfoContainer.style.display = "none";
     }
 }
-/*
 document.addEventListener("DOMContentLoaded", ()=>{
-    loadCart();
+    loadCart();  // 加载购物车内容（航班、汽车、酒店）
     
     // Add event listener for Book Flight button
     const bookFlightBtn = document.getElementById("bookFlightBtn");
@@ -409,6 +408,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
             bookFlight();
         });
     }
+    
+    // Load hotel from MySQL (已预订的酒店)
+    loadHotelMySQL();
 });
 
 function bookFlight() {
@@ -522,12 +524,12 @@ function bookFlight() {
                 } catch (error) {
                     alert("Error contacting server. Status: " + xhttp.status);
                 }
-});
-*/
+            }
+        }
+    };
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadHotelMySQL();
-});
+    xhttp.send(JSON.stringify(bookingData));
+}
 
 function loadHotelMySQL() {
     const hotelBookingID = localStorage.getItem("hotel_booking_id");
@@ -603,7 +605,6 @@ function loadHotelMySQL() {
         }
     };
 
-    xhttp.send(JSON.stringify(bookingData));
     // Send JSON request
     xhttp.send(JSON.stringify({
         hotel_booking_id: hotelBookingID

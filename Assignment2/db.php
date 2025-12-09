@@ -1,6 +1,6 @@
 <?php
 $servername = "localhost";
-$username = "travel_user1";     
+$username = "travel_user";     
 $password = "Travel123!";         
 $database = "travel_db"; 
 
