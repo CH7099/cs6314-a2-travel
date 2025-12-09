@@ -5,11 +5,28 @@ body {
     padding: 0;                    /* remove default padding */
 }
 
-/*Style header*/
+/*Style header & footer*/
 .header {
     padding: 20px;
     text-align: center;
     background-color: rgb(132, 190, 209);
+}
+
+.namedrop {
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.logoutLink {
+    margin-left: 20px;
+    font-size: 16px;
+    padding: 8px 12px;
+    background-color: rgb(101, 144, 158);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .footer {
@@ -112,7 +129,7 @@ body {
 }
 
 /* Input field styles */
-input[type=text] {
+input[type=text], input[type=password], input[type=email] {
     width: 20%;
     padding: 6px 5px;
     margin: 4px 0;

@@ -444,6 +444,7 @@ function bookStays() {
 
                     if (resp.success) {
                         alert("Booking confirmed! Booking #: " + resp.booking_number);
+                        localStorage.setItem("hotel_booking_id", resp.booking_number);
                         document.getElementById("hotelResults").innerHTML = "";
                     } else {
                         alert("Booking failed: " + resp.error);
@@ -1027,6 +1028,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             localStorage.removeItem("user_name"); 
             localStorage.removeItem("user_id");
             localStorage.removeItem("is_admin");
+            localStorage.removeItem("hotel_booking_id");
             alert("You have been logged out.");
             window.location.href = "home.html";
         });

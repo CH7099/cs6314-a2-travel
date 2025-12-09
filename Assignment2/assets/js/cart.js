@@ -398,7 +398,7 @@ function displayBookingInfo(bookingData) {
         if (passengerInfoContainer) passengerInfoContainer.style.display = "none";
     }
 }
-
+/*
 document.addEventListener("DOMContentLoaded", ()=>{
     loadCart();
     
@@ -522,9 +522,90 @@ function bookFlight() {
                 } catch (error) {
                     alert("Error contacting server. Status: " + xhttp.status);
                 }
+});
+*/
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadHotelMySQL();
+});
+
+function loadHotelMySQL() {
+    const hotelBookingID = localStorage.getItem("hotel_booking_id");
+
+    if (!hotelBookingID) {
+        document.getElementById("hotelinfo").innerHTML = "No hotel booking found.";
+        return;
+    }
+
+    console.log("Loading hotel info with booking ID:", hotelBookingID);
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "hotel_cart.php", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            if (this.status === 200) {
+                try {
+                    const response = JSON.parse(this.responseText);
+
+                    if (!response.success) {
+                        document.getElementById("hotelinfo").innerHTML =
+                            "Error: " + (response.message || "Unknown error.");
+                        return;
+                    }
+
+                    // Hotel Data
+                    const hotel = response.hotel;
+                    const guests = response.guests;
+
+                    let html = `
+                        <strong>Booking Number:</strong> ${hotel.hotel_booking_id}<br>
+                        <strong>Hotel ID:</strong> ${hotel.hotel_id}<br>
+                        <strong>Hotel Name:</strong> ${hotel.hotel_name}<br>
+                        <strong>City:</strong> ${hotel.city}<br>
+                        <strong>Price per Night:</strong> $${hotel.price_per_night}<br>
+                        <strong>Number of Rooms:</strong> ${hotel.number_of_rooms}<br>
+                        <strong>Check-In:</strong> ${hotel.check_in_date}<br>
+                        <strong>Check-Out:</strong> ${hotel.check_out_date}<br>
+                        <strong>Total Price:</strong> $${hotel.total_price}<br><br>
+                        <h4>Guests:</h4>
+                    `;
+
+                    if (guests.length === 0) {
+                        html += "<p>No guests found for this booking.</p>";
+                    } else {
+                        html += "<ul>";
+                        guests.forEach(g => {
+                            html += `
+                                <li>
+                                    ${g.first_name} ${g.last_name}<br>
+                                    SSN: ${g.SSN}<br>
+                                    DOB: ${g.date_of_birth}<br>
+                                    Category: ${g.category}
+                                </li><br>
+                            `;
+                        });
+                        html += "</ul>";
+                    }
+
+                    document.getElementById("hotelinfo").innerHTML = html;
+
+                } catch (err) {
+                    console.error("JSON parsing error:", err);
+                    document.getElementById("hotelinfo").innerHTML =
+                        "Error loading hotel data.";
+                }
+            } else {
+                document.getElementById("hotelinfo").innerHTML =
+                    "Server Error: Unable to load hotel booking.";
             }
         }
     };
 
     xhttp.send(JSON.stringify(bookingData));
+    // Send JSON request
+    xhttp.send(JSON.stringify({
+        hotel_booking_id: hotelBookingID
+    }));
 }
