@@ -1,8 +1,19 @@
 <?php
 include 'db.php';
 
-// Clear the table first
+// Disable foreign key checks temporarily
+$conn->query("SET FOREIGN_KEY_CHECKS = 0");
+
+// Clear related tables first 
+// delete tickets first
+$conn->query("DELETE FROM tickets");
+// delete flight_booking next
+$conn->query("DELETE FROM flight_booking");
+// truncate flights
 $conn->query("TRUNCATE TABLE flights");
+
+// Re-enable foreign key checks
+$conn->query("SET FOREIGN_KEY_CHECKS = 1");
 
 // Load the JSON file
 $jsonFile = 'data/flights.json';
