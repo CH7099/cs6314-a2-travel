@@ -1,7 +1,7 @@
 USE travel_db;
 
 CREATE TABLE IF NOT EXISTS passenger (
-    SSN             CHAR(9)     PRIMARY KEY,
+    SSN             VARCHAR(11)     PRIMARY KEY,
     first_name      VARCHAR(50) NOT NULL,
     last_name       VARCHAR(50) NOT NULL,
     date_of_birth   DATE        NOT NULL,

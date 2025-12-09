@@ -399,7 +399,7 @@ function displayBookingInfo(bookingData) {
     }
 }
 document.addEventListener("DOMContentLoaded", ()=>{
-    loadCart();  // 加载购物车内容（航班、汽车、酒店）
+    loadCart();  
     
     // Add event listener for Book Flight button
     const bookFlightBtn = document.getElementById("bookFlightBtn");
@@ -409,7 +409,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         });
     }
     
-    // Load hotel from MySQL (已预订的酒店)
+    // Load hotel from MySQL
     loadHotelMySQL();
 });
 

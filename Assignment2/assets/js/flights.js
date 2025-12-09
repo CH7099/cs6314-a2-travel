@@ -396,20 +396,27 @@ function validateInput() {
 }
 
 
-function openPassengerModal(totalPassengers, onConfirm) {
+function openPassengerModal(adults, children, infants, onConfirm) {
+  const totalPassengers = adults + children + infants;
   const modal = document.getElementById("passengerModal");
   const container = document.getElementById("passengerFormContainer");
   const confirmBtn = document.getElementById("modalConfirmBtn");
   const cancelBtn = document.getElementById("modalCancelBtn");
 
-  // build dynamic forms
+  // Build category list in order
+  const categories = [];
+  for (let i = 0; i < adults; i++) categories.push("Adult");
+  for (let i = 0; i < children; i++) categories.push("Child");
+  for (let i = 0; i < infants; i++) categories.push("Infant");
+
+  // Build dynamic forms
   container.innerHTML = "";
-  for (let i = 0; i < totalPassengers; i++) {
-    const idx = i + 1;
+  categories.forEach((category, idx) => {
     const block = document.createElement("div");
     block.classList.add("passenger-block");
+    block.dataset.category = category;
     block.innerHTML = `
-      <h4>Passenger ${idx}</h4>
+      <h4>Passenger ${idx + 1} (${category})</h4>
       <div class="grid-row">
         <label>
           <span>First Name</span>
@@ -430,9 +437,9 @@ function openPassengerModal(totalPassengers, onConfirm) {
       </label>
     `;
     container.appendChild(block);
-  }
+  });
 
-  // show modal
+  // Show modal
   modal.classList.add("show");
 
   const cleanup = () => {
@@ -447,16 +454,16 @@ function openPassengerModal(totalPassengers, onConfirm) {
   };
 
   confirmBtn.onclick = () => {
-    // read & validate
     const blocks = Array.from(container.children);
     const details = [];
     const ssnPattern = /^(?:\d{3}-\d{2}-\d{4}|\d{9})$/;
 
     for (const b of blocks) {
       const first = b.querySelector('input[data-role="first"]').value.trim();
-      const last  = b.querySelector('input[data-role="last"]').value.trim();
-      const ssn   = b.querySelector('input[data-role="ssn"]').value.trim();
+      const last = b.querySelector('input[data-role="last"]').value.trim();
+      const ssn = b.querySelector('input[data-role="ssn"]').value.trim();
       const date_of_birth = b.querySelector('input[data-role="date_of_birth"]').value.trim();
+      const category = b.dataset.category;
 
       if (!first || !last || !ssn || !date_of_birth) {
         alert("Please fill out all fields for every passenger.");
@@ -466,13 +473,21 @@ function openPassengerModal(totalPassengers, onConfirm) {
         alert("Invalid SSN format. Use ###-##-#### or 9 digits.");
         return;
       }
-      details.push({ first_name: first, last_name: last, ssn: ssn, date_of_birth: date_of_birth });
+
+      details.push({
+        first_name: first,
+        last_name: last,
+        ssn: ssn,
+        date_of_birth: date_of_birth,
+        category: category
+      });
     }
 
     cleanup();
     onConfirm(details);
   };
 }
+
   
 // Add flight to cart (save to localStorage, booking will happen later in cart page)
 function addToCart(selectedFlight, passengers, tripType, 
@@ -534,9 +549,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 };
                 const totalPassengers = passengers.adults + passengers.children + passengers.infants;
 
-                openPassengerModal(totalPassengers, (details) => {
-                    addToCart(outboundFlight, passengers, tripType, null, details);
-                });
+                openPassengerModal(passengers.adults, passengers.children, passengers.infants, (details) => {
+        addToCart(outboundFlight, passengers, tripType, null, details);
+    });
             } else {
                 // Disable the selected outbound button
                 e.target.disabled = true;
@@ -563,9 +578,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 infants: parseInt(document.getElementById("infants").value) ,  
             };
             const totalPassengers = passengers.adults + passengers.children + passengers.infants;
-            openPassengerModal(totalPassengers, (details) => {
-                addToCart(outboundFlight, passengers, tripType, returnFlight, details);
-            });
+            openPassengerModal(passengers.adults, passengers.children, passengers.infants, (details) => {
+    addToCart(outboundFlight, passengers, tripType, returnFlight, details);
+});
         }
     });
 });
