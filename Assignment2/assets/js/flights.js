@@ -100,7 +100,7 @@ function validateInput() {
     //Regex rules
     var dateRange = /^2024-(?:09-(?:0[1-9]|[12][0-9]|30)|10-(?:0[1-9]|[12][0-9]|3[01])|11-(?:0[1-9]|[12][0-9]|30)|12-01)$/;
     var locaRange = /^[A-Za-z .'-]+,\s*(?:TX|Texas|CA|California)$/i;
-    var numberRange = /^[0-4]$/;
+    var numberRange = /^[0-6]$/;
   
 
     //Departure data validation
@@ -142,7 +142,7 @@ function validateInput() {
     }
 
     if (!numberRange.test(numberChildren)) {
-        text = "The number of children must be an integer from 0 to 4.";
+        text = "The number of children must be an integer from 0 to 6.";
         out.innerHTML = text;
         return;
     }
