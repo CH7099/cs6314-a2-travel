@@ -23,16 +23,25 @@ function initAccountPage() {
     }
 }
 
-// Temporary: Check login status
-function checkLoginStatus() {
-    const userName = localStorage.getItem("user_name");
-    return userName !== null && userName !== "";
-}
-
-//Temporary: Check admin status
+// Temporary: Check admin status
+// For testing: You can manually set localStorage.setItem("is_admin", "true") in browser console
 function checkAdminStatus() {
+    // Option 1: Check localStorage flag (for testing)
+    const adminFlag = localStorage.getItem("is_admin");
+    if (adminFlag === "true") {
+        return true;
+    }
+    
+    // Option 2: Check phone from localStorage (if available)
     const userPhone = localStorage.getItem("user_phone");
-    return userPhone === "222-222-2222";
+    if (userPhone === "222-222-2222") {
+        return true;
+    }
+    
+    // Option 3: Hardcoded for testing (remove this later)
+    // return true; // Uncomment this line to always show admin functions for testing
+    
+    return false;
 }
 
 // Show admin functions section
@@ -272,7 +281,6 @@ document.addEventListener("DOMContentLoaded", function() {
             adminElements[i].style.display = "block";
         }
     }
-
     document.getElementById("loadHotelsBtn").addEventListener("click", function() {
         const resultDiv = document.getElementById("result");
 
@@ -289,6 +297,21 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         };
 
+        xhttp.send();
+    });
+    document.getElementById("loadFlightsBtn").addEventListener("click", function() {
+        const flightsResultDiv = document.getElementById("flightsResult");
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "load_flights.php", true);
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState === 4) {
+                if (xhttp.status === 200) {
+                    flightsResultDiv.innerHTML = xhttp.responseText;
+                } else {
+                    flightsResultDiv.innerHTML = "Error contacting server: " + xhttp.status;
+                }
+            }
+        };
         xhttp.send();
     });
 });

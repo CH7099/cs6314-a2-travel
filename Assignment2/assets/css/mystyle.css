@@ -501,3 +501,24 @@ button, input[type=button] {
     display: block;
     margin-top: 5px;
 }
+
+/* Book Flight button container */
+#bookFlightBtnContainer {
+    display: none;
+    margin-top: 20px;
+}
+
+/* Book Flight button */
+#bookFlightBtn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: rgb(132, 190, 209);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#bookFlightBtn:hover {
+    background-color: rgb(100, 170, 190);
+}
