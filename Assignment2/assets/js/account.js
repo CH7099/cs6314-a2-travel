@@ -76,14 +76,14 @@ function setupButtons() {
         "queryBySSNBtn": queryBySSN,
 
         // ADMIN
-        "adminTexasFlightsBtn": adminTexasFlights,
-        "adminTexasHotelsBtn": adminTexasHotels,
+        "adminTexasFlightsBtn": adminFlightsFromTexasSepOct,
+        "adminTexasNoInfantsBtn": adminFlightsFromTexasNoInfant,
+        "adminTexasHotelsBtn": adminHotelsInTexasSepOct,
         "adminMostExpensiveHotelsBtn": adminMostExpensiveHotels,
-        "adminInfantFlightsBtn": adminInfantFlights,
-        "adminInfantFiveKidsBtn": adminInfantFiveKids,
         "adminMostExpensiveFlightsBtn": adminMostExpensiveFlights,
-        "adminTexasNoInfantsBtn": adminTexasNoInfants,
-        "adminCAArrivalsBtn": adminCAArrivals
+        "adminInfantFlightsBtn": adminFlightsWithInfant,
+        "adminInfantFiveKidsBtn": adminFlightsWithInfantAnd5Children,
+        "adminCAArrivalsBtn": adminFlightsArrivingCaliforniaSepOct
     };
 
     for (let id in btns) {
@@ -219,7 +219,7 @@ function adminFlightsWithInfantAnd5Children() {
     // TODO: Query all booked flights with infants and atleast 5 children
 }
 
-function adminCountFlightsArrivingCaliforniaSepOct() {
+function adminFlightsArrivingCaliforniaSepOct() {
     // TODO: Query all booked flights arriving in California in Sep to Oct 2024
 }
 
@@ -244,23 +244,4 @@ document.addEventListener("DOMContentLoaded", function() {
             adminElements[i].style.display = "block";
         }
     }
-    
-    document.getElementById("loadHotelsBtn").addEventListener("click", function() {
-        const resultDiv = document.getElementById("result");
-
-        const xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "load_hotels.php", true);
-
-        xhttp.onreadystatechange = function() {
-            if (xhttp.readyState === 4) {
-                if (xhttp.status === 200) {
-                    resultDiv.innerHTML = xhttp.responseText;
-                } else {
-                    resultDiv.innerHTML = "Error contacting server: " + xhttp.status;
-                }
-            }
-        };
-
-        xhttp.send();
-    });
 });
