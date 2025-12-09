@@ -1,19 +1,9 @@
 <?php
 include 'db.php';
 
-// Disable foreign key checks temporarily
-$conn->query("SET FOREIGN_KEY_CHECKS = 0");
-
-// Clear related tables first 
-// delete tickets first
-$conn->query("DELETE FROM tickets");
-// delete flight_booking next
-$conn->query("DELETE FROM flight_booking");
-// truncate flights
-$conn->query("TRUNCATE TABLE flights");
-
-// Re-enable foreign key checks
-$conn->query("SET FOREIGN_KEY_CHECKS = 1");
+// Note: Using INSERT IGNORE to preserve existing bookings
+// No deletion of tickets, flight_booking, or flights tables
+// Only new flights will be added; existing flights remain unchanged
 
 // Load the JSON file
 $jsonFile = 'data/flights.json';
@@ -36,7 +26,7 @@ foreach ($flights as $flight) {
     $available_seats = (int)$flight['available_seats'];
     $price = (float)$flight['price'];
 
-    $sql = "INSERT INTO flights (flight_id, origin, destination, departure_date, arrival_date, departure_time, arrival_time, available_seats, price) 
+    $sql = "INSERT IGNORE INTO flights (flight_id, origin, destination, departure_date, arrival_date, departure_time, arrival_time, available_seats, price) 
             VALUES ('$flight_id', '$origin', '$destination', '$depart_date', '$arrive_date', '$depart_time', '$arrive_time', $available_seats, $price)";
     if ($conn->query($sql) === TRUE) {
         $inserted++;
@@ -44,5 +34,5 @@ foreach ($flights as $flight) {
 }
 
 $conn->close();
-echo "Table cleared and flights loaded successfully! Total flights inserted: $inserted";
+echo "Flights loaded successfully! Total flights inserted: $inserted (existing flights preserved, bookings unaffected)";
 ?>

@@ -22,26 +22,26 @@
         "price": 353
     },
     {
-        "flight_id": "FL-DAL-SFO-20240905-03",
-        "origin": "Dallas, TX",
-        "destination": "San Francisco, CA",
-        "depart_date": "2024-09-05",
-        "arrive_date": "2024-09-05",
-        "depart_time": "07:15",
-        "arrive_time": "10:30",
-        "available_seats": 148,
-        "price": 183
-    },
-    {
         "flight_id": "FL-SFO-DAL-20241010-04",
         "origin": "San Francisco, CA",
         "destination": "Dallas, TX",
-        "depart_date": "2024-10-10",
-        "arrive_date": "2024-10-10",
+        "depart_date": "2024-11-10",
+        "arrive_date": "2024-11-10",
         "depart_time": "10:30",
         "arrive_time": "14:05",
         "available_seats": 45,
         "price": 253
+    },
+    {
+        "flight_id": "FL-DAL-SFO-20240905-03",
+        "origin": "Dallas, TX",
+        "destination": "San Francisco, CA",
+        "depart_date": "2024-11-15",
+        "arrive_date": "2024-11-15",
+        "depart_time": "07:15",
+        "arrive_time": "10:30",
+        "available_seats": 148,
+        "price": 183
     },
     {
         "flight_id": "FL-DAL-SAN-20240905-05",
