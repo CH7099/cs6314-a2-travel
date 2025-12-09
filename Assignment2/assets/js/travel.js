@@ -1038,6 +1038,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             localStorage.removeItem("user_id");
             localStorage.removeItem("is_admin");
             localStorage.removeItem("hotel_booking_id");
+            localStorage.removeItem("cart");
             alert("You have been logged out.");
             window.location.href = "home.html";
         });
