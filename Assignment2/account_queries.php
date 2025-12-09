@@ -165,7 +165,7 @@ switch ($action) {
 
     case 'admin_california_arrivals':
         $stmt = $conn->prepare("
-            SELECT * FROM flight_booking fb
+            SELECT COUNT(*) as count FROM flight_booking fb
             JOIN flights f ON fb.flight_id = f.flight_id
             WHERE LOWER(f.destination) LIKE '%ca%'
             AND f.departure_date BETWEEN '2024-09-01' AND '2024-10-31'
