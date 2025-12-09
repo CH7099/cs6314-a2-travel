@@ -2,13 +2,24 @@
 header('Content-Type: application/json');
 include "db.php";
 
+// Support JSON POST input
+$raw = file_get_contents("php://input");
+if ($raw) {
+    $json = json_decode($raw, true);
+    if (is_array($json)) {
+        foreach ($json as $k => $v) {
+            $_POST[$k] = $v; // merge JSON into $_POST
+        }
+    }
+}
+
 $action = $_POST['action'] ?? '';
 
 switch ($action) {
 
     case 'flight_by_id':
         $id = $_POST['flight_booking_id'] ?? '';
-        $stmt = $conn->prepare("SELECT * FROM flight_bookings WHERE booking_id = ?");
+        $stmt = $conn->prepare("SELECT * FROM flight_booking WHERE flight_booking_id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
@@ -16,7 +27,7 @@ switch ($action) {
 
     case 'hotel_by_id':
         $id = $_POST['hotel_booking_id'] ?? '';
-        $stmt = $conn->prepare("SELECT * FROM hotel_bookings WHERE booking_id = ?");
+        $stmt = $conn->prepare("SELECT * FROM Hotel_Booking WHERE hotel_booking_id = ?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
@@ -24,16 +35,33 @@ switch ($action) {
 
     case 'passengers_by_flight':
         $id = $_POST['flight_booking_id'] ?? '';
-        $stmt = $conn->prepare("SELECT * FROM passengers WHERE flight_booking_id = ?");
-        $stmt->bind_param("s", $id);
+        $stmt = $conn->prepare("
+            SELECT p.SSN, p.first_name, p.last_name, p.date_of_birth, p.category, 
+                   t.ticket_id, t.price, fb.flight_booking_id, fb.total_price
+            FROM passenger p
+            JOIN tickets t ON p.SSN = t.SSN
+            JOIN flight_booking fb ON t.flight_booking_id = fb.flight_booking_id
+            WHERE fb.flight_booking_id = ?
+        ");
+        $stmt->bind_param("i", $id);
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
         break;
 
-    case 'september_2024':
+    case 'hotels_september_2024':
         $stmt = $conn->prepare("
-            SELECT * FROM flight_bookings 
-            WHERE MONTH(departure_date) = 9 AND YEAR(departure_date) = 2024
+            SELECT * FROM hotel_booking 
+            WHERE MONTH(check_in_date) = 9 AND YEAR(check_in_date) = 2024
+        ");
+        $stmt->execute();
+        echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
+        break;
+
+    case 'flights_september_2024':
+        $stmt = $conn->prepare("
+            SELECT * FROM flight_booking 
+            JOIN flights f ON flight_booking.flight_id = f.flight_id
+            WHERE MONTH(f.departure_date) = 9 AND YEAR(f.departure_date) = 2024
         ");
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
@@ -42,8 +70,10 @@ switch ($action) {
     case 'bookings_by_ssn':
         $ssn = $_POST['ssn'] ?? '';
         $stmt = $conn->prepare("
-            SELECT * FROM flight_bookings fb 
-            JOIN passengers p ON fb.booking_id = p.flight_booking_id
+            SELECT * 
+            FROM flight_booking fb
+            JOIN tickets t ON t.flight_booking_id = fb.flight_booking_id
+            JOIN passenger p ON p.SSN = t.SSN
             WHERE p.ssn = ?
         ");
         $stmt->bind_param("s", $ssn);
@@ -52,48 +82,46 @@ switch ($action) {
         break;
 
     case 'admin_texas_flights':
-        $city = "%" . strtolower($_POST['city'] ?? '') . "%";
         $stmt = $conn->prepare("
-            SELECT * FROM flight_bookings
-            WHERE LOWER(origin) LIKE ?
-            AND departure_date BETWEEN '2024-09-01' AND '2024-10-31'
+            SELECT * FROM flight_booking fb
+            JOIN flights f ON fb.flight_id = f.flight_id
+            WHERE LOWER(f.origin) LIKE '%tx%'
+            AND f.departure_date BETWEEN '2024-09-01' AND '2024-10-31'
         ");
-        $stmt->bind_param("s", $city);
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
         break;
 
     
     case 'admin_texas_flights_no_infants':
-        $city = "%" . strtolower($_POST['city'] ?? '') . "%";
         $stmt = $conn->prepare("
-            SELECT fb.* FROM flight_bookings fb
-            JOIN passengers p ON fb.booking_id = p.flight_booking_id
-            WHERE LOWER(fb.origin) LIKE ?
-            AND fb.departure_date BETWEEN '2024-09-01' AND '2024-10-31'
-            GROUP BY fb.booking_id
-            HAVING SUM(CASE WHEN p.age < 2 THEN 1 ELSE 0 END) = 0
+            SELECT fb.*, f.*, COUNT(p.SSN) as passenger_count FROM flight_booking fb
+            JOIN flights f ON fb.flight_id = f.flight_id
+            JOIN tickets t ON fb.flight_booking_id = t.flight_booking_id
+            JOIN passenger p ON t.SSN = p.SSN
+            WHERE LOWER(f.origin) LIKE '%tx%'
+            AND f.departure_date BETWEEN '2024-09-01' AND '2024-10-31'
+            GROUP BY fb.flight_booking_id
+            HAVING SUM(CASE WHEN p.category = 'Infant' THEN 1 ELSE 0 END) = 0
         ");
-        $stmt->bind_param("s", $city);
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
         break;
 
     case 'admin_texas_hotels':
-        $city = "%" . strtolower($_POST['city'] ?? '') . "%";
         $stmt = $conn->prepare("
-            SELECT * FROM hotel_bookings
-            WHERE LOWER(city) LIKE ?
+            SELECT * FROM hotel_booking
+            JOIN hotel h ON hotel_booking.hotel_id = h.hotel_id
+            WHERE LOWER(h.city) LIKE '%dallas%'
             AND check_in_date BETWEEN '2024-09-01' AND '2024-10-31'
         ");
-        $stmt->bind_param("s", $city);
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
         break;
 
     case 'admin_most_expensive_hotels':
         $stmt = $conn->prepare("
-            SELECT * FROM hotel_bookings
+            SELECT * FROM hotel_booking
             ORDER BY total_price DESC
             LIMIT 1
         ");
@@ -103,7 +131,7 @@ switch ($action) {
 
     case 'admin_most_expensive_flights':
         $stmt = $conn->prepare("
-            SELECT * FROM flight_bookings
+            SELECT * FROM flight_booking
             ORDER BY total_price DESC
             LIMIT 1
         ");
@@ -111,40 +139,44 @@ switch ($action) {
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
         break;
 
-    // Need to edit this code later ---------------------
     case 'admin_flights_with_infant':
         $stmt = $conn->prepare("
-            SELECT DISTINCT fb.* FROM flight_bookings fb
-            JOIN passengers p ON fb.booking_id = p.flight_booking_id
-            WHERE p.age < 2
+            SELECT DISTINCT fb.* FROM flight_booking fb
+            JOIN tickets t ON t.flight_booking_id = fb.flight_booking_id
+            JOIN passenger p ON p.SSN = t.SSN
+            WHERE p.category = 'Infant'
         ");
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
         break;
     
-    // Need to edit this code later ---------------------
     case 'admin_flights_with_infant_and_5_children':
         $stmt = $conn->prepare("
-            SELECT fb.* FROM flight_bookings fb
-            JOIN passengers p ON fb.booking_id = p.flight_booking_id
-            GROUP BY fb.booking_id
-            HAVING SUM(CASE WHEN p.age < 2 THEN 1 ELSE 0 END) >= 1
-            AND SUM(CASE WHEN p.age BETWEEN 2 AND 12 THEN 1 ELSE 0 END) >= 5
+            SELECT DISTINCT fb.* FROM flight_booking fb
+            JOIN tickets t ON t.flight_booking_id = fb.flight_booking_id
+            JOIN passenger p ON p.SSN = t.SSN
+            WHERE p.category = 'Infant'
+            GROUP BY fb.flight_booking_id
+            HAVING SUM(CASE WHEN p.category = 'Infant' THEN 1 ELSE 0 END) >= 1
+            AND SUM(CASE WHEN p.category = 'Child' THEN 1 ELSE 0 END) >= 5
         ");
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
         break;
 
     case 'admin_california_arrivals':
-        $city = "%" . strtolower($_POST['city'] ?? '') . "%";
         $stmt = $conn->prepare("
-            SELECT * FROM flight_bookings
-            WHERE LOWER(destination) LIKE ?
-            AND departure_date BETWEEN '2024-09-01' AND '2024-10-31'
+            SELECT * FROM flight_booking fb
+            JOIN flights f ON fb.flight_id = f.flight_id
+            WHERE LOWER(f.destination) LIKE '%ca%'
+            AND f.departure_date BETWEEN '2024-09-01' AND '2024-10-31'
         ");
-        $stmt->bind_param("s", $city);
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
+        break;
+
+    default:
+        echo json_encode(["error" => "Invalid action"]);
         break;
 }
 

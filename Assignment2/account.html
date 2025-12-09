@@ -108,12 +108,15 @@
                     <div>
                         <label>Flight Booking ID (Passengers): <input id="flightBookingIdPassengers" type="text"></label><br>
                         <button onclick="queryPassengers()">Get Passengers</button>
-                    </div>
-                    <div>
-                        <button onclick="querySeptemberBookings()">Get All Bookings (Sep 2024)</button><br>
                     </div><br>
                     <div>
-                        <label>Search Bookings by SSN: <input id="ssnQuery" type="text"></label><br>
+                        <button onclick="queryFlightsSeptemberBookings()">Get All Flight Bookings (Sep 2024)</button><br>
+                    </div><br>
+                    <div>
+                        <button onclick="queryHotelsSeptemberBookings()">Get All Hotel Bookings (Sep 2024)</button><br>
+                    </div><br>
+                    <div>
+                        <label>Search Flight Bookings by SSN: <input id="ssnQuery" type="text"></label><br>
                         <button onclick="queryBySSN()">Search by SSN</button>
                     </div><br>
                 </div>
@@ -123,14 +126,12 @@
                 <div class="requires-admin">
                     <h2>Admin Queries</h2>
                     <div>
-                        <label>Texas city substring (e.g. "Dallas, TX"): <input id="texasCity" type="text" placeholder="e.g. Dallas, TX"></label><br>
-                        <button onclick="adminFlightsFromTexasSepOct()">Flights from Texas (Sep–Oct 2024)</button><br>
-                        <button onclick="adminFlightsFromTexasNoInfant()">Flights from Texas (no infants) (Sep–Oct 2024)</button>
+                        <button onclick="adminFlightsFromTexasSepOct()">Get All Flight Bookings Departure from Texas (Sep–Oct 2024)</button><br>
+                        <button onclick="adminFlightsFromTexasNoInfant()">Get All Flight Bookings Departure from Texas (no infants) (Sep–Oct 2024)</button>
                     </div><br>
 
                     <div>
-                        <label>Texas hotel city substring (e.g. "Austin, TX"): <input id="texasHotelCity" type="text" placeholder="e.g. Austin, TX"></label><br>
-                        <button onclick="adminHotelsInTexasSepOct()">Hotels in Texas (Sep–Oct 2024)</button>
+                        <button onclick="adminHotelsInTexasSepOct()">Get All Hotel Bookings in Texas (Sep–Oct 2024)</button>
                     </div><br>
 
                     <div>
@@ -139,18 +140,17 @@
                     </div><br>
 
                     <div>
-                        <button onclick="adminFlightsWithInfant()">Flights with Infant</button><br>
-                        <button onclick="adminFlightsWithInfantAnd5Children()">Flights with Infant and ≥5 Children</button>
+                        <button onclick="adminFlightsWithInfant()">Get All Flight Booking with Infant</button><br>
+                        <button onclick="adminFlightsWithInfantAnd5Children()">Get All Flight Booking with Infant and ≥5 Children</button>
                     </div><br>
 
                     <div>
-                        <label>California arrival substring (e.g. "Los Angeles, CA"): <input id="californiaCity" type="text" placeholder="e.g. Los Angeles, CA"></label><br>
-                        <button onclick="adminFlightsArrivingCaliforniaSepOct()">Count Flights Arriving to CA (Sep–Oct 2024)</button>
+                        <button onclick="adminFlightsArrivingCaliforniaSepOct()">Count Booked Flights Arriving to CA (Sep–Oct 2024)</button>
                     </div><br>
 
                     <hr>
 
-                    <div id="result" style="white-space:pre-wrap;margin-top:18px;border:1px solid #ddd;padding:12px;"></div>
+                    <div id="results" style="white-space:pre-wrap;margin-top:18px;border:1px solid #ddd;padding:12px;"></div>
                 </div>
             </div>
         </div>

@@ -9,10 +9,12 @@ document.addEventListener("DOMContentLoaded", function() {
  */
 function initAccountPage() {
     // Check login status (temporary)
+    /*
     if (!checkLoginStatus()) {
         showLoginRequired();
         return;
     }
+    */
     
     // Check admin status (temporary: check phone === "222-222-2222")    
     // Show/hide admin functions
@@ -21,6 +23,11 @@ function initAccountPage() {
     } else {
         hideAdminFunctions();
     }
+}
+
+function checkLoginStatus() {
+    const loggedIn = localStorage.getItem("logged_in");
+    return loggedIn === "true";
 }
 
 // Temporary: Check admin status
@@ -171,10 +178,18 @@ function queryPassengers() {
     .then(data => displayResult(data));
 }
 
-function querySeptemberBookings() {
-    // TODO: Query all bookings in September 2024
+function queryHotelsSeptemberBookings() {
+    // TODO: Query all bookings for hotels in September 2024
     sendQuery("account_queries.php", { 
-        action: "september_2024",
+        action: "hotels_september_2024",
+    })
+    .then(data => displayResult(data));
+}
+
+function queryFlightsSeptemberBookings() {
+    // TODO: Query all bookings for flights in September 2024
+    sendQuery("account_queries.php", { 
+        action: "flights_september_2024",
     })
     .then(data => displayResult(data));
 }
@@ -263,10 +278,19 @@ function adminFlightsArrivingCaliforniaSepOct() {
 
 /* ---------------- OUTPUT RESULT ----------------*/
 function displayResult(data) {
-    let dataObj = JSON.parse(data);
-    console.log(dataObj);
+    if (!data) {
+        console.error("Empty response from server");
+        return;
+    }
 
-    document.getElementById("result").textContent = JSON.stringify(dataObj, null, 2);
+    try {
+        let dataObj = JSON.parse(data);
+        console.log(dataObj);
+        document.getElementById("results").textContent = JSON.stringify(dataObj, null, 2);
+    } catch (e) {
+       console.error("Failed to parse JSON:", e, data);
+        document.getElementById("results").textContent = "Error parsing server response.";
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
