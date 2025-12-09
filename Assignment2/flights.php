@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                 WHERE LOWER(origin) = ? AND LOWER(destination) = ? 
                                 AND departure_date BETWEEN ? AND ? AND available_seats >= ?
                                 ORDER BY ABS(DATEDIFF(departure_date, ?)), departure_time");
-        $stmt->bind_param("sssssis", $normalizedOrigin, $normalizedDestination, $dateMin, $dateMax, $totalPassengers, $departDate);
+        $stmt->bind_param("ssssis", $normalizedOrigin, $normalizedDestination, $dateMin, $dateMax, $totalPassengers, $departDate);
         $stmt->execute();
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                                     WHERE LOWER(origin) = ? AND LOWER(destination) = ? 
                                     AND departure_date BETWEEN ? AND ? AND available_seats >= ?
                                     ORDER BY ABS(DATEDIFF(departure_date, ?)), departure_time");
-            $stmt->bind_param("sssssis", $normalizedReturnOrigin, $normalizedReturnDestination, $dateMin, $dateMax, $totalPassengers, $returnDate);
+            $stmt->bind_param("ssssis", $normalizedReturnOrigin, $normalizedReturnDestination, $dateMin, $dateMax, $totalPassengers, $returnDate);
             $stmt->execute();
             $result = $stmt->get_result();
             while ($row = $result->fetch_assoc()) {
@@ -196,86 +196,393 @@ if ($action !== "book") {
     exit;
 }
 
+// Extract booking data
 $userId = trim($data['user_id'] ?? '');
-$flightId = trim($data['flight_id'] ?? '');
-$seats = intval($data['seats'] ?? 0);
-
-// Generate unique booking number: BKG-{8 alphanumeric characters}
-// Uses random hash for uniqueness
-$randomPart = strtoupper(substr(md5(uniqid(rand(), true)), 0, 8));
-$bookingNumber = 'BKG-' . $randomPart;
+$userPhone = trim($data['user_phone'] ?? '');
+$flight = $data['flight'] ?? null;
+$returnFlight = $data['return_flight'] ?? null;
+$passengers = $data['passengers'] ?? [];
+$passengersDetails = $data['passengers_details'] ?? [];
+$totalPrice = floatval($data['total_price'] ?? 0);
 
 // Validate required fields
-if (empty($userId) || empty($flightId) || $seats <= 0) {
+if (empty($userId) || !$flight || empty($passengersDetails)) {
     http_response_code(400);
-    echo json_encode(['error' => 'Missing required fields: user_id, flight_id, and seats']);
+    echo json_encode(['error' => 'Missing required fields: user_id, flight, and passengers_details']);
     exit;
 }
 
-// Read flights.json
-$flightsFile = 'data/flights.json';
-if (!file_exists($flightsFile)) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Flights data file not found']);
+// Get user phone from database if not provided
+if (empty($userPhone)) {
+    $phoneStmt = $conn->prepare("SELECT phone FROM users WHERE userid = ?");
+    $phoneStmt->bind_param("i", $userId);
+    $phoneStmt->execute();
+    $phoneResult = $phoneStmt->get_result();
+    if ($phoneResult->num_rows > 0) {
+        $userRow = $phoneResult->fetch_assoc();
+        $userPhone = $userRow['phone'];
+    } else {
+        http_response_code(404);
+        echo json_encode(['error' => 'User not found']);
+        exit;
+    }
+    $phoneStmt->close();
+}
+
+// Calculate total passengers
+$totalPassengers = intval($passengers['adults'] ?? 0) + intval($passengers['children'] ?? 0) + intval($passengers['infants'] ?? 0);
+
+// Validate flights and check seat availability
+$outboundFlightId = $flight['flight_id'] ?? '';
+$returnFlightId = $returnFlight['flight_id'] ?? null;
+
+// Check outbound flight
+$flightStmt = $conn->prepare("SELECT flight_id, available_seats, price FROM flights WHERE flight_id = ?");
+$flightStmt->bind_param("s", $outboundFlightId);
+$flightStmt->execute();
+$flightResult = $flightStmt->get_result();
+
+if ($flightResult->num_rows === 0) {
+    http_response_code(404);
+    echo json_encode(['error' => 'Outbound flight not found']);
     exit;
 }
 
-$flights = json_decode(file_get_contents($flightsFile), true);
-if (!is_array($flights)) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Failed to read flights.json']);
+$outboundFlightData = $flightResult->fetch_assoc();
+$outboundSeatsAvailable = intval($outboundFlightData['available_seats']);
+
+if ($outboundSeatsAvailable < $totalPassengers) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Not enough seats available on outbound flight. Available: ' . $outboundSeatsAvailable . ', Requested: ' . $totalPassengers]);
     exit;
 }
 
-// Find the flight and update the seats
-$foundFlight = false;
-$flightIndex = -1;
+// Check return flight if exists
+$returnFlightData = null;
+if ($returnFlightId) {
+    $returnStmt = $conn->prepare("SELECT flight_id, available_seats, price FROM flights WHERE flight_id = ?");
+    $returnStmt->bind_param("s", $returnFlightId);
+    $returnStmt->execute();
+    $returnResult = $returnStmt->get_result();
+    
+    if ($returnResult->num_rows === 0) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Return flight not found']);
+        exit;
+    }
+    
+    $returnFlightData = $returnResult->fetch_assoc();
+    $returnSeatsAvailable = intval($returnFlightData['available_seats']);
+    
+    if ($returnSeatsAvailable < $totalPassengers) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Not enough seats available on return flight. Available: ' . $returnSeatsAvailable . ', Requested: ' . $totalPassengers]);
+        exit;
+    }
+    $returnStmt->close();
+}
 
-foreach ($flights as $index => &$flight) {
-    if ($flight['flight_id'] === $flightId) {
-        $foundFlight = true;
-        $flightIndex = $index;
-        $seatsAvailable = intval($flight['available_seats'] ?? 0);
+$flightStmt->close();
+
+// Start transaction
+$conn->begin_transaction();
+
+try {
+    // Insert passengers into passenger table
+    $passengerSSNs = [];
+    foreach ($passengersDetails as $passenger) {
+        $ssn = trim($passenger['ssn'] ?? '');
+        $firstName = trim($passenger['first_name'] ?? '');
+        $lastName = trim($passenger['last_name'] ?? '');
+        $dob = trim($passenger['date_of_birth'] ?? '');
+        $category = trim($passenger['category'] ?? 'adult');
         
-        if ($seatsAvailable < $seats) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Not enough seats available. Available: ' . $seatsAvailable . ', Requested: ' . $seats]);
-            exit;
+        // Normalize category
+        if ($category === 'adults') $category = 'adult';
+        if ($category === 'children') $category = 'child';
+        if ($category === 'infants') $category = 'infant';
+        
+        // Insert or update passenger (ON DUPLICATE KEY UPDATE)
+        $passengerStmt = $conn->prepare("INSERT INTO passenger (SSN, first_name, last_name, date_of_birth, category) 
+                                        VALUES (?, ?, ?, ?, ?)
+                                        ON DUPLICATE KEY UPDATE 
+                                        first_name = VALUES(first_name), 
+                                        last_name = VALUES(last_name),
+                                        date_of_birth = VALUES(date_of_birth),
+                                        category = VALUES(category)");
+        $passengerStmt->bind_param("sssss", $ssn, $firstName, $lastName, $dob, $category);
+        
+        if (!$passengerStmt->execute()) {
+            throw new Exception("Failed to insert passenger: " . $passengerStmt->error);
         }
         
-        // Update the seats in the array
-        $flight['available_seats'] = $seatsAvailable - $seats;
-        break;
+        $passengerSSNs[] = $ssn;
+        $passengerStmt->close();
     }
-}
-unset($flight); 
-
-if (!$foundFlight) {
-    http_response_code(404);
-    echo json_encode(['error' => 'Flight not found']);
-    exit;
-}
-
-// Save the updated flights.json
-if (file_put_contents($flightsFile, json_encode($flights, JSON_PRETTY_PRINT)) === false) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Failed to update flights data']);
-    exit;
-}
-
-// Return success response
-http_response_code(200);
-echo json_encode([
-    'success' => true, 
-    'message' => 'Flight booked successfully',
-    'flight_id' => $flightId,
-    'seats_booked' => $seats,
-    'remaining_seats' => $flights[$flightIndex]['available_seats'],
-    'booking' => [
+    
+    // Insert flight_booking for outbound flight
+    $outboundPrice = floatval($flight['price'] ?? 0);
+    $adults = intval($passengers['adults'] ?? 0);
+    $children = intval($passengers['children'] ?? 0);
+    $infants = intval($passengers['infants'] ?? 0);
+    
+    $outboundBookingPrice = $outboundPrice * $adults + $outboundPrice * $children * 0.7 + $outboundPrice * $infants * 0.1;
+    
+    $bookingStmt = $conn->prepare("INSERT INTO flight_booking (flight_id, user_phone, total_price) VALUES (?, ?, ?)");
+    $bookingStmt->bind_param("ssd", $outboundFlightId, $userPhone, $outboundBookingPrice);
+    
+    if (!$bookingStmt->execute()) {
+        throw new Exception("Failed to insert flight_booking: " . $bookingStmt->error);
+    }
+    
+    $outboundBookingId = $conn->insert_id;
+    $bookingStmt->close();
+    
+    // Insert tickets for outbound flight
+    $ticketIndex = 0;
+    foreach ($passengerSSNs as $ssn) {
+        // Determine ticket price based on passenger category
+        $passengerDetail = $passengersDetails[$ticketIndex];
+        $category = $passengerDetail['category'] ?? 'adult';
+        if ($category === 'adults') $category = 'adult';
+        if ($category === 'children') $category = 'child';
+        if ($category === 'infants') $category = 'infant';
+        
+        $ticketPrice = $outboundPrice;
+        if ($category === 'child') $ticketPrice = $outboundPrice * 0.7;
+        if ($category === 'infant') $ticketPrice = $outboundPrice * 0.1;
+        
+        $ticketStmt = $conn->prepare("INSERT INTO tickets (flight_booking_id, SSN, price) VALUES (?, ?, ?)");
+        $ticketStmt->bind_param("isd", $outboundBookingId, $ssn, $ticketPrice);
+        
+        if (!$ticketStmt->execute()) {
+            throw new Exception("Failed to insert ticket: " . $ticketStmt->error);
+        }
+        
+        $ticketStmt->close();
+        $ticketIndex++;
+    }
+    
+    // Handle return flight if exists
+    $returnBookingId = null;
+    if ($returnFlightId && $returnFlightData) {
+        $returnPrice = floatval($returnFlight['price'] ?? 0);
+        $returnBookingPrice = $returnPrice * $adults + $returnPrice * $children * 0.7 + $returnPrice * $infants * 0.1;
+        
+        $returnBookingStmt = $conn->prepare("INSERT INTO flight_booking (flight_id, user_phone, total_price) VALUES (?, ?, ?)");
+        $returnBookingStmt->bind_param("ssd", $returnFlightId, $userPhone, $returnBookingPrice);
+        
+        if (!$returnBookingStmt->execute()) {
+            throw new Exception("Failed to insert return flight_booking: " . $returnBookingStmt->error);
+        }
+        
+        $returnBookingId = $conn->insert_id;
+        $returnBookingStmt->close();
+        
+        // Insert tickets for return flight
+        $ticketIndex = 0;
+        foreach ($passengerSSNs as $ssn) {
+            $passengerDetail = $passengersDetails[$ticketIndex];
+            $category = $passengerDetail['category'] ?? 'adult';
+            if ($category === 'adults') $category = 'adult';
+            if ($category === 'children') $category = 'child';
+            if ($category === 'infants') $category = 'infant';
+            
+            $ticketPrice = $returnPrice;
+            if ($category === 'child') $ticketPrice = $returnPrice * 0.7;
+            if ($category === 'infant') $ticketPrice = $returnPrice * 0.1;
+            
+            $returnTicketStmt = $conn->prepare("INSERT INTO tickets (flight_booking_id, SSN, price) VALUES (?, ?, ?)");
+            $returnTicketStmt->bind_param("isd", $returnBookingId, $ssn, $ticketPrice);
+            
+            if (!$returnTicketStmt->execute()) {
+                throw new Exception("Failed to insert return ticket: " . $returnTicketStmt->error);
+            }
+            
+            $returnTicketStmt->close();
+            $ticketIndex++;
+        }
+    }
+    
+    // Update available seats for outbound flight
+    $newOutboundSeats = $outboundSeatsAvailable - $totalPassengers;
+    $updateOutboundStmt = $conn->prepare("UPDATE flights SET available_seats = ? WHERE flight_id = ?");
+    $updateOutboundStmt->bind_param("is", $newOutboundSeats, $outboundFlightId);
+    
+    if (!$updateOutboundStmt->execute()) {
+        throw new Exception("Failed to update outbound flight seats: " . $updateOutboundStmt->error);
+    }
+    $updateOutboundStmt->close();
+    
+    // Update available seats for return flight if exists
+    if ($returnFlightId && $returnFlightData) {
+        $newReturnSeats = intval($returnFlightData['available_seats']) - $totalPassengers;
+        $updateReturnStmt = $conn->prepare("UPDATE flights SET available_seats = ? WHERE flight_id = ?");
+        $updateReturnStmt->bind_param("is", $newReturnSeats, $returnFlightId);
+        
+        if (!$updateReturnStmt->execute()) {
+            throw new Exception("Failed to update return flight seats: " . $updateReturnStmt->error);
+        }
+        $updateReturnStmt->close();
+    }
+    
+    // Commit transaction
+    $conn->commit();
+    
+    // Generate booking number
+    $randomPart = strtoupper(substr(md5(uniqid(rand(), true)), 0, 8));
+    $bookingNumber = 'BKG-' . $randomPart;
+    
+    // Query booking details and tickets for outbound flight
+    $outboundBookingDetails = [];
+    $outboundTicketsQuery = $conn->prepare("
+        SELECT 
+            fb.flight_booking_id,
+            fb.flight_id,
+            fb.total_price,
+            f.origin,
+            f.destination,
+            f.departure_date,
+            f.arrival_date,
+            TIME_FORMAT(f.departure_time, '%H:%i') as departure_time,
+            TIME_FORMAT(f.arrival_time, '%H:%i') as arrival_time
+        FROM flight_booking fb
+        JOIN flights f ON fb.flight_id = f.flight_id
+        WHERE fb.flight_booking_id = ?
+    ");
+    $outboundBookingDetails['booking_id'] = $outboundBookingId;
+    $outboundTicketsQuery->bind_param("i", $outboundBookingId);
+    $outboundTicketsQuery->execute();
+    $outboundResult = $outboundTicketsQuery->get_result();
+    if ($outboundRow = $outboundResult->fetch_assoc()) {
+        $outboundBookingDetails['flight_id'] = $outboundRow['flight_id'];
+        $outboundBookingDetails['origin'] = $outboundRow['origin'];
+        $outboundBookingDetails['destination'] = $outboundRow['destination'];
+        $outboundBookingDetails['departure_date'] = $outboundRow['departure_date'];
+        $outboundBookingDetails['arrival_date'] = $outboundRow['arrival_date'];
+        $outboundBookingDetails['departure_time'] = $outboundRow['departure_time'];
+        $outboundBookingDetails['arrival_time'] = $outboundRow['arrival_time'];
+        $outboundBookingDetails['total_price'] = floatval($outboundRow['total_price']);
+    }
+    $outboundTicketsQuery->close();
+    
+    // Query tickets for outbound flight
+    $outboundTickets = [];
+    $ticketsQuery = $conn->prepare("
+        SELECT 
+            t.ticket_id,
+            t.flight_booking_id,
+            t.SSN,
+            t.price,
+            p.first_name,
+            p.last_name,
+            p.date_of_birth
+        FROM tickets t
+        JOIN passenger p ON t.SSN = p.SSN
+        WHERE t.flight_booking_id = ?
+    ");
+    $ticketsQuery->bind_param("i", $outboundBookingId);
+    $ticketsQuery->execute();
+    $ticketsResult = $ticketsQuery->get_result();
+    while ($ticketRow = $ticketsResult->fetch_assoc()) {
+        $outboundTickets[] = [
+            'ticket_id' => $ticketRow['ticket_id'],
+            'flight_booking_id' => $ticketRow['flight_booking_id'],
+            'SSN' => $ticketRow['SSN'],
+            'first_name' => $ticketRow['first_name'],
+            'last_name' => $ticketRow['last_name'],
+            'date_of_birth' => $ticketRow['date_of_birth'],
+            'price' => floatval($ticketRow['price'])
+        ];
+    }
+    $outboundBookingDetails['tickets'] = $outboundTickets;
+    $ticketsQuery->close();
+    
+    // Query return flight booking details if exists
+    $returnBookingDetails = null;
+    if ($returnBookingId) {
+        $returnBookingDetails = [];
+        $returnBookingDetails['booking_id'] = $returnBookingId;
+        $returnTicketsQuery = $conn->prepare("
+            SELECT 
+                fb.flight_booking_id,
+                fb.flight_id,
+                fb.total_price,
+                f.origin,
+                f.destination,
+                f.departure_date,
+                f.arrival_date,
+                TIME_FORMAT(f.departure_time, '%H:%i') as departure_time,
+                TIME_FORMAT(f.arrival_time, '%H:%i') as arrival_time
+            FROM flight_booking fb
+            JOIN flights f ON fb.flight_id = f.flight_id
+            WHERE fb.flight_booking_id = ?
+        ");
+        $returnTicketsQuery->bind_param("i", $returnBookingId);
+        $returnTicketsQuery->execute();
+        $returnResult = $returnTicketsQuery->get_result();
+        if ($returnRow = $returnResult->fetch_assoc()) {
+            $returnBookingDetails['flight_id'] = $returnRow['flight_id'];
+            $returnBookingDetails['origin'] = $returnRow['origin'];
+            $returnBookingDetails['destination'] = $returnRow['destination'];
+            $returnBookingDetails['departure_date'] = $returnRow['departure_date'];
+            $returnBookingDetails['arrival_date'] = $returnRow['arrival_date'];
+            $returnBookingDetails['departure_time'] = $returnRow['departure_time'];
+            $returnBookingDetails['arrival_time'] = $returnRow['arrival_time'];
+            $returnBookingDetails['total_price'] = floatval($returnRow['total_price']);
+        }
+        $returnTicketsQuery->close();
+        
+        // Query tickets for return flight
+        $returnTickets = [];
+        $returnTicketsQuery2 = $conn->prepare("
+            SELECT 
+                t.ticket_id,
+                t.flight_booking_id,
+                t.SSN,
+                t.price,
+                p.first_name,
+                p.last_name,
+                p.date_of_birth
+            FROM tickets t
+            JOIN passenger p ON t.SSN = p.SSN
+            WHERE t.flight_booking_id = ?
+        ");
+        $returnTicketsQuery2->bind_param("i", $returnBookingId);
+        $returnTicketsQuery2->execute();
+        $returnTicketsResult = $returnTicketsQuery2->get_result();
+        while ($returnTicketRow = $returnTicketsResult->fetch_assoc()) {
+            $returnTickets[] = [
+                'ticket_id' => $returnTicketRow['ticket_id'],
+                'flight_booking_id' => $returnTicketRow['flight_booking_id'],
+                'SSN' => $returnTicketRow['SSN'],
+                'first_name' => $returnTicketRow['first_name'],
+                'last_name' => $returnTicketRow['last_name'],
+                'date_of_birth' => $returnTicketRow['date_of_birth'],
+                'price' => floatval($returnTicketRow['price'])
+            ];
+        }
+        $returnBookingDetails['tickets'] = $returnTickets;
+        $returnTicketsQuery2->close();
+    }
+    
+    // Return success response with detailed booking information
+    http_response_code(200);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Flight booked successfully',
         'booking_number' => $bookingNumber,
-        'user_id' => $userId,
-        'flight_id' => $flightId,
-        'seats_booked' => $seats
-    ]
-]);
+        'outbound_booking' => $outboundBookingDetails,
+        'return_booking' => $returnBookingDetails,
+        'total_price' => $totalPrice
+    ]);
+    
+} catch (Exception $e) {
+    // Rollback transaction on error
+    $conn->rollback();
+    http_response_code(500);
+    echo json_encode(['error' => 'Booking failed: ' . $e->getMessage()]);
+}
+
+$conn->close();
 ?>

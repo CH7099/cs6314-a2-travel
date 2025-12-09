@@ -88,17 +88,55 @@ function loadFlight(){
     const flightInfo = document.getElementById("flightinfo");
     const passInfo = document.getElementById("passinfo");
     const totalPriceInfo = document.getElementById("totalpriceinfo");
+    const bookingInfo = document.getElementById("bookinginfo");
 
     if (!flightInfo || !passInfo || !totalPriceInfo) {
         console.error("Required DOM elements not found in cart page");
         return;
     }
 
+    // First, check if there are flights in cart (priority: show cart first)
     const cartFlights = localStorage.getItem("cart");
-    if (!cartFlights) {
+    if (cartFlights) {
+        // Clear booking info if cart exists
+        if (bookingInfo) bookingInfo.innerHTML = "";
+        // Continue to display cart information below
+    } else {
+        // No cart, check if there are booked flights (from previous booking)
+        const bookedFlights = localStorage.getItem("booked_flights");
+        if (bookedFlights) {
+            try {
+                const bookingData = JSON.parse(bookedFlights);
+                displayBookingInfo(bookingData);
+                // Hide Book button since already booked
+                const bookBtnContainer = document.getElementById("bookFlightBtnContainer");
+                if (bookBtnContainer) {
+                    bookBtnContainer.style.display = "none";
+                }
+                return;
+            } catch (error) {
+                console.error("Error parsing booked flights:", error);
+            }
+        }
+        
+        // No cart and no booked flights
         flightInfo.innerHTML = "No flights in cart.";
+        // Hide Book button if no flights
+        const bookBtnContainer = document.getElementById("bookFlightBtnContainer");
+        if (bookBtnContainer) {
+            bookBtnContainer.style.display = "none";
+        }
         passInfo.innerHTML = "";
         totalPriceInfo.innerHTML = "";
+        if (bookingInfo) bookingInfo.innerHTML = "";
+        
+        // Show "Selected Flights:", "Total Price:", and "Passenger Information:" container when cart is empty
+        const selectedFlightsTitle = document.getElementById("selectedFlightsTitle");
+        const totalPriceTitle = document.getElementById("totalPriceTitle");
+        const passengerInfoContainer = document.getElementById("passengerInfoContainer");
+        if (selectedFlightsTitle) selectedFlightsTitle.style.display = "block";
+        if (totalPriceTitle) totalPriceTitle.style.display = "block";
+        if (passengerInfoContainer) passengerInfoContainer.style.display = "block";
         return;
     }
 
@@ -235,8 +273,258 @@ function loadFlight(){
     
     //Display total price
     totalPriceInfo.innerHTML = `<p>Total Price: $${totalPrice.toFixed(2)}</p>`;
+    
+    // Show Book button if flight is in cart
+    const bookBtnContainer = document.getElementById("bookFlightBtnContainer");
+    if (bookBtnContainer) {
+        bookBtnContainer.style.display = "block";
+    }
+    
+    // Show "Selected Flights:", "Total Price:", and "Passenger Information:" container when cart has items
+    const selectedFlightsTitle = document.getElementById("selectedFlightsTitle");
+    const totalPriceTitle = document.getElementById("totalPriceTitle");
+    const passengerInfoContainer = document.getElementById("passengerInfoContainer");
+    if (selectedFlightsTitle) selectedFlightsTitle.style.display = "block";
+    if (totalPriceTitle) totalPriceTitle.style.display = "block";
+    if (passengerInfoContainer) passengerInfoContainer.style.display = "block";
+    
+    // Clear booking info when showing cart
+    if (bookingInfo) bookingInfo.innerHTML = "";
+}
+
+// Function to display booking information
+function displayBookingInfo(bookingData) {
+    const flightInfo = document.getElementById("flightinfo");
+    const passInfo = document.getElementById("passinfo");
+    const totalPriceInfo = document.getElementById("totalpriceinfo");
+    const bookingInfo = document.getElementById("bookinginfo");
+    
+    if (!flightInfo || !passInfo || !totalPriceInfo) {
+        console.error("Required DOM elements not found");
+        return;
+    }
+    
+    let html = `<h3>Booking Confirmed</h3>`;
+    html += `<p><strong>Booking Number:</strong> ${bookingData.booking_number}</p>`;
+    
+    // Display outbound flight booking
+    if (bookingData.outbound_booking) {
+        const ob = bookingData.outbound_booking;
+        html += `<h4>Outbound Flight:</h4>`;
+        html += `<p><strong>Flight Booking ID:</strong> ${ob.booking_id}</p>`;
+        html += `<p><strong>Flight ID:</strong> ${ob.flight_id}</p>`;
+        html += `<p><strong>Route:</strong> ${ob.origin} → ${ob.destination}</p>`;
+        html += `<p><strong>Departure:</strong> ${ob.departure_date} ${ob.departure_time}</p>`;
+        html += `<p><strong>Arrival:</strong> ${ob.arrival_date} ${ob.arrival_time}</p>`;
+        html += `<p><strong>Total Price:</strong> $${ob.total_price.toFixed(2)}</p>`;
+        
+        // Display tickets for outbound flight
+        if (ob.tickets && ob.tickets.length > 0) {
+            html += `<h4>Tickets:</h4>`;
+            ob.tickets.forEach((ticket, index) => {
+                html += `<div style="margin-left: 20px; margin-bottom: 10px; padding-left: 10px;">`;
+                html += `<p><strong>Ticket ${index + 1}:</strong></p>`;
+                html += `<p>Ticket ID: ${ticket.ticket_id}</p>`;
+                html += `<p>Flight Booking ID: ${ticket.flight_booking_id}</p>`;
+                html += `<p>SSN: ${ticket.SSN}</p>`;
+                html += `<p>Passenger: ${ticket.first_name} ${ticket.last_name}</p>`;
+                html += `<p>Date of Birth: ${ticket.date_of_birth}</p>`;
+                html += `<p>Ticket Price: $${ticket.price.toFixed(2)}</p>`;
+                html += `</div>`;
+            });
+        }
+    }
+    
+    // Display return flight booking if exists
+    if (bookingData.return_booking) {
+        const rb = bookingData.return_booking;
+        html += `<h4>Return Flight Booking:</h4>`;
+        html += `<p><strong>Flight Booking ID:</strong> ${rb.booking_id}</p>`;
+        html += `<p><strong>Flight ID:</strong> ${rb.flight_id}</p>`;
+        html += `<p><strong>Route:</strong> ${rb.origin} → ${rb.destination}</p>`;
+        html += `<p><strong>Departure:</strong> ${rb.departure_date} ${rb.departure_time}</p>`;
+        html += `<p><strong>Arrival:</strong> ${rb.arrival_date} ${rb.arrival_time}</p>`;
+        html += `<p><strong>Total Price:</strong> $${rb.total_price.toFixed(2)}</p>`;
+        
+        // Display tickets for return flight
+        if (rb.tickets && rb.tickets.length > 0) {
+            html += `<h4>Tickets:</h4>`;
+            rb.tickets.forEach((ticket, index) => {
+                html += `<div style="margin-left: 20px; margin-bottom: 10px; padding-left: 10px;">`;
+                html += `<p><strong>Ticket ${index + 1}:</strong></p>`;
+                html += `<p>Ticket ID: ${ticket.ticket_id}</p>`;
+                html += `<p>Flight Booking ID: ${ticket.flight_booking_id}</p>`;
+                html += `<p>SSN: ${ticket.SSN}</p>`;
+                html += `<p>Passenger: ${ticket.first_name} ${ticket.last_name}</p>`;
+                html += `<p>Date of Birth: ${ticket.date_of_birth}</p>`;
+                html += `<p>Ticket Price: $${ticket.price.toFixed(2)}</p>`;
+                html += `</div>`;
+            });
+        }
+    }
+    
+    // Display total price
+    html += `<h4>Total Booking Price: $${bookingData.total_price.toFixed(2)}</h4>`;
+    
+    // Display in bookinginfo div if exists, otherwise in flightinfo
+    if (bookingInfo) {
+        bookingInfo.innerHTML = html;
+        flightInfo.innerHTML = "";
+        passInfo.innerHTML = "";
+        totalPriceInfo.innerHTML = "";
+        
+        // Hide "Selected Flights:" and "Total Price:" titles when booking is confirmed
+        const selectedFlightsTitle = document.getElementById("selectedFlightsTitle");
+        const totalPriceTitle = document.getElementById("totalPriceTitle");
+        if (selectedFlightsTitle) selectedFlightsTitle.style.display = "none";
+        if (totalPriceTitle) totalPriceTitle.style.display = "none";
+        
+        // Hide the entire "Passenger Information:" container to avoid blank space
+        const passengerInfoContainer = document.getElementById("passengerInfoContainer");
+        if (passengerInfoContainer) passengerInfoContainer.style.display = "none";
+    } else {
+        flightInfo.innerHTML = html;
+        passInfo.innerHTML = "";
+        totalPriceInfo.innerHTML = "";
+        
+        // Hide "Selected Flights:" and "Total Price:" titles when booking is confirmed
+        const selectedFlightsTitle = document.getElementById("selectedFlightsTitle");
+        const totalPriceTitle = document.getElementById("totalPriceTitle");
+        if (selectedFlightsTitle) selectedFlightsTitle.style.display = "none";
+        if (totalPriceTitle) totalPriceTitle.style.display = "none";
+        
+        // Hide the entire "Passenger Information:" container to avoid blank space
+        const passengerInfoContainer = document.getElementById("passengerInfoContainer");
+        if (passengerInfoContainer) passengerInfoContainer.style.display = "none";
+    }
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
     loadCart();
+    
+    // Add event listener for Book Flight button
+    const bookFlightBtn = document.getElementById("bookFlightBtn");
+    if (bookFlightBtn) {
+        bookFlightBtn.addEventListener("click", function() {
+            bookFlight();
+        });
+    }
 });
+
+function bookFlight() {
+    const cartFlights = localStorage.getItem("cart");
+    if (!cartFlights) {
+        alert("No flights in cart to book.");
+        return;
+    }
+
+    let cartFlightsData;
+    try {
+        cartFlightsData = JSON.parse(cartFlights);
+    } catch (error) {
+        console.error("Error parsing cart data:", error);
+        alert("Error loading cart data. Please try again.");
+        return;
+    }
+
+    // Validate cart data
+    if (!cartFlightsData || !cartFlightsData.flight || !cartFlightsData.passengers || !cartFlightsData.passengersDetails) {
+        alert("Cart data is incomplete. Please add flights again.");
+        return;
+    }
+
+    // Get user_id
+    const user_id = localStorage.getItem("user_id");
+    if (!user_id) {
+        alert("User ID not found. Please log in again.");
+        return;
+    }
+
+    // Get user phone (if available, otherwise will be fetched from backend)
+    const user_phone = localStorage.getItem("user_phone");
+
+    // Prepare booking data
+    const flight = cartFlightsData.flight;
+    const selectedFlightReturn = cartFlightsData.selectedFlightReturn || null;
+    const passengers = cartFlightsData.passengers;
+    const passengersDetails = cartFlightsData.passengersDetails;
+
+    // Calculate total price
+    const outboundPrice = parseFloat(flight.price) || 0;
+    const adults = parseInt(passengers.adults) || 0;
+    const children = parseInt(passengers.children) || 0;
+    const infants = parseInt(passengers.infants) || 0;
+    
+    let totalPrice = 
+        outboundPrice * adults +
+        outboundPrice * children * 0.7 +
+        outboundPrice * infants * 0.1;
+
+    if (selectedFlightReturn && selectedFlightReturn.price) {
+        const returnPrice = parseFloat(selectedFlightReturn.price) || 0;
+        totalPrice += (
+            returnPrice * adults +
+            returnPrice * children * 0.7 +
+            returnPrice * infants * 0.1
+        );
+    }
+
+    // Prepare booking request
+    const bookingData = {
+        action: "book",
+        user_id: user_id,
+        user_phone: user_phone,
+        flight: flight,
+        return_flight: selectedFlightReturn,
+        passengers: passengers,
+        passengers_details: passengersDetails,
+        total_price: totalPrice.toFixed(2)
+    };
+
+    // Send booking request to backend
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "flights.php", true);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === 4) {
+            if (xhttp.status === 200) {
+                try {
+                    const response = JSON.parse(xhttp.responseText);
+                    if (response.success) {
+                        // Save booking information to localStorage
+                        const bookingData = {
+                            booking_number: response.booking_number,
+                            outbound_booking: response.outbound_booking,
+                            return_booking: response.return_booking,
+                            total_price: response.total_price
+                        };
+                        localStorage.setItem("booked_flights", JSON.stringify(bookingData));
+                        
+                        // Clear cart after successful booking
+                        localStorage.removeItem("cart");
+                        
+                        alert("Flight booked successfully! Booking Number: " + response.booking_number);
+                        
+                        // Reload cart page to show booking information
+                        window.location.reload();
+                    } else {
+                        alert("Booking failed: " + (response.error || "Unknown error"));
+                    }
+                } catch (error) {
+                    console.error("Error parsing response:", error);
+                    alert("Error processing booking response. Please try again.");
+                }
+            } else {
+                try {
+                    const errorResponse = JSON.parse(xhttp.responseText);
+                    alert("Booking failed: " + (errorResponse.error || "Server error"));
+                } catch (error) {
+                    alert("Error contacting server. Status: " + xhttp.status);
+                }
+            }
+        }
+    };
+
+    xhttp.send(JSON.stringify(bookingData));
+}

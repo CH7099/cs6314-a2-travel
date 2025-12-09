@@ -6,14 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
  * Initialize account page
  */
 function initAccountPage() {
-    // Check login status (temporary)
-    const isLoggedIn = checkLoginStatus();
-    if (!isLoggedIn) {
-        showLoginRequired();
-        return;
-    }
-    
-    // Check admin status (temporary: check phone === "222-222-2222")
+    // Temporary: Assume user is logged in (login system not ready yet)
+    // Check admin status (temporary: hardcoded check)
     const isAdmin = checkAdminStatus();
     
     // Show/hide admin functions
@@ -24,16 +18,25 @@ function initAccountPage() {
     }
 }
 
-// Temporary: Check login status
-function checkLoginStatus() {
-    const userName = localStorage.getItem("user_name");
-    return userName !== null && userName !== "";
-}
-
-//Temporary: Check admin status
+// Temporary: Check admin status
+// For testing: You can manually set localStorage.setItem("is_admin", "true") in browser console
 function checkAdminStatus() {
+    // Option 1: Check localStorage flag (for testing)
+    const adminFlag = localStorage.getItem("is_admin");
+    if (adminFlag === "true") {
+        return true;
+    }
+    
+    // Option 2: Check phone from localStorage (if available)
     const userPhone = localStorage.getItem("user_phone");
-    return userPhone === "222-222-2222";
+    if (userPhone === "222-222-2222") {
+        return true;
+    }
+    
+    // Option 3: Hardcoded for testing (remove this later)
+    // return true; // Uncomment this line to always show admin functions for testing
+    
+    return false;
 }
 
 // Show admin functions section
@@ -52,10 +55,6 @@ function hideAdminFunctions() {
     }
 }
 
-// Show login required message
-function showLoginRequired() {
-    // TODO: Show login required message
-}
 
 // Import flights data (Admin function)
 function importFlights() {
@@ -123,6 +122,21 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         };
 
+        xhttp.send();
+    });
+    document.getElementById("loadFlightsBtn").addEventListener("click", function() {
+        const flightsResultDiv = document.getElementById("flightsResult");
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "load_flights.php", true);
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState === 4) {
+                if (xhttp.status === 200) {
+                    flightsResultDiv.innerHTML = xhttp.responseText;
+                } else {
+                    flightsResultDiv.innerHTML = "Error contacting server: " + xhttp.status;
+                }
+            }
+        };
         xhttp.send();
     });
 });
