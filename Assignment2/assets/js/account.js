@@ -272,4 +272,23 @@ document.addEventListener("DOMContentLoaded", function() {
             adminElements[i].style.display = "block";
         }
     }
+
+    document.getElementById("loadHotelsBtn").addEventListener("click", function() {
+        const resultDiv = document.getElementById("result");
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "load_hotels.php", true);
+
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState === 4) {
+                if (xhttp.status === 200) {
+                    resultDiv.innerHTML = xhttp.responseText;
+                } else {
+                    resultDiv.innerHTML = "Error contacting server: " + xhttp.status;
+                }
+            }
+        };
+
+        xhttp.send();
+    });
 });
