@@ -12,7 +12,7 @@
             <h1 id="namedrop" style="display:inline"></h1>
             <button id="logoutLink" style="display:none">Log Out</button>
         </div>
-
+    
         <div class="row">
             <div class="topnav">
                 <a href="home.html">Home</a>
@@ -25,52 +25,6 @@
                 <a href="cruises.html" class="requires-login">Cruises</a>
                 <a href="contact-us.html" class="requires-login">Contact us</a>
                 <a href="cart.html" class="requires-login">Cart</a>
-            </div>
-        </div>
-
-    <div class="row">
-        <div class="topnav">
-            <a href="home.html">Home</a>
-            <a href="register.html">Register</a>
-            <a href="login.html">Login</a>
-            <a href="account.html" class="requires-login">Account</a>
-            <a href="stays.html" class="requires-login">Stays</a>
-            <a href="flights.html" class="requires-login">Flights</a>
-            <a href="cars.html" class="requires-login">Cars</a>
-            <a href="cruises.html" class="requires-login">Cruises</a>
-            <a href="contact-us.html" class="requires-login">Contact us</a>
-            <a href="cart.html" class="requires-login">Cart</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="column side">
-            <h2>Left Side</h2>
-            <p class="prefselector">Choose background color: </p>
-            <select id="colorpicker" onchange="colorChange()">
-                <option value="white" selected="true">White</option>
-                <option value="lightgray">Light Gray</option>
-                <option value="darkgray">Dark Gray</option>
-            </select>
-            <br>
-            <p class="prefselector">Choose font size: </p>
-            <select id="sizepicker" onchange="fontChange()">
-                <option value="12px" >12</option>
-                <option value="16px" selected="true">16</option>
-                <option value="18px">18</option>
-                <option value="20px">20</option>
-                <option value="24px">24</option>
-            </select>
-            <br>
-        </div>
-        <div class="column middle">
-            <div class="requires-admin">
-                <h2>Load Hotels from XML into SQL</h2>
-                <button id="loadHotelsBtn">Load Hotels</button>
-                <div id="result"></div>
-                <h2>Load Flights from JSON into SQL</h2>
-                <button id="loadFlightsBtn">Load Flights</button>
-                <div id="flightsResult"></div>
             </div>
         </div>
 
@@ -95,6 +49,16 @@
                 <br>
             </div>
             <div class="column middle">
+                <div class="requires-admin">
+                    <h2>Load Hotels from XML into SQL</h2>
+                    <button id="loadHotelsBtn">Load Hotels</button>
+                    <div id="result"></div>
+                    <h2>Load Flights from JSON into SQL</h2>
+                    <button id="loadFlightsBtn">Load Flights</button>
+                    <div id="flightsResult"></div>
+                </div><br>
+
+                <hr>
                 <div>
                     <h2>Lookup by Booking ID (User)</h2>
                     <div>
