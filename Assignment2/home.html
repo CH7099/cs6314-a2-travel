@@ -6,59 +6,61 @@
         <script type="text/javascript" src="assets/js/travel.js"></script>
     </head>
     <body id="home">
-    <div class="header">
-        <h1 style="display:inline">Home</h1>
-        <h1 id="namedrop" style="display:inline"></h1>
-        <button id="logoutLink" style="display:none">Log Out</button>
-    </div>
+        <div class="header">
+            <div class="header-title">
+                <h1 id="namedrop" style="display:inline"></h1>
+                <h1 style="display:inline">- Home</h1>
+            </div>
+            <button id="logoutLink" style="display:none">Log Out</button>
+        </div>
 
-    <div class="row">
-        <div class="topnav">
-            <a href="home.html">Home</a>
-            <a href="register.html">Register</a>
-            <a href="login.html">Login</a>
-            <a id="account" href="account.html" class="requires-login">Account</a>
-            <a id="stays" href="stays.html" class="requires-login">Stays</a>
-            <a id="flights" href="flights.html" class="requires-login">Flights</a>
-            <a id="cars" href="cars.html" class="requires-login">Cars</a>
-            <a id="cruises" href="cruises.html" class="requires-login">Cruises</a>
-            <a id="contact-us" href="contact-us.html" class="requires-login">Contact us</a>
-            <a id="cart" href="cart.html" class="requires-login">Cart</a>
+        <div class="row">
+            <div class="topnav">
+                <a href="home.html">Home</a>
+                <a href="register.html">Register</a>
+                <a href="login.html">Login</a>
+                <a id="account" href="account.html" class="requires-login">Account</a>
+                <a id="stays" href="stays.html" class="requires-login">Stays</a>
+                <a id="flights" href="flights.html" class="requires-login">Flights</a>
+                <a id="cars" href="cars.html" class="requires-login">Cars</a>
+                <a id="cruises" href="cruises.html" class="requires-login">Cruises</a>
+                <a id="contact-us" href="contact-us.html" class="requires-login">Contact Us</a>
+                <a id="cart" href="cart.html" class="requires-login">Cart</a>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="column side">
-            <h2>Left Side</h2>
-            <p class="prefselector">Choose background color: </p>
-            <select id="colorpicker" onchange="colorChange()">
-                <option value="white" selected="true">White</option>
-                <option value="lightgray">Light Gray</option>
-                <option value="darkgray">Dark Gray</option>
-            </select>
-            <br>
-            <p class="prefselector">Choose font size: </p>
-            <select id="sizepicker" onchange="fontChange()">
-                <option value="12px" >12</option>
-                <option value="16px" selected="true">16</option>
-                <option value="18px">18</option>
-                <option value="20px">20</option>
-                <option value="24px">24</option>
-            </select>
-            <br>
+        <div class="row">
+            <div class="column side">
+                <h2>Left Side</h2>
+                <p class="prefselector">Choose background color: </p>
+                <select id="colorpicker" onchange="colorChange()">
+                    <option value="white" selected="true">White</option>
+                    <option value="lightgray">Light Gray</option>
+                    <option value="darkgray">Dark Gray</option>
+                </select>
+                <br>
+                <p class="prefselector">Choose font size: </p>
+                <select id="sizepicker" onchange="fontChange()">
+                    <option value="12px" >12</option>
+                    <option value="16px" selected="true">16</option>
+                    <option value="18px">18</option>
+                    <option value="20px">20</option>
+                    <option value="24px">24</option>
+                </select>
+                <br>
+            </div>
+            <div class="column middle">
+                <h2>Main content</h2>
+                <h3>Current Date/Time: </h3>
+                <p id="datetimenow"></p>
+            </div>
         </div>
-        <div class="column middle">
-            <h2>Main content</h2>
-            <h3>Current Date/Time: </h3>
-            <p id="datetimenow"></p>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="footer">
-            <h3 id="Names">Nicholas Aminzadeh, NHA190001 | Changhui Sun, CXS240024 | Thi Vu, TAV180002</h3>
+        <div class="row">
+            <div class="footer">
+                <h3 id="Names">Nicholas Aminzadeh, NHA190001 | Changhui Sun, CXS240024 | Thi Vu, TAV180002</h3>
+            </div>
         </div>
-    </div>
 
     </body>
 </html>

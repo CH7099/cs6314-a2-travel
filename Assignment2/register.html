@@ -7,68 +7,70 @@
     </head>
     <body id="register">
         <div class="header">
-        <h1 style="display:inline">Register</h1>
-        <h1 id="namedrop" style="display:inline"></h1>
-        <button id="logoutLink" style="display:none">Log Out</button>
-    </div>
+            <div class="header-title">
+                <h1 id="namedrop" style="display:inline"></h1>
+                <h1 style="display:inline">- Register</h1>
+            </div>
+            <button id="logoutLink" style="display:none">Log Out</button>
+        </div>
 
-    <div class="row">
-        <div class="topnav">
-            <a href="home.html">Home</a>
-            <a href="register.html">Register</a>
-            <a href="login.html">Login</a>
-            <a href="account.html" class="requires-login">Account</a>
-            <a href="stays.html" class="requires-login">Stays</a>
-            <a href="flights.html" class="requires-login">Flights</a>
-            <a href="cars.html" class="requires-login">Cars</a>
-            <a href="cruises.html" class="requires-login">Cruises</a>
-            <a href="contact-us.html" class="requires-login">Contact us</a>
-            <a href="cart.html" class="requires-login">Cart</a>
+        <div class="row">
+            <div class="topnav">
+                <a href="home.html">Home</a>
+                <a href="register.html">Register</a>
+                <a href="login.html">Login</a>
+                <a href="account.html" class="requires-login">Account</a>
+                <a href="stays.html" class="requires-login">Stays</a>
+                <a href="flights.html" class="requires-login">Flights</a>
+                <a href="cars.html" class="requires-login">Cars</a>
+                <a href="cruises.html" class="requires-login">Cruises</a>
+                <a href="contact-us.html" class="requires-login">Contact Us</a>
+                <a href="cart.html" class="requires-login">Cart</a>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="column side">
-            <h2>Left Side</h2>
-            <p class="prefselector">Choose background color: </p>
-            <select id="colorpicker" onchange="colorChange()">
-                <option value="white" selected="true">White</option>
-                <option value="lightgray">Light Gray</option>
-                <option value="darkgray">Dark Gray</option>
-            </select>
-            <br>
-            <p class="prefselector">Choose font size: </p>
-            <select id="sizepicker" onchange="fontChange()">
-                <option value="12px" >12</option>
-                <option value="16px" selected="true">16</option>
-                <option value="18px">18</option>
-                <option value="20px">20</option>
-                <option value="24px">24</option>
-            </select>
-            <br>
+        <div class="row">
+            <div class="column side">
+                <h2>Left Side</h2>
+                <p class="prefselector">Choose background color: </p>
+                <select id="colorpicker" onchange="colorChange()">
+                    <option value="white" selected="true">White</option>
+                    <option value="lightgray">Light Gray</option>
+                    <option value="darkgray">Dark Gray</option>
+                </select>
+                <br>
+                <p class="prefselector">Choose font size: </p>
+                <select id="sizepicker" onchange="fontChange()">
+                    <option value="12px" >12</option>
+                    <option value="16px" selected="true">16</option>
+                    <option value="18px">18</option>
+                    <option value="20px">20</option>
+                    <option value="24px">24</option>
+                </select>
+                <br>
+            </div>
+            <div class="column middle">
+                <h2>Register Form</h2>
+                <form method="post" action="register.php" id="registerForm">
+                    <input type="hidden" name="action" value="register">
+                    <input type="text" name="first_name" placeholder="First Name" required><br>
+                    <input type="text" name="last_name" placeholder="Last Name" required><br>
+                    <input type="date" name="dob" placeholder="Date of Birth" required><br>
+                    <input type="radio" name="gender" value="male"> Male <input type="radio" name="gender" value="female"> Female<br>
+                    <input type="text" name="phone" placeholder="Phone" required placeholder="ddd-ddd-dddd"><br>
+                    <input type="email" name="email" placeholder="Email" required><br>
+                    <input type="password" name="password" placeholder="Password" required><br>
+                    <input type="password" name="confirm_password" placeholder="Confirm Password" required><br>
+                    <button type="submit" name="register">Register</button>
+                </form>
+            </div>
         </div>
-        <div class="column middle">
-            <h2>Register Form</h2>
-            <form method="post" action="register.php" id="registerForm">
-                <input type="hidden" name="action" value="register">
-                <input type="text" name="first_name" placeholder="First Name" required><br>
-                <input type="text" name="last_name" placeholder="Last Name" required><br>
-                <input type="date" name="dob" placeholder="Date of Birth" required><br>
-                <input type="radio" name="gender" value="male"> Male <input type="radio" name="gender" value="female"> Female<br>
-                <input type="text" name="phone" placeholder="Phone" required placeholder="ddd-ddd-dddd"><br>
-                <input type="email" name="email" placeholder="Email" required><br>
-                <input type="password" name="password" placeholder="Password" required><br>
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required><br>
-                <button type="submit" name="register">Register</button>
-            </form>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="footer">
-            <h3 id="Names">Nicholas Aminzadeh, NHA190001 | Changhui Sun, CXS240024 | Thi Vu, TAV180002</h3>
+        <div class="row">
+            <div class="footer">
+                <h3 id="Names">Nicholas Aminzadeh, NHA190001 | Changhui Sun, CXS240024 | Thi Vu, TAV180002</h3>
+            </div>
         </div>
-    </div>
 
     </body>
 </html>
