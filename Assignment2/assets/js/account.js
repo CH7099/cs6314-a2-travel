@@ -188,7 +188,7 @@ function queryBySSN() {
  Admin query functions
 */
 function adminFlightsFromTexasSepOct() {
-    // TODO: Query all booked flights from Texas in Sep to Oct 2024
+    // TODO: Query all booked flights departure from Texas in Sep to Oct 2024
     sendQuery("account_queries.php", { 
         action: "admin_texas_flights",
     })
@@ -197,30 +197,58 @@ function adminFlightsFromTexasSepOct() {
 
 function adminFlightsFromTexasNoInfant() {
     // TODO: Query all booked flights from Texas in Sep to Oct 2024 without infants
+    sendQuery("account_queries.php", { 
+        action: "admin_texas_flights_no_infants",
+    })
+    .then(data => displayResult(data));
 }
 
 function adminHotelsInTexasSepOct() {
     // TODO: Query all booked hotels in Texas in Sep to Oct 2024
+    sendQuery("account_queries.php", { 
+        action: "admin_texas_hotels",
+    })
+    .then(data => displayResult(data));
 }
 
 function adminMostExpensiveHotels() {
     // TODO: Query all information about most expensive booked hotels
+    sendQuery("account_queries.php", { 
+        action: "admin_most_expensive_hotels",
+    })
+    .then(data => displayResult(data));
 }
 
 function adminMostExpensiveFlights() {
     // TODO: Query all information about most expensive booked flights
+    sendQuery("account_queries.php", { 
+        action: "admin_most_expensive_flights",
+    })
+    .then(data => displayResult(data));
 }
 
 function adminFlightsWithInfant() {
     // TODO: Query all booked flights with infants
+    sendQuery("account_queries.php", { 
+        action: "admin_flights_with_infant",
+    })
+    .then(data => displayResult(data));
 }
 
 function adminFlightsWithInfantAnd5Children() {
     // TODO: Query all booked flights with infants and atleast 5 children
+    sendQuery("account_queries.php", { 
+        action: "admin_flights_with_infant_and_5_children",
+    })
+    .then(data => displayResult(data));
 }
 
 function adminFlightsArrivingCaliforniaSepOct() {
     // TODO: Query all booked flights arriving in California in Sep to Oct 2024
+    sendQuery("account_queries.php", { 
+        action: "admin_california_arrivals",
+    })
+    .then(data => displayResult(data));
 }
 
 
