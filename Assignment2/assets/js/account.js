@@ -281,7 +281,6 @@ document.addEventListener("DOMContentLoaded", function() {
             adminElements[i].style.display = "block";
         }
     }
-    
     document.getElementById("loadHotelsBtn").addEventListener("click", function() {
         const resultDiv = document.getElementById("result");
 

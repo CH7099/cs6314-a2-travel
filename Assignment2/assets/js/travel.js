@@ -481,11 +481,12 @@ function collectGuestInfo(adults, children, infants, callback) {
 
     document.getElementById("guestModal").style.display = "block";
 
-    const guestForm = document.getElementById("guestForm");
     guestForm.onsubmit = function(event) {
         event.preventDefault();
         const guests = [];
         const groups = guestFieldsContainer.getElementsByClassName("guest-group");
+
+        const ssnSet = new Set(); // Track entered SSNs
 
         for (let group of groups) {
             const first_name = group.querySelector('input[name="first_name"]').value.trim();
@@ -498,6 +499,13 @@ function collectGuestInfo(adults, children, infants, callback) {
                 return;
             }
 
+            // Check for duplicate SSNs
+            if (ssnSet.has(ssn)) {
+                alert(`Duplicate SSN detected: ${ssn}. Each guest must have a unique SSN.`);
+                return;
+            }
+            ssnSet.add(ssn);
+
             const category = group.querySelector("h4").innerText.split(" ")[0].toLowerCase();
             guests.push({ first_name, last_name, dob, ssn, category });
         }
@@ -505,6 +513,7 @@ function collectGuestInfo(adults, children, infants, callback) {
         closeGuestModal();
         callback(guests);
     };
+
 }
 
 function closeGuestModal() {

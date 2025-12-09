@@ -28,13 +28,20 @@ There are default values set for the files for user.json and hotel.json (left ov
 Login Accounts You Can Use
 These are preloaded via users.sql.
 
-| Phone        | Password   | First Name | Last Name |
-| ------------ | ---------- | ---------- | --------- |
-| 222-222-2222 | Alice123   | Alice      | Admin     |
-| 333-333-3333 | John123    | John       | Miller    |
-| 444-444-4444 | Emma123    | Emma       | Brown     |
-| 555-555-5555 | Michael123 | Michael    | Clark     |
-| 666-666-6666 | Sarah123   | Sarah      | Walker    |
+| Phone        |    Password   | First Name | Last Name |
+| ------------ | ------------- | ---------- | --------- |
+| 222-222-2222 | 222-222-2222  | Alice      | Admin     |
+| 333-333-3333 | 333-333-3333  | John       | Miller    |
+| 444-444-4444 | 444-444-4444  | Emma       | Brown     |
+| 555-555-5555 | 555-555-5555  | Michael    | Clark     |
+| 666-666-6666 | 666-666-6666  | Sarah      | Walker    |
+
+
+Test:
+"origin": "San Francisco, CA",
+"destination": "Dallas, TX",
+one-way: 2024-11-10
+return: 2024-11-15
 
 
 

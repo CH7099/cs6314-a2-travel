@@ -25,23 +25,48 @@ if (empty($hotel_id) || empty($checkin) || empty($checkout) || $rooms <= 0) {
     exit;
 }
 
-// Ensure dates are in correct MySQL format
+// Format dates
 $checkin = date('Y-m-d', strtotime($checkin));
 $checkout = date('Y-m-d', strtotime($checkout));
 
-// Generate booking number as the primary key
+// Check if any guest SSN already exists
+$ssns = array_map(fn($g) => trim($g['ssn']), $guests);
+$ssn_placeholders = implode(',', array_fill(0, count($ssns), '?'));
+
+if (!empty($ssns)) {
+    $types = str_repeat('s', count($ssns));
+    $check_stmt = $conn->prepare("SELECT SSN FROM Guests WHERE SSN IN ($ssn_placeholders)");
+    $check_stmt->bind_param($types, ...$ssns);
+    $check_stmt->execute();
+    $result = $check_stmt->get_result();
+    if ($result->num_rows > 0) {
+        $existing_ssns = [];
+        while ($row = $result->fetch_assoc()) {
+            $existing_ssns[] = $row['SSN'];
+        }
+        echo json_encode([
+            "success" => false,
+            "error" => "The following SSNs already have bookings: " . implode(', ', $existing_ssns)
+        ]);
+        $check_stmt->close();
+        $conn->close();
+        exit;
+    }
+    $check_stmt->close();
+}
+
+// Generate booking ID
 $hotel_booking_id = "BKG" . time();
 
-// Insert booking into Hotel_Booking
+// Insert booking
 $stmt = $conn->prepare("INSERT INTO Hotel_Booking 
     (hotel_booking_id, hotel_id, check_in_date, check_out_date, number_of_rooms, price_per_night, total_price)
     VALUES (?, ?, ?, ?, ?, ?, ?)");
-
-// Correct bind types: s = string, i = int, d = decimal
 $stmt->bind_param("ssssidd", $hotel_booking_id, $hotel_id, $checkin, $checkout, $rooms, $price_per_night, $total_price);
-
 if (!$stmt->execute()) {
     echo json_encode(["success" => false, "error" => "Booking failed: " . $stmt->error]);
+    $stmt->close();
+    $conn->close();
     exit;
 }
 
@@ -60,6 +85,8 @@ foreach ($guests as $guest) {
 
     if (!$guest_stmt->execute()) {
         echo json_encode(["success" => false, "error" => "Guest insert failed: " . $guest_stmt->error]);
+        $guest_stmt->close();
+        $conn->close();
         exit;
     }
 }
