@@ -102,7 +102,7 @@ switch ($action) {
             WHERE LOWER(f.origin) LIKE '%tx%'
             AND f.departure_date BETWEEN '2024-09-01' AND '2024-10-31'
             GROUP BY fb.flight_booking_id
-            HAVING SUM(CASE WHEN p.category = 'Infant' THEN 1 ELSE 0 END) = 0
+            HAVING SUM(CASE WHEN LOWER(p.category) = 'infant' THEN 1 ELSE 0 END) = 0
         ");
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
@@ -144,7 +144,7 @@ switch ($action) {
             SELECT DISTINCT fb.* FROM flight_booking fb
             JOIN tickets t ON t.flight_booking_id = fb.flight_booking_id
             JOIN passenger p ON p.SSN = t.SSN
-            WHERE p.category = 'Infant'
+            WHERE LOWER(p.category) = 'infant'
         ");
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));
@@ -155,10 +155,9 @@ switch ($action) {
             SELECT DISTINCT fb.* FROM flight_booking fb
             JOIN tickets t ON t.flight_booking_id = fb.flight_booking_id
             JOIN passenger p ON p.SSN = t.SSN
-            WHERE p.category = 'Infant'
             GROUP BY fb.flight_booking_id
-            HAVING SUM(CASE WHEN p.category = 'Infant' THEN 1 ELSE 0 END) >= 1
-            AND SUM(CASE WHEN p.category = 'Child' THEN 1 ELSE 0 END) >= 5
+            HAVING SUM(CASE WHEN LOWER(p.category) = 'infant' THEN 1 ELSE 0 END) >= 1
+            AND SUM(CASE WHEN LOWER(p.category) = 'child' THEN 1 ELSE 0 END) >= 5
         ");
         $stmt->execute();
         echo json_encode($stmt->get_result()->fetch_all(MYSQLI_ASSOC));

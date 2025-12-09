@@ -16,8 +16,5 @@ CREATE TABLE IF NOT EXISTS flights (
     INDEX idx_available_seats (available_seats)
 );
 
--- Query to check the flights table --
-/*
-USE travel_db;
-SELECT * FROM flights LIMIT 10;
-*/
+-- DROP TABLE IF EXISTS flights;--
+
